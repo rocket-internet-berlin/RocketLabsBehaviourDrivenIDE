@@ -62,9 +62,7 @@ public final class BehatProfileReader {
     private void readAutoLoaderExtensionConfiguration(BehatProfile profile, Map profileData) {
         if (profileData.get("autoload") instanceof Map) {
             Map<?, ?> autoLoadData = (Map) profileData.get("autoload");
-            autoLoadData
-                    .values()
-                    .stream()
+            autoLoadData.values().stream()
                     .filter(value -> value instanceof String)
                     .forEach(value -> profile.addAutoLoadPath((String) value));
         } else if (profileData.get("autoload") instanceof String) {
@@ -80,13 +78,11 @@ public final class BehatProfileReader {
             //ignore cache node
             if (gherkinData.get("filters") instanceof Map) {
                 Map<?, ?> filters = (Map) gherkinData.get("filters");
-                filters.keySet()
-                        .stream()
-                        .filter(key -> key instanceof String)
-                        .forEach(key -> {
-                            FilterType filterType = FilterType.valueOf(((String) key).toUpperCase());
-                            profile.addFilter(filterType.createFilter((String) filters.get(key)));
-                        });
+                for (Object key : filters.keySet()) {
+                    assert key instanceof String;
+                    FilterType filterType = FilterType.valueOf(((String) key).toUpperCase());
+                    profile.addFilter(filterType.createFilter((String) filters.get(key)));
+                }
             }
         }
     }
@@ -94,64 +90,10 @@ public final class BehatProfileReader {
     private void readSuiteExtensionConfiguration(BehatProfile profile, Map profileData) {
         if (profileData.get("suites") instanceof Map) {
             Map<?, ?> suites = (Map) profileData.get("suites");
-            suites.keySet()
-                    .stream()
-                    .filter(key -> key instanceof String)
-                    .forEach(key -> profile.addSuite(suiteReader.readSuite((String) key, suites.get(key))));
+            for (Object key : suites.keySet()) {
+                assert key instanceof String;
+                profile.addSuite(suiteReader.readSuite((String) key, suites.get(key)));
+            }
         }
-        /**
-         $builder
-         ->defaultValue(array('default' => array(
-         'enabled'    => true,
-         'type'       => null,
-         'settings'   => array()
-         )))
-         ->treatNullLike(array())
-         ->treatFalseLike(array())
-         ->useAttributeAsKey('name')
-         ->prototype('array')
-         ->beforeNormalization()
-         ->ifTrue(function ($suite) {
-         return is_array($suite) && count($suite);
-         })
-         ->then(function ($suite) {
-         $suite['settings'] = isset($suite['settings'])
-         ? $suite['settings']
-         : array();
-
-         foreach ($suite as $key => $val) {
-         $suiteKeys = array('enabled', 'type', 'settings');
-         if (!in_array($key, $suiteKeys)) {
-         $suite['settings'][$key] = $val;
-         unset($suite[$key]);
-         }
-         }
-
-         return $suite;
-         })
-         ->end()
-         ->normalizeKeys(false)
-         ->addDefaultsIfNotSet()
-         ->treatTrueLike(array('enabled' => true))
-         ->treatNullLike(array('enabled' => true))
-         ->treatFalseLike(array('enabled' => false))
-         ->children()
-         ->booleanNode('enabled')
-         ->info('Enables/disables suite')
-         ->defaultTrue()
-         ->end()
-         ->scalarNode('type')
-         ->info('Specifies suite type')
-         ->defaultValue(null)
-         ->end()
-         ->arrayNode('settings')
-         ->info('Specifies suite extra settings')
-         ->defaultValue(array())
-         ->useAttributeAsKey('name')
-         ->prototype('variable')->end()
-         ->end()
-         ->end()
-         ->end()
-         */
     }
 }

@@ -1,0 +1,23 @@
+# behat.yml
+default: &default
+  autoload:
+    '': "%paths.base%/features"
+  suites: &suites
+    default:
+      paths: ["somePath"]
+  gherkin:
+    filters:
+      tags: 'someFilter'
+
+secondProfile:
+  <<: *default
+  gherkin:
+    filters:
+      role: "admin"
+  suites:
+    default:
+      paths: ["noPath"]
+
+thirdProfile:
+  suites:
+    <<: *suites

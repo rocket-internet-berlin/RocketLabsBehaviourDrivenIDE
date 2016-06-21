@@ -9,8 +9,6 @@ default:
     '': "%paths.base%/features"
   suites:
     default:
-      contexts:
-        - \Some\Namespace\Some\ClassContest
   gherkin:
     filters:
-      tags: 'aklsd'
+      tags: 'someFilter'

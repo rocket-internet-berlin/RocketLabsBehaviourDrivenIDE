@@ -33,7 +33,7 @@ public final class BehatProfile implements Profile {
     }
 
     @Override
-    public Suite getSuite(String name) {
+    public BehatSuite getSuite(String name) {
         return suites.get(name);
     }
 
