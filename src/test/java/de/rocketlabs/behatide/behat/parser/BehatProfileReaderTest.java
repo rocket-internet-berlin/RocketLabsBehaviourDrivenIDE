@@ -100,7 +100,8 @@ public class BehatProfileReaderTest extends TestCase {
 
         Assert.assertEquals(1, defaultProfile.getAutoLoadPaths().size());
         Assert.assertEquals(1, secondProfile.getAutoLoadPaths().size());
-        Assert.assertEquals(0, thirdProfile.getAutoLoadPaths().size());
+        Assert.assertEquals(1, thirdProfile.getAutoLoadPaths().size());
+        Assert.assertTrue(thirdProfile.getAutoLoadPaths().contains("%paths.base%/features/bootstrap"));
 
         Assert.assertEquals(1, defaultProfile.getSuiteNames().size());
         Assert.assertEquals(1, secondProfile.getSuiteNames().size());
