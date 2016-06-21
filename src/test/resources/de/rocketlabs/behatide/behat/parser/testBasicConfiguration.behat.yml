@@ -1,0 +1,14 @@
+# behat.yml
+default:
+  extensions:
+    Behat\MinkExtension:
+      files_path: "%paths.base%/resources"
+      base_url: "http://base.url"
+      selenium2: ~
+  autoload:
+    '': "%paths.base%/features"
+  suites:
+    default:
+  gherkin:
+    filters:
+      tags: 'someFilter'

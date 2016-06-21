@@ -1,0 +1,24 @@
+# behat.yml
+default:
+  suites:
+    default:
+      contexts:
+        - \Some\Random\Context
+        - \Some\Random\OtherContext
+        - \Some\Other\Namespace\Context
+      filters:
+        tags: "some-tag"
+      paths: ["%paths.base%/features"]
+    second:
+      enabled: false
+      filters:
+        role: "admin"
+      paths: ["%paths.base%/features"]
+    third:
+      type: suite
+      contexts:
+        - \Some\Random\Context
+        - \Some\Random\OtherContext
+      paths:
+        - path1
+        - path2
