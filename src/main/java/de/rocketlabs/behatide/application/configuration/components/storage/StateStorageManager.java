@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import de.rocketlabs.behatide.application.configuration.components.exceptions.StateStorageException;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,30 +26,37 @@ public class StateStorageManager {
         return instance;
     }
 
-    @Nullable
+    @NotNull
     public <T> T loadState(@NotNull Class<T> stateClass) {
         State state = stateClass.getAnnotation(State.class);
         if (state == null) {
             throw new StateStorageException("Given object misses @State annotation");
         }
+        T object = null;
         for (Storage storage : state.storages()) {
             StateStorage stateStorage = getStateStorage(storage.storageClass());
             if (stateStorage.hasState(state)) {
-                return deserializeData(stateClass, stateStorage.loadData(state));
+                object = deserializeData(stateClass, stateStorage.loadData(state));
+                break;
             }
         }
-        return null;
+        if (object == null) {
+            try {
+                object = stateClass.newInstance();
+            } catch (InstantiationException | IllegalAccessException e) {
+                throw new StateStorageException("State object could not be instantiated", e);
+            }
+        }
+        return object;
     }
 
     public <T extends StateStorage> StateStorage getStateStorage(Class<T> storageClass) throws StateStorageException {
         if (!storageClass.equals(StateStorage.class)) {
             if (!storageInstances.containsKey(storageClass)) {
                 try {
-                    Constructor<T> constructor = storageClass.getConstructor();
-                    constructor.setAccessible(true);
-                    T storage = constructor.newInstance();
+                    T storage = storageClass.newInstance();
                     storageInstances.put(storageClass, storage);
-                } catch (NoSuchMethodException | InstantiationException | InvocationTargetException | IllegalAccessException e) {
+                } catch (InstantiationException | IllegalAccessException e) {
                     throw new StateStorageException("Storage could not be instantiated", e);
                 }
             }
