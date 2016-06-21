@@ -12,6 +12,7 @@ import java.util.Map;
 
 public final class BehatConfigurationReader implements ConfigurationReader<BehatConfiguration> {
 
+    public static final String YAML_HOOK_IDENTIFIER = "<<";
     private BehatProfileReader profileParser;
 
     @Inject
@@ -49,19 +50,19 @@ public final class BehatConfigurationReader implements ConfigurationReader<Behat
         //noinspection unchecked
         Map<String, Object> mergedMap = new HashMap<>(dataMap);
 
-        if (mergedMap.containsKey("<<")) {
-            assert mergedMap.get("<<") instanceof Map;
+        if (mergedMap.containsKey(YAML_HOOK_IDENTIFIER)) {
+            assert mergedMap.get(YAML_HOOK_IDENTIFIER) instanceof Map;
 
             //noinspection unchecked
-            Map<String, Object> baseData = (Map) mergedMap.get("<<");
-            mergedMap.remove("<<");
+            Map<String, Object> baseData = (Map) mergedMap.get(YAML_HOOK_IDENTIFIER);
+            mergedMap.remove(YAML_HOOK_IDENTIFIER);
 
             mergedMap = mergeMapsRecursive(baseData, mergedMap);
         }
 
         //Start recursion
         for (String key : mergedMap.keySet()) {
-            if (!key.equals("<<")) {
+            if (!key.equals(YAML_HOOK_IDENTIFIER)) {
                 mergedMap.put(key, mergeYamlLinks(mergedMap.get(key)));
             }
         }
