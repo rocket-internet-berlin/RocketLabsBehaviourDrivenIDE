@@ -7,12 +7,16 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    flatDir {
+        dirs 'lib'
+    }
 }
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile group: 'com.esotericsoftware.yamlbeans', name: 'yamlbeans', version: '1.09'
     compile group: 'com.google.inject', name: 'guice', version: '4.0'
+    compile 'at.ac.tuwien:phpparser:1.2'
 }
 
 //noinspection GroovyAssignabilityCheck
