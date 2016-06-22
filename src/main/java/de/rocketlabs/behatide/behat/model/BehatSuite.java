@@ -47,7 +47,7 @@ public class BehatSuite implements Suite {
     }
 
     public Object getSetting(String key) {
-        return settings;
+        return settings.get(key);
     }
 
     public void addSetting(String key, Object value) {
