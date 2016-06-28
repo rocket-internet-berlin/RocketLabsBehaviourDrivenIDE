@@ -16,7 +16,8 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile group: 'com.esotericsoftware.yamlbeans', name: 'yamlbeans', version: '1.09'
     compile group: 'com.google.inject', name: 'guice', version: '4.0'
-    compile 'at.ac.tuwien:phpparser:1.2'
+    compile group: 'org.jetbrains', name: 'annotations', version: '15.0'
+    compile group: 'com.github.javaparser', name: 'javaparser-core', 'version': '2.4.0'
 }
 
 //noinspection GroovyAssignabilityCheck
