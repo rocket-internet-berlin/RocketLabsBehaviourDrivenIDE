@@ -20,6 +20,8 @@ TODO:
 - Notice comment on line 555
 - There are a couple of warnings when compiling which I wasn't able to solve nor was I able
   to figure out if they mattered at all.
+
+- To regenerate classes run 'java -classpath "../../../lib/javacc-6.0.jar" javacc ./php.jj' from this directory
 */
 
 options {
