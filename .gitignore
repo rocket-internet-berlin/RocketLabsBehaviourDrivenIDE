@@ -21,6 +21,7 @@ gradle-app.setting
 
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
 !gradle-wrapper.jar
+!javacc-6.0.jar
 
 # Cache of project
 .gradletasknamecache
@@ -28,3 +29,10 @@ gradle-app.setting
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
 
+src/main/java/de/rocketlabs/behatide/php/ParseException.java
+src/main/java/de/rocketlabs/behatide/php/PhpParser.java
+src/main/java/de/rocketlabs/behatide/php/PhpParserConstants.java
+src/main/java/de/rocketlabs/behatide/php/PhpParserTokenManager.java
+src/main/java/de/rocketlabs/behatide/php/SimpleCharStream.java
+src/main/java/de/rocketlabs/behatide/php/Token.java
+src/main/java/de/rocketlabs/behatide/php/TokenMgrError.java

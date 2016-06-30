@@ -30,3 +30,16 @@ sourceSets {
         output.resourcesDir = "build/classes/test"
     }
 }
+
+task generatePhpParser(type: Exec) {
+    description = "Generate PHP parser with JavaCC"
+    args = [
+            "-classpath",
+            "tools/javacc-6.0.jar",
+            "javacc",
+            "tools/php.jj"
+    ]
+    executable "java"
+}
+
+compileJava.dependsOn(generatePhpParser)

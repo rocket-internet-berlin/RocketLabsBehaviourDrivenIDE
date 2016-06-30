@@ -9,7 +9,7 @@ public class PhpDocBlock {
     private final String description;
     private final List<PhpDocBlockTag> tags;
 
-    public PhpDocBlock(@Nullable String description, @com.sun.istack.internal.Nullable List<PhpDocBlockTag> tags) {
+    public PhpDocBlock(@Nullable String description, @Nullable List<PhpDocBlockTag> tags) {
         this.description = description;
         this.tags = tags;
     }

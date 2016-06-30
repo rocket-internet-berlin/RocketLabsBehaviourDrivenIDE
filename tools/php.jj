@@ -26,7 +26,7 @@ TODO:
 
 options {
   STATIC = false;
-  OUTPUT_DIRECTORY = "../java/de/rocketlabs/behatide/php/";
+  OUTPUT_DIRECTORY = "./src/main/java/de/rocketlabs/behatide/php/";
   SANITY_CHECK = false;
   SUPPORT_CLASS_VISIBILITY_PUBLIC = false;
 }
