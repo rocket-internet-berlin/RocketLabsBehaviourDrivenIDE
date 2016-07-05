@@ -1,5 +1,7 @@
 package de.rocketlabs.behatide.application.configuration.components.storage;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import de.rocketlabs.behatide.application.configuration.components.exceptions.StateStorageException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -14,7 +16,9 @@ public class StateStorageManager {
     private static StateStorageManager instance;
     private Map<Class<? extends StateStorage>, StateStorage> storageInstances = new HashMap<>();
 
-    private Map<String, Object> statesToSave = new HashMap<>();
+    private Map<State, String> statesToSave = new HashMap<>();
+    private Gson gson = new GsonBuilder().create();
+
 
     private StateStorageManager() {
     }
@@ -35,7 +39,7 @@ public class StateStorageManager {
         for (Storage storage : state.storages()) {
             StateStorage stateStorage = getStateStorage(storage.storageClass());
             if (stateStorage.hasState(state)) {
-                return stateStorage.getState(stateClass);
+                return deserializeData(stateClass, stateStorage.loadData(state));
             }
         }
         return null;
@@ -65,13 +69,20 @@ public class StateStorageManager {
             throw new StateStorageException("Given object misses @State annotation");
         }
 
-        statesToSave.put(state.name(), data);
+        statesToSave.put(state, serializeData(data));
+    }
+
+    private String serializeData(Object data) {
+        return gson.toJson(data);
+    }
+
+    private <T> T deserializeData(Class<T> dataClass, String json) {
+        return gson.fromJson(json, dataClass);
     }
 
     public void save() {
-        statesToSave.keySet().parallelStream().forEach(key -> {
-            Object data = statesToSave.get(key);
-            State state = data.getClass().getAnnotation(State.class);
+        statesToSave.keySet().parallelStream().forEach(state -> {
+            String data = statesToSave.get(state);
             for (Storage storage : state.storages()) {
                 StateStorage stateStorage = getStateStorage(storage.storageClass());
                 if (stateStorage.saveState(data, state)) {

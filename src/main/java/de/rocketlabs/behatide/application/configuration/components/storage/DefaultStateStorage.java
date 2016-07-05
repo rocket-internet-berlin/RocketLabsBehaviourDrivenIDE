@@ -1,43 +1,34 @@
 package de.rocketlabs.behatide.application.configuration.components.storage;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import de.rocketlabs.behatide.application.configuration.components.exceptions.StateStorageException;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 public class DefaultStateStorage implements StateStorage {
 
     private static final String USER_DIRECTORY = System.getProperty("user.dir");
     private static final String STORAGE_DIRECTORY = USER_DIRECTORY + File.separator + ".behatIde";
 
-    private Gson gson = new GsonBuilder().create();
 
     @Override
-    public <T> T getState(@NotNull Class<T> stateClass) {
-        State state = stateClass.getAnnotation(State.class);
-        if (state == null) {
-            throw new StateStorageException("Given class is not annotated with @State");
-        }
-
-        try (FileReader reader = new FileReader(getFilePath(state))) {
-            return gson.fromJson(reader, stateClass);
+    public String loadData(@NotNull State state) {
+        StringBuilder data = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(getFilePath(state)))) {
+            reader.lines().forEach(data::append);
         } catch (IOException e) {
             throw new StateStorageException("Could not load save file", e);
         }
+        return data.toString();
     }
 
     @Override
-    public boolean saveState(@NotNull Object data, State state) {
+    public boolean saveState(@NotNull String data, State state) {
         String filePath = getFilePath(state);
         ensureStorageDirectory();
 
         try (FileWriter writer = new FileWriter(filePath)) {
-            gson.toJson(data, writer);
+            writer.write(data);
         } catch (IOException e) {
             throw new StateStorageException("Could not write save file", e);
         }
