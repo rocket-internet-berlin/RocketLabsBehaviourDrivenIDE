@@ -284,7 +284,6 @@ PhpFile PhpFile() :
     String namespace = "";
     PhpClass cd = null;
     List classes = null;
-    List methods = null;
 }
 {
     (
@@ -293,7 +292,6 @@ PhpFile PhpFile() :
         [ LOOKAHEAD(NamespaceDeclaration()) namespace = NamespaceDeclaration() ]
         (<SLASH_STAR_COMMENT>)?
         (UseStatement() | <SLASH_STAR_COMMENT>)*
-//        (DocBlock())?
 
         ( LOOKAHEAD(<CLASS>) cd = ClassDeclaration() { classes = add(classes, cd); } )*
         ( <EOF> | "\u001A" /** ctrl+z char **/)
