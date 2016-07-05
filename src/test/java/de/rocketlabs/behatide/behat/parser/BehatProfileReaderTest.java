@@ -7,23 +7,25 @@ import de.rocketlabs.behatide.behat.model.BehatConfiguration;
 import de.rocketlabs.behatide.behat.model.BehatProfile;
 import de.rocketlabs.behatide.behat.model.BehatSuite;
 import de.rocketlabs.behatide.domain.parser.ConfigurationReader;
-import junit.framework.TestCase;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-public class BehatProfileReaderTest extends TestCase {
+public class BehatProfileReaderTest {
 
     private ConfigurationReader configurationReader;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         Injector injector = Guice.createInjector(new BehatModule());
         configurationReader = injector.getInstance(ConfigurationReader.class);
     }
 
+    @Test
     public void testBasicConfiguration() throws IOException {
         InputStream resource = getClass().getResourceAsStream("testBasicConfiguration.behat.yml");
         Object configuration = configurationReader.read(resource);
@@ -44,6 +46,7 @@ public class BehatProfileReaderTest extends TestCase {
         Assert.assertNotNull(profile.getSuite("default"));
     }
 
+    @Test
     public void testSuiteConfiguration() throws IOException {
         InputStream resource = getClass().getResourceAsStream("testSuiteConfiguration.behat.yml");
         Object configuration = configurationReader.read(resource);
@@ -83,6 +86,7 @@ public class BehatProfileReaderTest extends TestCase {
         Assert.assertEquals("suite", thirdSuite.getType());
     }
 
+    @Test
     public void testYamlLinks() throws IOException {
         InputStream resource = getClass().getResourceAsStream("testYmlLinks.behat.yml");
         Object configuration = configurationReader.read(resource);
