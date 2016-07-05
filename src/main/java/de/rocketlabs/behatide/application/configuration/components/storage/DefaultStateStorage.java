@@ -15,13 +15,16 @@ public class DefaultStateStorage implements StateStorage {
     private static final String USER_DIRECTORY = System.getProperty("user.dir");
     private static final String STORAGE_DIRECTORY = USER_DIRECTORY + File.separator + ".behatIde";
 
-    @Override
-    public <T> T getState(@NotNull Class<T> stateClass, Storage storage) {
-        File file = new File(getFilePath(storage));
+    private Gson gson = new GsonBuilder().create();
 
-        try (FileReader reader = new FileReader(file)) {
-            GsonBuilder gsonBuilder = new GsonBuilder();
-            Gson gson = gsonBuilder.create();
+    @Override
+    public <T> T getState(@NotNull Class<T> stateClass) {
+        State state = stateClass.getAnnotation(State.class);
+        if (state == null) {
+            throw new StateStorageException("Given class is not annotated with @State");
+        }
+
+        try (FileReader reader = new FileReader(getFilePath(state))) {
             return gson.fromJson(reader, stateClass);
         } catch (IOException e) {
             throw new StateStorageException("Could not load save file", e);
@@ -29,13 +32,11 @@ public class DefaultStateStorage implements StateStorage {
     }
 
     @Override
-    public boolean saveState(@NotNull Object data, Storage storage) {
-        String filePath = getFilePath(storage);
+    public boolean saveState(@NotNull Object data, State state) {
+        String filePath = getFilePath(state);
         ensureStorageDirectory();
 
         try (FileWriter writer = new FileWriter(filePath)) {
-            GsonBuilder builder = new GsonBuilder();
-            Gson gson = builder.create();
             gson.toJson(data, writer);
         } catch (IOException e) {
             throw new StateStorageException("Could not write save file", e);
@@ -44,14 +45,14 @@ public class DefaultStateStorage implements StateStorage {
     }
 
     @Override
-    public boolean hasState(@NotNull Storage storage) {
-        File file = new File(getFilePath(storage));
+    public boolean hasState(@NotNull State state) {
+        File file = new File(getFilePath(state));
         return file.exists() && file.isFile();
     }
 
     @NotNull
-    private String getFilePath(Storage storage) {
-        return getStorageDirectory() + File.separator + storage.value();
+    private String getFilePath(State state) {
+        return getStorageDirectory() + File.separator + state.name() + ".json";
     }
 
     private void ensureStorageDirectory() {

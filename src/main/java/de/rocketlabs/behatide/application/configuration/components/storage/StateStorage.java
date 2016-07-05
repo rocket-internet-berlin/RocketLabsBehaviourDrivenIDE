@@ -4,9 +4,9 @@ import org.jetbrains.annotations.NotNull;
 
 public interface StateStorage {
 
-    <T> T getState(@NotNull Class<T> stateClass, Storage storage);
+    <T> T getState(@NotNull Class<T> stateClass);
 
-    boolean hasState(@NotNull Storage storage);
+    boolean hasState(@NotNull State storage);
 
-    boolean saveState(@NotNull Object state, Storage storage);
+    boolean saveState(@NotNull Object data, State state);
 }

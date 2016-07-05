@@ -8,5 +8,5 @@ public @interface State {
 
     String name();
 
-    Storage[] storages() default {};
+    Storage[] storages() default {@Storage};
 }

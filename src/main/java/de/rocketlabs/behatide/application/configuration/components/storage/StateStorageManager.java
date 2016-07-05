@@ -34,8 +34,8 @@ public class StateStorageManager {
         }
         for (Storage storage : state.storages()) {
             StateStorage stateStorage = getStateStorage(storage.storageClass());
-            if (stateStorage.hasState(storage)) {
-                return stateStorage.getState(stateClass, storage);
+            if (stateStorage.hasState(state)) {
+                return stateStorage.getState(stateClass);
             }
         }
         return null;
@@ -74,8 +74,8 @@ public class StateStorageManager {
             State state = data.getClass().getAnnotation(State.class);
             for (Storage storage : state.storages()) {
                 StateStorage stateStorage = getStateStorage(storage.storageClass());
-                if (stateStorage.saveState(data, storage)) {
-                    return;
+                if (stateStorage.saveState(data, state)) {
+                    break;
                 }
             }
         });

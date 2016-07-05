@@ -33,7 +33,7 @@ public class DefaultStageStorageTest {
     @Before
     public void setUp() {
         storageManager = StateStorageManager.getInstance();
-        saveFile = new File(System.getProperty("java.io.tmpdir") + File.separator + "test_state.json");
+        saveFile = new File(System.getProperty("java.io.tmpdir") + File.separator + "TestState.json");
     }
 
     @Test
@@ -75,8 +75,7 @@ public class DefaultStageStorageTest {
     @State(
             name = "TestState",
             storages = @Storage(
-                    storageClass = DefaultStageStorage.class,
-                    value = "test_state.json"
+                    storageClass = DefaultTestStageStorage.class
             )
     )
     private static class TestState {
@@ -127,7 +126,7 @@ public class DefaultStageStorageTest {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static class DefaultStageStorage extends DefaultStateStorage {
+    public static class DefaultTestStageStorage extends DefaultStateStorage {
 
         @NotNull
         @Override

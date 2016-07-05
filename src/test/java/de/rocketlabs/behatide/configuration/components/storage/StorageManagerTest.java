@@ -59,7 +59,7 @@ public class StorageManagerTest {
     public static class TestStorage implements StateStorage {
 
         @Override
-        public <T> T getState(@NotNull Class<T> stateClass, Storage storage) {
+        public <T> T getState(@NotNull Class<T> stateClass) {
             if (stateClass.equals(TestState.class)) {
                 TestState testState = new TestState();
                 //noinspection unchecked
@@ -69,12 +69,12 @@ public class StorageManagerTest {
         }
 
         @Override
-        public boolean hasState(@NotNull Storage storage) {
+        public boolean hasState(@NotNull State storage) {
             return true;
         }
 
         @Override
-        public boolean saveState(@NotNull Object state, Storage storage) {
+        public boolean saveState(@NotNull Object data, State state) {
             return false;
         }
 
@@ -87,17 +87,17 @@ public class StorageManagerTest {
         }
 
         @Override
-        public <T> T getState(@NotNull Class<T> stateClass, Storage storage) {
+        public <T> T getState(@NotNull Class<T> stateClass) {
             return null;
         }
 
         @Override
-        public boolean hasState(@NotNull Storage storage) {
+        public boolean hasState(@NotNull State storage) {
             return false;
         }
 
         @Override
-        public boolean saveState(@NotNull Object state, Storage storage) {
+        public boolean saveState(@NotNull Object data, State state) {
             return false;
         }
     }
