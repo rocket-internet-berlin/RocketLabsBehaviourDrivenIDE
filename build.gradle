@@ -7,12 +7,17 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    flatDir {
+        dirs 'lib'
+    }
 }
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile group: 'com.esotericsoftware.yamlbeans', name: 'yamlbeans', version: '1.09'
     compile group: 'com.google.inject', name: 'guice', version: '4.0'
+    compile group: 'org.jetbrains', name: 'annotations', version: '15.0'
+    compile group: 'com.github.javaparser', name: 'javaparser-core', 'version': '2.4.0'
 }
 
 //noinspection GroovyAssignabilityCheck
@@ -25,3 +30,16 @@ sourceSets {
         output.resourcesDir = "build/classes/test"
     }
 }
+
+task generatePhpParser(type: Exec) {
+    description = "Generate PHP parser with JavaCC"
+    args = [
+            "-classpath",
+            "tools/javacc-6.0.jar",
+            "javacc",
+            "tools/php.jj"
+    ]
+    executable "java"
+}
+
+compileJava.dependsOn(generatePhpParser)
