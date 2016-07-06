@@ -23,7 +23,7 @@ public class DefaultStateStorage implements StateStorage {
     }
 
     @Override
-    public boolean saveState(@NotNull String data, State state) {
+    public boolean saveState(@NotNull String data, @NotNull State state) {
         String filePath = getFilePath(state);
         ensureStorageDirectory();
 

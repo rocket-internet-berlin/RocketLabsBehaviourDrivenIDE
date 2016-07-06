@@ -19,7 +19,6 @@ public class StateStorageManager {
     private Map<State, String> statesToSave = new HashMap<>();
     private Gson gson = new GsonBuilder().create();
 
-
     private StateStorageManager() {
     }
 
