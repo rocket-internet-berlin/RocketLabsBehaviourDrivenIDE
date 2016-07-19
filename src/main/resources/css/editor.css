@@ -1,0 +1,44 @@
+.keyword {
+    -fx-fill: #c9c983;
+    -fx-font-weight: bold;
+}
+
+.top {
+   -fx-hgap: 100%;
+   -fx-vgap: 100%;
+   -fx-background: #FFFFFF;
+}
+
+.editor-test-class {
+   -fx-background-color:  #2b3233;
+   -fx-text-fill: #fff
+}
+
+.default {
+    -fx-fill: #d4eaf0;
+    -fx-text-fill: #d4eaf0
+}
+
+.lineNumber {
+    -fx-background-color:  #2b3233;
+    -fx-border-style: solid;
+    -fx-border-width: 0 1 0 0;
+    -fx-border-color: transparent #e7e7e1 transparent transparent;
+    -fx-text-fill: #b9b768;
+}
+
+.caret {
+    -fx-stroke: #b7cbd4;
+}
+
+#menuBar:focus {
+    -fx-background-color: #2b3233;
+}
+
+#menuBar .menu-item .label {
+     -fx-text-fill: #2b3233;
+     -fx-fill: #2b3233;
+ }
+#menuBar .label {
+     -fx-text-fill: #fff;
+ }
