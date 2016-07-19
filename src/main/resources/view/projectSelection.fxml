@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.BorderPane?>
-<BorderPane prefWidth="500" prefHeight="500"/>
+<?import de.rocketlabs.behatide.application.component.ProjectQuickSelection?>
+<?import javafx.scene.layout.*?>
+<AnchorPane>
+    <ProjectQuickSelection AnchorPane.bottomAnchor="0"
+                           AnchorPane.rightAnchor="0"
+                           AnchorPane.topAnchor="0"
+                           AnchorPane.leftAnchor="0"
+    />
+</AnchorPane>

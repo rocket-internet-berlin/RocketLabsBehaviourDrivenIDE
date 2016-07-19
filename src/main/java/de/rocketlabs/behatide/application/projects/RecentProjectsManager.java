@@ -1,28 +1,29 @@
-package de.rocketlabs.behatide.application.configuration.components;
+package de.rocketlabs.behatide.application.projects;
 
 import de.rocketlabs.behatide.application.configuration.components.storage.State;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @State(name = "RecentProjectManager")
 public class RecentProjectsManager {
 
     private static final int RECENT_PROJECTS_LIMIT = 5;
-    private List<String> recentProjects = new LinkedList<>();
-    private String openProject;
+    private List<RecentProjectModel> recentProjects = new LinkedList<>();
+    private RecentProjectModel openProject;
 
     @NotNull
-    public List<String> getRecentProjects() {
-        List<String> copy = new LinkedList<>();
-        Collections.copy(copy, recentProjects);
-        return copy;
+    public List<RecentProjectModel> getRecentProjects() {
+        return recentProjects
+                .stream()
+                .map(RecentProjectModel::clone)
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
-    public void setRecentProject(@NotNull String recentProject) {
+    public void setRecentProject(@NotNull RecentProjectModel recentProject) {
         if (recentProjects.contains(recentProject)) {
             recentProjects.remove(recentProject);
         }
@@ -32,12 +33,11 @@ public class RecentProjectsManager {
         }
     }
 
-    @Nullable
-    public String getOpenProject() {
+    public @Nullable RecentProjectModel getOpenProject() {
         return openProject;
     }
 
-    public void setOpenProject(@Nullable String openProject) {
+    public void setOpenProject(@Nullable RecentProjectModel openProject) {
         this.openProject = openProject;
     }
 }

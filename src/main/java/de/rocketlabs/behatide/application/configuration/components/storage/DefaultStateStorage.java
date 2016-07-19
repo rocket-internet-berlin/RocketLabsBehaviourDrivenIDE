@@ -7,7 +7,7 @@ import java.io.*;
 
 public class DefaultStateStorage implements StateStorage {
 
-    private static final String USER_DIRECTORY = System.getProperty("user.dir");
+    private static final String USER_DIRECTORY = System.getProperty("user.home");
     private static final String STORAGE_DIRECTORY = USER_DIRECTORY + File.separator + ".behatIde";
 
 
