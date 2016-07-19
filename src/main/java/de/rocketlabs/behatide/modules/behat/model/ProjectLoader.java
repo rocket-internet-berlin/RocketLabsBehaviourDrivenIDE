@@ -5,6 +5,8 @@ import com.google.inject.Injector;
 import de.rocketlabs.behatide.application.event.EventManager;
 import de.rocketlabs.behatide.application.event.FileLoadFailedEvent;
 import de.rocketlabs.behatide.domain.parser.ConfigurationReader;
+import de.rocketlabs.behatide.modules.behat.BehatModule;
+import de.rocketlabs.behatide.modules.behat.parser.BehatConfigurationReader;
 
 import java.io.File;
 import java.io.IOException;
