@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.rocketlabs.behatide.application.component.startup.HomeScreen?>
+<?import de.rocketlabs.behatide.application.component.startup.ProjectQuickSelection?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.Scene?>
+<?import javafx.stage.Stage?>
+<Stage resizable="false">
+    <scene>
+        <Scene>
+            <HBox>
+                <ProjectQuickSelection/>
+                <HomeScreen HBox.hgrow="ALWAYS"/>
+            </HBox>
+        </Scene>
+    </scene>
+</Stage>

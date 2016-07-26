@@ -1,7 +1,7 @@
 package de.rocketlabs.behatide.configuration.components.storage;
 
-import de.rocketlabs.behatide.application.configuration.components.exceptions.StateStorageException;
-import de.rocketlabs.behatide.application.configuration.components.storage.*;
+import de.rocketlabs.behatide.application.configuration.exceptions.StateStorageException;
+import de.rocketlabs.behatide.application.configuration.storage.*;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Before;

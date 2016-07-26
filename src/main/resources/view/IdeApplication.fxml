@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.rocketlabs.behatide.application.component.Editor?>
+<?import de.rocketlabs.behatide.application.component.MainMenuBar?>
+<?import de.rocketlabs.behatide.application.component.MainScene?>
+<?import javafx.scene.Scene?>
+<?import javafx.stage.Stage?>
+<Stage xmlns:fx="http://javafx.com/fxml">
+    <scene>
+        <Scene stylesheets="@../css/editor.css">
+            <MainScene prefWidth="500" prefHeight="500">
+                <top>
+                    <MainMenuBar fx:id="menuBar"/>
+                </top>
+                <center>
+                    <Editor/>
+                </center>
+            </MainScene>
+        </Scene>
+    </scene>
+</Stage>

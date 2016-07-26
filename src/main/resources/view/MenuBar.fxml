@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.rocketlabs.behatide.application.component.MainMenuBar?>
+<?import de.rocketlabs.behatide.application.component.menu.FileMenu?>
+<?import de.rocketlabs.behatide.application.component.menu.HelpMenu?>
+<fx:root type="MainMenuBar" xmlns:fx="http://javafx.com/fxml">
+    <FileMenu/>
+    <HelpMenu/>
+</fx:root>

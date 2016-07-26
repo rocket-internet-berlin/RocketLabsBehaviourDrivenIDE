@@ -1,41 +1,40 @@
 package de.rocketlabs.behatide.application;
 
-import de.rocketlabs.behatide.application.configuration.components.storage.StateStorageManager;
+import de.rocketlabs.behatide.application.configuration.storage.StateStorageManager;
 import de.rocketlabs.behatide.application.event.EventManager;
-import de.rocketlabs.behatide.application.projects.RecentProjectModel;
-import de.rocketlabs.behatide.application.projects.RecentProjectsManager;
-import de.rocketlabs.behatide.application.projects.event.LoadProjectEvent;
-import de.rocketlabs.behatide.application.projects.event.LoadProjectListener;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.layout.Region;
-import javafx.stage.Stage;
+import de.rocketlabs.behatide.application.event.FileLoadFailedEvent;
+import de.rocketlabs.behatide.application.event.LoadProjectEvent;
+import de.rocketlabs.behatide.application.event.ShowStartupEvent;
+import de.rocketlabs.behatide.application.event.listener.FileLoadFailedEventListener;
+import de.rocketlabs.behatide.application.event.listener.LoadProjectListener;
+import de.rocketlabs.behatide.application.event.listener.ShowStartupEventListener;
+import de.rocketlabs.behatide.application.manager.project.ProjectManager;
+import de.rocketlabs.behatide.application.manager.project.ProjectMetaData;
 
 import java.io.IOException;
+import java.util.List;
 
 public class IdeApplication {
 
-    public void initializeStage(Stage stage) throws IOException {
+    public void initializeStage() throws IOException {
         StateStorageManager storageManager = StateStorageManager.getInstance();
 
-        RecentProjectsManager recentProjectsManager = storageManager.loadState(RecentProjectsManager.class);
-        RecentProjectModel openProject = recentProjectsManager.getOpenProject();
+        ProjectManager projectManager = storageManager.loadState(ProjectManager.class);
+        List<ProjectMetaData> openProjects = projectManager.getOpenProjects();
 
-        Scene scene;
-        EventManager.addListener(LoadProjectEvent.class, new LoadProjectListener());
-        if (openProject == null) {
-            scene = loadProjectSelection();
-            stage.setScene(scene);
-            stage.setTitle("Rocket Labs Behat IDE");
-            stage.show();
-            stage.centerOnScreen();
+        registerEventListeners();
+
+        if (openProjects.isEmpty()) {
+            EventManager.fireEvent(new ShowStartupEvent());
         } else {
-            EventManager.fireEvent(new LoadProjectEvent(openProject, stage));
+            openProjects.forEach(project -> EventManager.fireEvent(new LoadProjectEvent(project)));
         }
     }
 
-    private Scene loadProjectSelection() throws IOException {
-        Region root = FXMLLoader.load(getClass().getResource("/view/projectSelection.fxml"));
-        return new Scene(root, root.getPrefWidth(), root.getPrefHeight());
+    private void registerEventListeners() {
+        EventManager.addListener(LoadProjectEvent.class, new LoadProjectListener());
+        EventManager.addListener(FileLoadFailedEvent.class, new FileLoadFailedEventListener());
+        EventManager.addListener(ShowStartupEvent.class, new ShowStartupEventListener());
     }
+
 }

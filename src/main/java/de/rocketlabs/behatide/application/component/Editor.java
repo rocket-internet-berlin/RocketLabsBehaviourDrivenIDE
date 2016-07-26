@@ -1,10 +1,8 @@
 package de.rocketlabs.behatide.application.component;
 
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.StyleSpans;
@@ -29,11 +27,9 @@ public class Editor extends VBox
 
     private static final String KEYWORD_REGEX = "(" + String.join("|", BEHAT_KEYWORDS) + ")";
     private static final Pattern PATTERN = Pattern.compile("(?<KEYWORD>" + KEYWORD_REGEX + ")");
-    private static final String editorCode = String.join("\n", new String[] {"Feature: Setup_ClearKvs\n" +
-            "\n" +
+    private static final String EDITOR_CODE = "Feature: Setup_ClearKvs\n\n" +
             "  Scenario: Destroy KVS\n" +
-            "    When I destroy the KVS\n" +
-            ""});
+        "    When I destroy the KVS\n";
 
     private static final Integer BYTE_VALUE_BLANK_LINE = 32;
 
@@ -81,10 +77,8 @@ public class Editor extends VBox
         codeArea.getStyleClass().add("editor-test-class");
         codeArea.richChanges()
                 .filter(ch -> !ch.getInserted().equals(ch.getRemoved()))
-                .subscribe(change -> {
-                    codeArea.setStyleSpans(0, computeHighlighting(codeArea.getText()));
-                });
-        codeArea.replaceText(0, 0, editorCode);
+            .subscribe(change -> codeArea.setStyleSpans(0, computeHighlighting(codeArea.getText())));
+        codeArea.replaceText(0, 0, EDITOR_CODE);
         codeArea.setPrefSize(1000, 1000);
 
         return this;
