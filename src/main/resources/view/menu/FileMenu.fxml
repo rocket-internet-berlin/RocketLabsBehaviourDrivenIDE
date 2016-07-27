@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.rocketlabs.behatide.application.component.menu.FileMenu?>
+<?import javafx.scene.control.*?>
+<fx:root type="FileMenu" xmlns:fx="http://javafx.com/fxml">
+    <MenuItem text="Open" onAction="#openAction"/>
+    <MenuItem text="Save" onAction="#saveAction"/>
+    <SeparatorMenuItem/>
+    <MenuItem text="Settings" onAction="#settingsAction"/>
+    <SeparatorMenuItem/>
+    <MenuItem text="Exit" onAction="#exitAction"/>
+</fx:root>

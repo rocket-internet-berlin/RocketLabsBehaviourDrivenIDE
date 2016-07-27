@@ -1,9 +1,9 @@
 package de.rocketlabs.behatide.configuration.components.storage;
 
-import de.rocketlabs.behatide.application.configuration.components.storage.DefaultStateStorage;
-import de.rocketlabs.behatide.application.configuration.components.storage.State;
-import de.rocketlabs.behatide.application.configuration.components.storage.StateStorageManager;
-import de.rocketlabs.behatide.application.configuration.components.storage.Storage;
+import de.rocketlabs.behatide.application.configuration.storage.DefaultStateStorage;
+import de.rocketlabs.behatide.application.configuration.storage.State;
+import de.rocketlabs.behatide.application.configuration.storage.StateStorageManager;
+import de.rocketlabs.behatide.application.configuration.storage.Storage;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Before;

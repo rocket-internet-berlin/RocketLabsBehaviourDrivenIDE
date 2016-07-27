@@ -1,18 +1,19 @@
 package de.rocketlabs.behatide.application.component;
 
-import java.util.function.IntFunction;
-
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
-
-import org.reactfx.collection.LiveList;;
+import org.reactfx.collection.LiveList;
 import org.reactfx.value.Val;
 
-class LineNumber implements IntFunction {
+import java.util.function.IntFunction;
+
+;
+
+class LineNumber implements IntFunction<Node> {
 
     private static final Insets DEFAULT_INSETS = new Insets(0.0, 5.0, 0.0, 5.0);
     private static final Font DEFAULT_FONT =

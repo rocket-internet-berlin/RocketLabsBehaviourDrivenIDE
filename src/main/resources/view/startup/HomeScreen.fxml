@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.rocketlabs.behatide.application.component.startup.HomeScreen?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.VBox?>
+<fx:root type="HomeScreen" xmlns:fx="http://javafx.com/fxml">
+    <center>
+        <VBox alignment="TOP_CENTER">
+            <ImageView>
+                <Image url="@/images/behat_logo.png"/>
+            </ImageView>
+            <Label>BehatIDE</Label>
+            <Label fx:id="version"/>
+            <Button prefWidth="300" onAction="#onCreateNewProject">Create new Project</Button>
+        </VBox>
+    </center>
+</fx:root>
