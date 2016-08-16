@@ -12,6 +12,7 @@ import de.rocketlabs.behatide.domain.model.Project;
 import de.rocketlabs.behatide.domain.model.ProjectLoader;
 import de.rocketlabs.behatide.modules.behat.BehatModule;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
@@ -31,7 +32,7 @@ public class LoadProjectListener implements EventListener<LoadProjectEvent> {
         ProjectMetaData projectMetaData = event.getProjectMetaData();
         Project project = projectLoader.loadProject(projectMetaData.getPath());
 
-        if (project == null) {
+        if (project == null && false) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Could not load project");
             alert.showAndWait();
@@ -54,7 +55,8 @@ public class LoadProjectListener implements EventListener<LoadProjectEvent> {
 
     private void openMainWindow(Project project) throws IOException {
         Stage stage = FXMLLoader.load(getClass().getResource("/view/IdeApplication.fxml"));
-        MainScene root = ((MainScene) stage.getScene().getRoot());
+        Scene scene = stage.getScene();
+        MainScene root = ((MainScene) scene.getRoot());
         root.setProject(project);
         stage.setTitle("Rocket Labs Behat IDE");
         stage.show();

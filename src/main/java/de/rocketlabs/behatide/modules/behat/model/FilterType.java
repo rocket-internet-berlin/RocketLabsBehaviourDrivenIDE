@@ -1,5 +1,7 @@
 package de.rocketlabs.behatide.modules.behat.model;
 
+import de.rocketlabs.behatide.modules.behat.filter.*;
+
 import java.lang.reflect.InvocationTargetException;
 
 public enum FilterType {

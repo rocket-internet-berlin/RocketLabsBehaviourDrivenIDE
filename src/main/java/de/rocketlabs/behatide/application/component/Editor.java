@@ -1,5 +1,8 @@
 package de.rocketlabs.behatide.application.component;
 
+import de.rocketlabs.behatide.application.keymanager.KeyManager;
+import de.rocketlabs.behatide.application.keymanager.listener.NewLineListener;
+import de.rocketlabs.behatide.application.keymanager.listener.TabListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.input.KeyCode;
@@ -16,25 +19,30 @@ import java.util.function.IntFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
-public class Editor extends VBox
-{
-
-    private static final String[] BEHAT_KEYWORDS = new String[] {
+public class Editor extends VBox {
+    private static final String[] BEHAT_KEYWORDS = new String[]{
             "Feature", "Scenario Outline", "Scenario Template", "Scenario", "Examples",
             "Scenarios", "When", "Then", "Given", "And"
     };
 
     private static final String KEYWORD_REGEX = "(" + String.join("|", BEHAT_KEYWORDS) + ")";
     private static final Pattern PATTERN = Pattern.compile("(?<KEYWORD>" + KEYWORD_REGEX + ")");
-    private static final String EDITOR_CODE = "Feature: Setup_ClearKvs\n\n" +
-            "  Scenario: Destroy KVS\n" +
-        "    When I destroy the KVS\n";
+    private static final String EDITOR_CODE = String.join("\n", "Feature: Setup_Text",
+            "",
+            "  Scenario: Behat IDE-editor Text Area",
+            "    When I start the application",
+            "    Then A new Stage gets created",
+            "    And I see a editor window",
+            "    When I click on the x of the Window",
+            "    Then The the window gets closed",
+            "    When Type any character",
+            "    Then the character should appear on the screen");
 
-    private static final Integer BYTE_VALUE_BLANK_LINE = 32;
 
     private static final Set<String> CSS_CLASS_KEYWORD = Collections.singleton("keyword");
     private static final Set<String> CSS_CLASS_DEFAULT = Collections.singleton("default");
+
+    private KeyManager keyManager;
 
     @FXML
     public CodeArea codeArea;
@@ -45,21 +53,21 @@ public class Editor extends VBox
         fxmlLoader.setController(this);
         try {
             fxmlLoader.load();
+            registerKeyManager();
 
             setDesignToCodeArea();
             addEventsToCodeArea();
 
         } catch (IOException exception) {
-          throw new RuntimeException(exception);
+            throw new RuntimeException(exception);
         }
     }
 
-    private static StyleSpans<Collection<String>> computeHighlighting(String text)
-    {
+    private static StyleSpans<Collection<String>> computeHighlighting(String text) {
         Matcher matcher = PATTERN.matcher(text);
         int lastKwEnd = 0;
         StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
-        while(matcher.find()) {
+        while (matcher.find()) {
             spansBuilder.add(CSS_CLASS_DEFAULT, matcher.start() - lastKwEnd);
             spansBuilder.add(CSS_CLASS_KEYWORD, matcher.end() - matcher.start());
             lastKwEnd = matcher.end();
@@ -68,65 +76,32 @@ public class Editor extends VBox
         return spansBuilder.create();
     }
 
-    private Editor setDesignToCodeArea()
-    {
-        IntFunction<String> format = (digits -> "%"+ (digits < 2 ? 2 : digits) + "d");
+    private Editor setDesignToCodeArea() {
+        IntFunction<String> format = (digits -> "%" + (digits < 2 ? 2 : digits) + "d");
         LineNumber ln = new LineNumber(codeArea.getParagraphs(), format);
 
         codeArea.setParagraphGraphicFactory(ln);
         codeArea.getStyleClass().add("editor-test-class");
         codeArea.richChanges()
                 .filter(ch -> !ch.getInserted().equals(ch.getRemoved()))
-            .subscribe(change -> codeArea.setStyleSpans(0, computeHighlighting(codeArea.getText())));
+                .subscribe(change -> codeArea.setStyleSpans(0, computeHighlighting(codeArea.getText())));
         codeArea.replaceText(0, 0, EDITOR_CODE);
         codeArea.setPrefSize(1000, 1000);
 
         return this;
     }
 
-    private Editor addEventsToCodeArea()
-    {
-        codeArea.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.TAB) {
-                eventTabCalculation();
-                e.consume();
-            } else if (e.getCode() == KeyCode.ENTER) {
-                eventNewLine();
-                e.consume();
-            }
-        });
+    private Editor addEventsToCodeArea() {
+        codeArea.setOnKeyPressed(e ->
+                keyManager.fireKeyEvent(e)
+        );
 
         return this;
     }
 
-    private void eventTabCalculation()
-    {
-        StringBuilder sb = new StringBuilder(2);
-        for (int i = 0; i < 2; i++) {
-            sb.append(" ");
-        }
-        codeArea.insertText(codeArea.getCaretPosition(), sb.toString());
+    private void registerKeyManager() {
+        keyManager = new KeyManager();
+        keyManager.addMapping(KeyCode.TAB, new TabListener(codeArea));
+        keyManager.addMapping(KeyCode.ENTER, new NewLineListener(codeArea));
     }
-
-    private void eventNewLine()
-    {
-        String str = codeArea.getText().substring(0, codeArea.getCaretPosition());
-        String[] parts = str.split("\n");
-        String lastLine = parts[parts.length - 1];
-        Integer nextIndent = 0;
-        for (int value : lastLine.getBytes()) {
-            if (value == BYTE_VALUE_BLANK_LINE) {
-                nextIndent++;
-            } else {
-                break;
-            }
-        }
-        StringBuilder sb = new StringBuilder(nextIndent);
-        sb.append("\n");
-        for (int i = 0; i < nextIndent; i++) {
-            sb.append(" ");
-        }
-        codeArea.insertText(codeArea.getCaretPosition(), sb.toString());
-    }
-
 }

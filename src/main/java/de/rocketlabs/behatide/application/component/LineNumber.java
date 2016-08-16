@@ -11,8 +11,6 @@ import org.reactfx.value.Val;
 
 import java.util.function.IntFunction;
 
-;
-
 class LineNumber implements IntFunction<Node> {
 
     private static final Insets DEFAULT_INSETS = new Insets(0.0, 5.0, 0.0, 5.0);

@@ -2,6 +2,7 @@ package de.rocketlabs.behatide.modules.behat.model;
 
 import de.rocketlabs.behatide.domain.model.Profile;
 import de.rocketlabs.behatide.domain.model.Suite;
+import de.rocketlabs.behatide.modules.behat.filter.GherkinFilter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
