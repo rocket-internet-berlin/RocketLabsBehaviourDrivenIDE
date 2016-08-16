@@ -2,6 +2,9 @@ package de.rocketlabs.behatide.application.configuration.storage;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapter;
+import com.google.gson.TypeAdapterFactory;
+import com.google.gson.reflect.TypeToken;
 import de.rocketlabs.behatide.application.configuration.exceptions.StateStorageException;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +18,7 @@ public class StateStorageManager {
 
     private Map<State, Object> loadedStates = new HashMap<>();
     private Map<State, String> statesToSave = new HashMap<>();
-    private Gson gson = new GsonBuilder().create();
+    private Gson gson;
 
     private StateStorageManager() {
     }
@@ -25,6 +28,27 @@ public class StateStorageManager {
             instance = new StateStorageManager();
         }
         return instance;
+    }
+
+    private Gson getGson() {
+        if (gson == null) {
+            GsonBuilder builder = new GsonBuilder();
+            if (getClass().getPackage().getImplementationTitle() == null) {
+                builder.setPrettyPrinting();
+            }
+            builder.registerTypeAdapterFactory(
+                new TypeAdapterFactory() {
+                    @Override
+                    public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
+
+                        return null;
+                    }
+                }
+
+                                              );
+            gson = builder.create();
+        }
+        return gson;
     }
 
     @NotNull
@@ -83,11 +107,11 @@ public class StateStorageManager {
     }
 
     private String serializeData(Object data) {
-        return gson.toJson(data);
+        return GsonUtils.getGson().toJson(data);
     }
 
     private <T> T deserializeData(Class<T> dataClass, String json) {
-        return gson.fromJson(json, dataClass);
+        return GsonUtils.getGson().fromJson(json, dataClass);
     }
 
     public void save() {

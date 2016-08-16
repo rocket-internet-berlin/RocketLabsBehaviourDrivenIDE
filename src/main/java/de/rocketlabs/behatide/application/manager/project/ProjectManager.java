@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@State(name = "ModuleManager")
+@State(name = "ProjectManager")
 public class ProjectManager {
 
     private static final int RECENT_PROJECTS_LIMIT = 5;

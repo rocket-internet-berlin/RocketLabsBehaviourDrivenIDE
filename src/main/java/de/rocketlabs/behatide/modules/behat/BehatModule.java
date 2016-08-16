@@ -1,16 +1,20 @@
 package de.rocketlabs.behatide.modules.behat;
 
 import de.rocketlabs.behatide.domain.model.Configuration;
-import de.rocketlabs.behatide.domain.model.ProjectConfiguration;
 import de.rocketlabs.behatide.domain.model.ProjectLoader;
+import de.rocketlabs.behatide.domain.model.ProjectType;
 import de.rocketlabs.behatide.domain.parser.ConfigurationReader;
 import de.rocketlabs.behatide.modules.AbstractModule;
 import de.rocketlabs.behatide.modules.behat.model.BehatConfiguration;
+import de.rocketlabs.behatide.modules.behat.model.ProjectConfiguration;
 import de.rocketlabs.behatide.modules.behat.parser.BehatConfigurationReader;
 
-import java.awt.*;
+import java.util.LinkedList;
+import java.util.List;
 
 public class BehatModule extends AbstractModule {
+
+    private transient List<ProjectType> projectSetups;
 
     @Override
     protected void configure() {
@@ -20,17 +24,11 @@ public class BehatModule extends AbstractModule {
     }
 
     @Override
-    public String getProjectTypeName() {
-        return "Behat Project";
-    }
-
-    @Override
-    public Image getProjectTypeIcon() {
-        return null;
-    }
-
-    @Override
-    public ProjectConfiguration getDefaultProjectConfiguration() {
-        return new de.rocketlabs.behatide.modules.behat.model.ProjectConfiguration();
+    public List<ProjectType> getProjectTypes() {
+        if (projectSetups == null) {
+            projectSetups = new LinkedList<>();
+            projectSetups.add(new ProjectType("Behat Project", null, new ProjectConfiguration()));
+        }
+        return projectSetups;
     }
 }

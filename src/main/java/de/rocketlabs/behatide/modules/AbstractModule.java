@@ -1,14 +1,28 @@
 package de.rocketlabs.behatide.modules;
 
-import de.rocketlabs.behatide.domain.model.ProjectConfiguration;
+import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
+import de.rocketlabs.behatide.application.configuration.storage.ExtendableSerializable;
+import de.rocketlabs.behatide.application.configuration.storage.GsonUtils;
+import de.rocketlabs.behatide.domain.model.ProjectType;
 
-import java.awt.*;
+import java.util.List;
 
-public abstract class AbstractModule extends com.google.inject.AbstractModule {
+public abstract class AbstractModule extends com.google.inject.AbstractModule implements
+                                                                              ExtendableSerializable<AbstractModule> {
 
-    public abstract String getProjectTypeName();
+    private static final RuntimeTypeAdapterFactory<AbstractModule> adapter =
+        RuntimeTypeAdapterFactory.of(AbstractModule.class);
 
-    public abstract Image getProjectTypeIcon();
+    @Override
+    public RuntimeTypeAdapterFactory<AbstractModule> getStaticAdapter() {
+        return adapter;
+    }
 
-    public abstract ProjectConfiguration getDefaultProjectConfiguration();
+    public AbstractModule() {
+        registerClass();
+        GsonUtils.registerType(getStaticAdapter());
+    }
+
+    public abstract List<ProjectType> getProjectTypes();
+
 }

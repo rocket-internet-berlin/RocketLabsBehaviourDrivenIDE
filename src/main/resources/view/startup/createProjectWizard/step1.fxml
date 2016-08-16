@@ -3,12 +3,16 @@
 <?import de.rocketlabs.behatide.application.component.startup.wizard.CreateProjectStep1?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
 <fx:root type="CreateProjectStep1" minWidth="400" stylesheets="@/css/wizard.css" xmlns:fx="http://javafx.com/fxml">
     <content>
         <BorderPane>
             <left>
                 <ListView fx:id="projectTypeList"/>
             </left>
+            <center>
+                <Pane fx:id="editorPane"/>
+            </center>
         </BorderPane>
     </content>
 </fx:root>

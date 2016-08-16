@@ -1,53 +1,69 @@
 package de.rocketlabs.behatide.modules.behat.model;
 
-import de.rocketlabs.behatide.application.configuration.PathConfigurationField;
-import de.rocketlabs.behatide.domain.ConfigurationField;
+import de.rocketlabs.behatide.application.component.IdeForm;
+import de.rocketlabs.behatide.modules.behat.form.ProjectCreationForm;
+import javafx.beans.property.SimpleStringProperty;
 
-import java.util.LinkedList;
-import java.util.List;
+public class ProjectConfiguration implements de.rocketlabs.behatide.domain.model
+                                                 .ProjectConfiguration<ProjectConfiguration> {
 
-public class ProjectConfiguration implements de.rocketlabs.behatide.domain.model.ProjectConfiguration {
-
-    private final PathConfigurationField behatConfigurationFile;
-    private final PathConfigurationField projectLocation;
-    private final PathConfigurationField behatExecutable;
+    private final SimpleStringProperty behatConfigurationFile;
+    private final SimpleStringProperty projectLocation;
+    private final SimpleStringProperty behatExecutable;
 
     public ProjectConfiguration() {
-        behatConfigurationFile = new PathConfigurationField("Configuration file");
-        projectLocation = new PathConfigurationField("Project location");
-        behatExecutable = new PathConfigurationField("Behat executable");
-    }
-
-    @Override
-    public List<ConfigurationField> getFields() {
-        return new LinkedList<ConfigurationField>() {{
-            add(behatConfigurationFile);
-            add(projectLocation);
-            add(behatExecutable);
-        }};
+        behatConfigurationFile = new SimpleStringProperty();
+        projectLocation = new SimpleStringProperty();
+        behatExecutable = new SimpleStringProperty();
     }
 
     public String getBehatConfigurationFile() {
-        return behatConfigurationFile.getData();
+        return behatConfigurationFile.get();
+    }
+
+    public SimpleStringProperty behatConfigurationFileProperty() {
+        return behatConfigurationFile;
+    }
+
+    public void setBehatConfigurationFile(String behatConfigurationFile) {
+        this.behatConfigurationFile.set(behatConfigurationFile);
     }
 
     public String getProjectLocation() {
-        return projectLocation.getData();
+        return projectLocation.get();
+    }
+
+    public SimpleStringProperty projectLocationProperty() {
+        return projectLocation;
+    }
+
+    public void setProjectLocation(String projectLocation) {
+        this.projectLocation.set(projectLocation);
     }
 
     public String getBehatExecutable() {
-        return behatExecutable.getData();
+        return behatExecutable.get();
     }
 
-    public void setBehatConfigurationFile(String path) {
-        behatConfigurationFile.setData(path);
+    public SimpleStringProperty behatExecutableProperty() {
+        return behatExecutable;
     }
 
-    public void setProjectLocation(String path) {
-        projectLocation.setData(path);
+    public void setBehatExecutable(String behatExecutable) {
+        this.behatExecutable.set(behatExecutable);
     }
 
-    public void setBehatExecutable(String path) {
-        behatExecutable.setData(path);
+    @Override
+    public ProjectConfiguration getClone() {
+        ProjectConfiguration projectConfiguration = new ProjectConfiguration();
+        projectConfiguration.setBehatConfigurationFile(getBehatConfigurationFile());
+        projectConfiguration.setBehatExecutable(getBehatExecutable());
+        projectConfiguration.setProjectLocation(getProjectLocation());
+        return projectConfiguration;
+    }
+
+    @Override
+    public IdeForm getForm() {
+        return new ProjectCreationForm(this);
     }
 }
