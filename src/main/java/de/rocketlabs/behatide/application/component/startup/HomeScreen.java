@@ -1,6 +1,10 @@
 package de.rocketlabs.behatide.application.component.startup;
 
 import de.rocketlabs.behatide.application.component.startup.wizard.CreateProjectWizard;
+import de.rocketlabs.behatide.application.event.EventManager;
+import de.rocketlabs.behatide.application.event.LoadProjectEvent;
+import de.rocketlabs.behatide.domain.model.Project;
+import de.rocketlabs.behatide.domain.model.ProjectConfiguration;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -46,6 +50,12 @@ public class HomeScreen extends BorderPane {
     @FXML
     private void onCreateNewProject() {
         CreateProjectWizard wizard = new CreateProjectWizard();
-        wizard.showAndWait();
+        wizard.showAndWait().ifPresent(result -> {
+            Object userData = wizard.getUserData();
+            if (userData instanceof ProjectConfiguration) {
+                Project project = ((ProjectConfiguration) userData).createProject();
+                EventManager.fireEvent(new LoadProjectEvent(project.getMetaData()));
+            }
+        });
     }
 }

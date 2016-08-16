@@ -7,4 +7,6 @@ public interface ProjectConfiguration<T extends ProjectConfiguration> extends Cl
     T getClone();
 
     IdeForm getForm();
+
+    Project createProject();
 }

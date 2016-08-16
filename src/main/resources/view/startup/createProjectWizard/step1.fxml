@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.rocketlabs.behatide.application.component.startup.wizard.CreateProjectStep1?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.Pane?>
-<fx:root type="CreateProjectStep1" minWidth="400" stylesheets="@/css/wizard.css" xmlns:fx="http://javafx.com/fxml">
+<fx:root type="CreateProjectStep1" minWidth="700" stylesheets="@/css/wizard.css" xmlns:fx="http://javafx.com/fxml">
     <content>
-        <BorderPane>
+        <BorderPane fx:id="pane">
             <left>
-                <ListView fx:id="projectTypeList"/>
+                <ListView fx:id="projectTypeList">
+                    <BorderPane.margin>
+                        <Insets right="25.0"/>
+                    </BorderPane.margin>
+                </ListView>
             </left>
-            <center>
-                <Pane fx:id="editorPane"/>
-            </center>
         </BorderPane>
     </content>
 </fx:root>
