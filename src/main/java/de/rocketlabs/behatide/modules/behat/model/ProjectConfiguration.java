@@ -5,8 +5,6 @@ import de.rocketlabs.behatide.domain.model.Project;
 import de.rocketlabs.behatide.modules.behat.form.ProjectCreationForm;
 import javafx.beans.property.SimpleStringProperty;
 
-import java.io.File;
-
 public class ProjectConfiguration implements de.rocketlabs.behatide.domain.model
                                                  .ProjectConfiguration<ProjectConfiguration> {
 
@@ -72,7 +70,6 @@ public class ProjectConfiguration implements de.rocketlabs.behatide.domain.model
 
     @Override
     public Project createProject() {
-        File projectDirectory = new File(getProjectLocation());
         return de.rocketlabs.behatide.modules.behat.model.Project.generateProject(this);
     }
 }
