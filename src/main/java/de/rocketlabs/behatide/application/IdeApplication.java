@@ -1,6 +1,5 @@
 package de.rocketlabs.behatide.application;
 
-import de.rocketlabs.behatide.application.component.MainScene;
 import de.rocketlabs.behatide.application.configuration.storage.StateStorageManager;
 import de.rocketlabs.behatide.application.event.EventManager;
 import de.rocketlabs.behatide.application.event.FileLoadFailedEvent;
@@ -11,8 +10,6 @@ import de.rocketlabs.behatide.application.event.listener.LoadProjectListener;
 import de.rocketlabs.behatide.application.event.listener.ShowStartupEventListener;
 import de.rocketlabs.behatide.application.manager.project.ProjectManager;
 import de.rocketlabs.behatide.application.manager.project.ProjectMetaData;
-import javafx.fxml.FXMLLoader;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.List;
@@ -33,10 +30,6 @@ public class IdeApplication {
             openProjects.forEach(project -> EventManager.fireEvent(new LoadProjectEvent(project)));
         }
     }
-
-    public void checkAndRunKeyEvents() {
-    }
-
 
     private void registerEventListeners() {
         EventManager.addListener(LoadProjectEvent.class, new LoadProjectListener());

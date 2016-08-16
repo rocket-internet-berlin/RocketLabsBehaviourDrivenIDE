@@ -12,7 +12,6 @@ import de.rocketlabs.behatide.domain.model.Project;
 import de.rocketlabs.behatide.domain.model.ProjectLoader;
 import de.rocketlabs.behatide.modules.behat.BehatModule;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
@@ -58,18 +57,6 @@ public class LoadProjectListener implements EventListener<LoadProjectEvent> {
         Stage stage = FXMLLoader.load(getClass().getResource("/view/IdeApplication.fxml"));
         Scene scene = stage.getScene();
         MainScene root = ((MainScene) scene.getRoot());
-//        scene.setOnKeyPressed(e -> {
-//            Node target = scene.getFocusOwner();
-//            KeyMap keyMap;
-//            while(target != null && !e.isConsumed()) {
-//                if (target instanceof KeyListenerNode) {
-//                    keyMap = ((KeyListenerNode) target).getKeyMap();
-//                }
-//                if (!e.isConsumed()) {
-//                    target = target.getParent();
-//                }
-//            }
-//        });
         root.setProject(project);
         stage.setTitle("Rocket Labs Behat IDE");
         stage.show();

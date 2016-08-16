@@ -10,9 +10,9 @@ import java.util.Map;
 
 public class KeyManager
 {
-    private Map<KeyCode, List<KeyManagerListener>> keyMap = new HashMap<>();
+    private Map<KeyCode, List<KeyEventListener>> keyMap = new HashMap<>();
 
-    public <T extends Event> void addMap(KeyCode keyCode, KeyManagerListener mapListener)
+    public void addMapping(KeyCode keyCode, KeyEventListener mapListener)
     {
         if (!keyMap.containsKey(keyCode)) {
             keyMap.put(keyCode, new LinkedList<>());
@@ -20,21 +20,11 @@ public class KeyManager
         keyMap.get(keyCode).add(mapListener);
     }
 
-    public <T extends Event> void fireKeyMapEvent(KeyEvent e)
+    public void fireKeyEvent(KeyEvent e)
     {
-        List<KeyManagerListener> listeners = keyMap.get(e.getCode());
+        List<KeyEventListener> listeners = keyMap.get(e.getCode());
         if (listeners != null) {
             listeners.forEach(listener -> listener.handleEvent(e));
         }
     }
-//
-//    public static <T extends Event> void fireEvent(T event)  {
-//
-//        List<EventListener<?>> listeners = map.get(event.getClass());
-//        if (listeners != null) {
-//            listeners.forEach(listener -> {
-//                ((EventListener<T>) listener).handleEvent(event);
-//            });
-//        }
-//    }
 }

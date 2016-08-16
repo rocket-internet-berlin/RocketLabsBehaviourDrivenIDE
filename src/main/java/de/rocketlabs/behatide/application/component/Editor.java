@@ -19,10 +19,8 @@ import java.util.function.IntFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
-public class Editor extends VBox
-{
-    private static final String[] BEHAT_KEYWORDS = new String[] {
+public class Editor extends VBox {
+    private static final String[] BEHAT_KEYWORDS = new String[]{
             "Feature", "Scenario Outline", "Scenario Template", "Scenario", "Examples",
             "Scenarios", "When", "Then", "Given", "And"
     };
@@ -55,26 +53,21 @@ public class Editor extends VBox
         fxmlLoader.setController(this);
         try {
             fxmlLoader.load();
-            registerKeyEvents();
-
-            keyManager = new KeyManager();
-            keyManager.addMap(KeyCode.TAB,  new TabListener(codeArea));
-            keyManager.addMap(KeyCode.ENTER,  new NewLineListener(codeArea));
+            registerKeyManager();
 
             setDesignToCodeArea();
             addEventsToCodeArea();
 
         } catch (IOException exception) {
-          throw new RuntimeException(exception);
+            throw new RuntimeException(exception);
         }
     }
 
-    private static StyleSpans<Collection<String>> computeHighlighting(String text)
-    {
+    private static StyleSpans<Collection<String>> computeHighlighting(String text) {
         Matcher matcher = PATTERN.matcher(text);
         int lastKwEnd = 0;
         StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
-        while(matcher.find()) {
+        while (matcher.find()) {
             spansBuilder.add(CSS_CLASS_DEFAULT, matcher.start() - lastKwEnd);
             spansBuilder.add(CSS_CLASS_KEYWORD, matcher.end() - matcher.start());
             lastKwEnd = matcher.end();
@@ -83,34 +76,32 @@ public class Editor extends VBox
         return spansBuilder.create();
     }
 
-    private Editor setDesignToCodeArea()
-    {
-        IntFunction<String> format = (digits -> "%"+ (digits < 2 ? 2 : digits) + "d");
+    private Editor setDesignToCodeArea() {
+        IntFunction<String> format = (digits -> "%" + (digits < 2 ? 2 : digits) + "d");
         LineNumber ln = new LineNumber(codeArea.getParagraphs(), format);
 
         codeArea.setParagraphGraphicFactory(ln);
         codeArea.getStyleClass().add("editor-test-class");
         codeArea.richChanges()
                 .filter(ch -> !ch.getInserted().equals(ch.getRemoved()))
-            .subscribe(change -> codeArea.setStyleSpans(0, computeHighlighting(codeArea.getText())));
+                .subscribe(change -> codeArea.setStyleSpans(0, computeHighlighting(codeArea.getText())));
         codeArea.replaceText(0, 0, EDITOR_CODE);
         codeArea.setPrefSize(1000, 1000);
 
         return this;
     }
 
-    private Editor addEventsToCodeArea()
-    {
-        codeArea.setOnKeyPressed(e -> {
-            keyManager.fireKeyMapEvent(e);
-        });
+    private Editor addEventsToCodeArea() {
+        codeArea.setOnKeyPressed(e ->
+                keyManager.fireKeyEvent(e)
+        );
 
         return this;
     }
 
-    private void registerKeyEvents()
-    {
-//        KeyMapHandler.addListener(TabEvent.class, new TabListener());
-//        KeyMapHandler.addListener(NewLineEvent.class, new NewLineListener());
+    private void registerKeyManager() {
+        keyManager = new KeyManager();
+        keyManager.addMapping(KeyCode.TAB, new TabListener(codeArea));
+        keyManager.addMapping(KeyCode.ENTER, new NewLineListener(codeArea));
     }
 }
