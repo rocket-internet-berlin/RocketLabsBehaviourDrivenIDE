@@ -5,8 +5,7 @@ import javafx.scene.control.MenuBar;
 
 import java.io.IOException;
 
-public class MainMenuBar extends MenuBar
-{
+public class MainMenuBar extends MenuBar {
 
     public MainMenuBar() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MenuBar.fxml"));

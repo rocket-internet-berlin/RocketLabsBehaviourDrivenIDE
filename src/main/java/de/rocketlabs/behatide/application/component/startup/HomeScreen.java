@@ -38,7 +38,6 @@ public class HomeScreen extends BorderPane {
         version.setText(getVersion());
     }
 
-    @FXML
     private String getVersion() {
         String version = getClass().getPackage().getImplementationVersion();
         if (version == null) {

@@ -39,13 +39,12 @@ public class LoadProjectListener implements EventListener<LoadProjectEvent> {
         Injector injector = Guice.createInjector(module);
         Class<? extends Project> projectClass = injector.getInstance(Project.class).getClass();
 
-
         Map<StorageParameter, String> parameters = new HashMap<StorageParameter, String>() {{
             put(StorageParameter.STORAGE_DIRECTORY, projectMetaData.getPath());
         }};
         Project project = storageManager.loadState(projectClass, parameters);
 
-        if (project == null && false) {
+        if (project == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Could not load project");
             alert.showAndWait();
@@ -64,7 +63,6 @@ public class LoadProjectListener implements EventListener<LoadProjectEvent> {
     public boolean runOnJavaFxThread() {
         return true;
     }
-
 
     private void openMainWindow(Project project) throws IOException {
         Stage stage = FXMLLoader.load(getClass().getResource("/view/IdeApplication.fxml"));
