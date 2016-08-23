@@ -9,12 +9,11 @@ public class EventManager {
 
     private static final Queue<Event> eventsToProcess = new LinkedList<>();
     private static final Worker worker = new Worker();
+    private static Map<Class<? extends Event>, List<EventListener<? extends Event>>> map = new HashMap<>();
 
     static {
         new Thread(worker, "EventWorker").start();
     }
-
-    private static Map<Class<? extends Event>, List<EventListener<? extends Event>>> map = new HashMap<>();
 
     public static <T extends Event> void addListener(Class<T> eventClass, EventListener<T> listener) {
         if (!map.containsKey(eventClass)) {
@@ -23,12 +22,21 @@ public class EventManager {
         map.get(eventClass).add(listener);
     }
 
+    public static <T extends Event> void removeListener(Class<T> eventClass,
+                                                        EventListener<T> listener) {
+        if (!map.containsKey(eventClass)) {
+            return;
+        }
+        map.get(eventClass).remove(listener);
+    }
+
     /**
      * Adds a new event to event queue. The event will be handed over to listeners at some point in the future.
      * Events will be handled sequentially meaning a event added using fireEvent will be process before any event from
      * subsequent fireEvent calls will be handled.
      * <p>
-     * In case of GUI adaptions a listener call will be forwarded to JavaFX event queue using {@link Platform#runLater(Runnable)}. This
+     * In case of GUI adaptions a listener call will be forwarded to JavaFX event queue using
+     * {@link Platform#runLater(Runnable)}. This
      * can cause and additional wait time for an event to be fully processed.
      */
     public static <T extends Event> void fireEvent(T event) {
