@@ -7,6 +7,7 @@ import org.controlsfx.validation.Validator;
 
 public class ProjectCreationForm extends IdeForm {
 
+    public static final String ERR_MSG_EMPTY = "Value cannot be empty";
     private ProjectConfiguration configuration;
 
     public ProjectCreationForm(ProjectConfiguration configuration) {
@@ -32,10 +33,10 @@ public class ProjectCreationForm extends IdeForm {
         projectLocation.textProperty().bindBidirectional(configuration.projectLocationProperty());
         addControl("Project location", projectLocation);
 
-        getValidation().registerValidator(title, Validator.createEmptyValidator("Value cannot be empty"));
-        getValidation().registerValidator(configFile, Validator.createEmptyValidator("Value cannot be empty"));
-        getValidation().registerValidator(executable, Validator.createEmptyValidator("Value cannot be empty"));
-        getValidation().registerValidator(projectLocation, Validator.createEmptyValidator("Value cannot be empty"));
+        getValidation().registerValidator(title, Validator.createEmptyValidator(ERR_MSG_EMPTY));
+        getValidation().registerValidator(configFile, Validator.createEmptyValidator(ERR_MSG_EMPTY));
+        getValidation().registerValidator(executable, Validator.createEmptyValidator(ERR_MSG_EMPTY));
+        getValidation().registerValidator(projectLocation, Validator.createEmptyValidator(ERR_MSG_EMPTY));
         getValidation().setErrorDecorationEnabled(false);
     }
 

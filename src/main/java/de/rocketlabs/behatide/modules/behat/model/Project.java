@@ -31,7 +31,6 @@ public class Project extends de.rocketlabs.behatide.domain.model.Project {
     private BehatConfiguration configuration;
     private byte[] configurationFileHash;
 
-
     @Override
     public String getTitle() {
         return title;
