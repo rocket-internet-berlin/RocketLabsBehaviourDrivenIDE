@@ -2,6 +2,11 @@
 
 <?import de.rocketlabs.behatide.application.component.menu.FileMenu?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.input.KeyCodeCombination?>
 <fx:root type="FileMenu" xmlns:fx="http://javafx.com/fxml">
-    <MenuItem text="Exit" onAction="#exitAction"/>
+    <MenuItem text="Exit" onAction="#exitAction">
+        <accelerator>
+            <KeyCodeCombination shortcut="DOWN" code="Q" shift="UP" control="UP" alt="UP" meta="UP"/>
+        </accelerator>
+    </MenuItem>
 </fx:root>

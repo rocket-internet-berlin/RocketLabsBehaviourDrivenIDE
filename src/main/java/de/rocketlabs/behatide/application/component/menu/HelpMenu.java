@@ -16,7 +16,7 @@ public class HelpMenu extends Menu {
     private ObjectProperty<Scene> scene = new SimpleObjectProperty<>();
 
     public HelpMenu() {
-        super("Help");
+        super("_Help");
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/menu/HelpMenu.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);

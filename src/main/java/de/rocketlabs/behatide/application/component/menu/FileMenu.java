@@ -17,7 +17,7 @@ public class FileMenu extends Menu {
     private ObjectProperty<Scene> scene = new SimpleObjectProperty<>();
 
     public FileMenu() {
-        super("File");
+        super("_File");
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/menu/FileMenu.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
