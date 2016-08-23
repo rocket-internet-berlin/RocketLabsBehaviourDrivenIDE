@@ -321,18 +321,18 @@ String ClassPath() :
 
 PhpClass ClassDeclaration() :
 {
-    String className = null;
+    String moduleName = null;
     List classMembers = null;
 }
 {
     [<ABSTRACT> | <FINAL> ]
     <CLASS>
-    <IDENTIFIER> { className = token.image; }
+    <IDENTIFIER> { moduleName = token.image; }
     [<EXTENDS> <IDENTIFIER>]
     [<IMPLEMENTS> <IDENTIFIER> ( "," <IDENTIFIER>) * ]
     classMembers = ClassMembers()
 
-    { return new PhpClass(className, classMembers); }
+    { return new PhpClass(moduleName, classMembers); }
 }
 
 void EndOfStatement() : {}

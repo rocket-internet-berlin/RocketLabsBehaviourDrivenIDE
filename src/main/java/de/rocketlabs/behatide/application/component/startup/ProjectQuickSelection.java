@@ -1,6 +1,6 @@
 package de.rocketlabs.behatide.application.component.startup;
 
-import de.rocketlabs.behatide.application.configuration.storage.StateStorageManager;
+import de.rocketlabs.behatide.application.configuration.storage.state.StateStorageManager;
 import de.rocketlabs.behatide.application.event.EventManager;
 import de.rocketlabs.behatide.application.event.LoadProjectEvent;
 import de.rocketlabs.behatide.application.manager.project.ProjectManager;

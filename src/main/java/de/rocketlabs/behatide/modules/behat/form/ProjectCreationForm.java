@@ -16,6 +16,10 @@ public class ProjectCreationForm extends IdeForm {
     }
 
     private void initFields() {
+        TextField title = new TextField();
+        title.textProperty().bindBidirectional(configuration.titleProperty());
+        addControl("Title", title);
+
         TextField configFile = new TextField();
         configFile.textProperty().bindBidirectional(configuration.behatConfigurationFileProperty());
         addControl("Configuration File", configFile);
@@ -28,7 +32,7 @@ public class ProjectCreationForm extends IdeForm {
         projectLocation.textProperty().bindBidirectional(configuration.projectLocationProperty());
         addControl("Project location", projectLocation);
 
-
+        getValidation().registerValidator(title, Validator.createEmptyValidator("Value cannot be empty"));
         getValidation().registerValidator(configFile, Validator.createEmptyValidator("Value cannot be empty"));
         getValidation().registerValidator(executable, Validator.createEmptyValidator("Value cannot be empty"));
         getValidation().registerValidator(projectLocation, Validator.createEmptyValidator("Value cannot be empty"));

@@ -2,7 +2,6 @@ package de.rocketlabs.behatide.application.component.startup.wizard;
 
 import de.rocketlabs.behatide.application.component.IdeForm;
 import de.rocketlabs.behatide.application.component.startup.wizard.step1.ProjectItem;
-import de.rocketlabs.behatide.application.configuration.storage.StateStorageManager;
 import de.rocketlabs.behatide.application.manager.modules.ModuleManager;
 import de.rocketlabs.behatide.application.wizard.ValidationWizardStep;
 import de.rocketlabs.behatide.domain.model.ProjectConfiguration;
@@ -52,7 +51,7 @@ public class CreateProjectStep1 extends WizardPane implements ValidationWizardSt
 
     @FXML
     private void initialize() {
-        ModuleManager moduleManager = StateStorageManager.getInstance().loadState(ModuleManager.class);
+        ModuleManager moduleManager = ModuleManager.getInstance();
         List<AbstractModule> loadedModules = moduleManager.getLoadedModules();
         List<ProjectType> knownTypes = new LinkedList<>();
         for (AbstractModule module : loadedModules) {

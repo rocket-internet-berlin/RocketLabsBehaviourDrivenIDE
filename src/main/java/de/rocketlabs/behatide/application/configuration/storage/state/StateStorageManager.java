@@ -1,11 +1,7 @@
-package de.rocketlabs.behatide.application.configuration.storage;
+package de.rocketlabs.behatide.application.configuration.storage.state;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapter;
-import com.google.gson.TypeAdapterFactory;
-import com.google.gson.reflect.TypeToken;
 import de.rocketlabs.behatide.application.configuration.exceptions.StateStorageException;
+import de.rocketlabs.behatide.application.configuration.storage.StorageParameter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -17,8 +13,6 @@ public class StateStorageManager {
     private Map<Class<? extends StateStorage>, StateStorage> storageInstances = new HashMap<>();
 
     private Map<State, Object> loadedStates = new HashMap<>();
-    private Map<State, String> statesToSave = new HashMap<>();
-    private Gson gson;
 
     private StateStorageManager() {
     }
@@ -30,29 +24,13 @@ public class StateStorageManager {
         return instance;
     }
 
-    private Gson getGson() {
-        if (gson == null) {
-            GsonBuilder builder = new GsonBuilder();
-            if (getClass().getPackage().getImplementationTitle() == null) {
-                builder.setPrettyPrinting();
-            }
-            builder.registerTypeAdapterFactory(
-                new TypeAdapterFactory() {
-                    @Override
-                    public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
-
-                        return null;
-                    }
-                }
-
-                                              );
-            gson = builder.create();
-        }
-        return gson;
+    @NotNull
+    public <T> T loadState(@NotNull Class<T> stateClass) {
+        return loadState(stateClass, new HashMap<>());
     }
 
     @NotNull
-    public <T> T loadState(@NotNull Class<T> stateClass) {
+    public <T> T loadState(@NotNull Class<T> stateClass, Map<StorageParameter, String> parameters) {
         State state = stateClass.getAnnotation(State.class);
         if (state == null) {
             throw new StateStorageException("Given object misses @State annotation");
@@ -65,8 +43,8 @@ public class StateStorageManager {
         T object = null;
         for (Storage storage : state.storages()) {
             StateStorage stateStorage = getStateStorage(storage.storageClass());
-            if (stateStorage.hasState(state)) {
-                object = deserializeData(stateClass, stateStorage.loadData(state));
+            if (stateStorage.hasState(state, parameters)) {
+                object = stateStorage.loadData(state, stateClass, parameters);
                 break;
             }
         }
@@ -94,36 +72,29 @@ public class StateStorageManager {
             return storageInstances.get(storageClass);
         }
 
-        return new DefaultStateStorage();
+        return getStateStorage(JsonFileStateStorage.class);
+    }
+
+    public void save() {
+        storageInstances.values().forEach(StateStorage::save);
     }
 
     public void setState(Object data) {
+        setState(data, new HashMap<>());
+    }
+
+    public void setState(Object data, Map<StorageParameter, String> parameters) {
         State state = data.getClass().getAnnotation(State.class);
         if (state == null) {
             throw new StateStorageException("Given object misses @State annotation");
         }
 
-        statesToSave.put(state, serializeData(data));
-    }
-
-    private String serializeData(Object data) {
-        return GsonUtils.getGson().toJson(data);
-    }
-
-    private <T> T deserializeData(Class<T> dataClass, String json) {
-        return GsonUtils.getGson().fromJson(json, dataClass);
-    }
-
-    public void save() {
-        statesToSave.keySet().parallelStream().forEach(state -> {
-            String data = statesToSave.get(state);
-            for (Storage storage : state.storages()) {
-                StateStorage stateStorage = getStateStorage(storage.storageClass());
-                if (stateStorage.saveState(data, state)) {
-                    break;
-                }
+        for (Storage storage : state.storages()) {
+            StateStorage stateStorage = getStateStorage(storage.storageClass());
+            if (stateStorage.supports(data, parameters)) {
+                stateStorage.setState(data, parameters);
             }
-        });
+        }
     }
 
 }

@@ -1,33 +1,41 @@
 package de.rocketlabs.behatide.application.manager.modules;
 
-import de.rocketlabs.behatide.application.configuration.storage.State;
-import de.rocketlabs.behatide.application.configuration.storage.StateStorageManager;
 import de.rocketlabs.behatide.modules.AbstractModule;
 import de.rocketlabs.behatide.modules.behat.BehatModule;
 
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
-@State(name = "ModuleManager")
 public class ModuleManager {
 
-    private List<AbstractModule> loadedModules;
+    private static ModuleManager instance = new ModuleManager();
+    private List<AbstractModule> loadedModules = new LinkedList<>();
+
+    private ModuleManager() {
+        registerModule(new BehatModule());
+    }
+
+    private void registerModule(AbstractModule module) {
+        loadedModules.add(module);
+        module.configureGson();
+    }
+
+    public static ModuleManager getInstance() {
+        return instance;
+    }
+
+    public AbstractModule forName(String name) {
+        for (AbstractModule loadedModule : loadedModules) {
+            if (Objects.equals(loadedModule.getClass().getSimpleName(), name)) {
+                return loadedModule;
+            }
+        }
+        throw new IllegalArgumentException("Unknown module " + name);
+    }
 
     public List<AbstractModule> getLoadedModules() {
-        if (loadedModules == null) {
-            loadedModules = new LinkedList<>();
-            loadStandardModules();
-        }
         return Collections.unmodifiableList(loadedModules);
-    }
-
-    private void loadStandardModules() {
-        loadModule(new BehatModule());
-    }
-
-    public void loadModule(AbstractModule module) {
-        loadedModules.add(module);
-        StateStorageManager.getInstance().setState(this);
     }
 }

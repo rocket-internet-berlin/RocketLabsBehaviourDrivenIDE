@@ -1,11 +1,14 @@
 package de.rocketlabs.behatide.configuration.components.storage;
 
 import de.rocketlabs.behatide.application.configuration.exceptions.StateStorageException;
-import de.rocketlabs.behatide.application.configuration.storage.*;
+import de.rocketlabs.behatide.application.configuration.storage.StorageParameter;
+import de.rocketlabs.behatide.application.configuration.storage.state.*;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Map;
 
 public class StorageManagerTest {
 
@@ -19,7 +22,7 @@ public class StorageManagerTest {
     @Test
     public void testGetStateStorage() {
         StateStorage stateStorage = storageManager.getStateStorage(StateStorage.class);
-        Assert.assertTrue(stateStorage instanceof DefaultStateStorage);
+        Assert.assertTrue(stateStorage instanceof JsonFileStateStorage);
 
         stateStorage = storageManager.getStateStorage(TestStorage.class);
         Assert.assertTrue(stateStorage instanceof TestStorage);
@@ -59,23 +62,31 @@ public class StorageManagerTest {
     public static class TestStorage implements StateStorage {
 
         @Override
-        public String loadData(@NotNull State state) {
+        public <T> T loadData(@NotNull State state, Class<T> stateClass, Map<StorageParameter, String> parameters) {
+
             if (state.name().equals("TestState")) {
-                return "{}";
+                return (T) new TestState();
             }
             return null;
         }
 
         @Override
-        public boolean hasState(@NotNull State storage) {
+        public boolean hasState(@NotNull State storage, Map<StorageParameter, String> parameters) {
             return true;
         }
 
         @Override
-        public boolean saveState(@NotNull String data, State state) {
-            return false;
+        public <T extends Map<StorageParameter, String>> void setState(@NotNull Object data, T parameters) {
         }
 
+        @Override
+        public void save() {
+        }
+
+        @Override
+        public boolean supports(Object data, Map<StorageParameter, String> parameters) {
+            return true;
+        }
     }
 
     @SuppressWarnings("WeakerAccess")
@@ -85,18 +96,26 @@ public class StorageManagerTest {
         }
 
         @Override
-        public String loadData(@NotNull State state) {
+        public <T> T loadData(@NotNull State state, Class<T> stateClass, Map<StorageParameter, String> parameters) {
             return null;
         }
 
         @Override
-        public boolean hasState(@NotNull State storage) {
+        public boolean hasState(@NotNull State storage, Map<StorageParameter, String> parameters) {
             return false;
         }
 
         @Override
-        public boolean saveState(@NotNull String data, State state) {
-            return false;
+        public <T extends Map<StorageParameter, String>> void setState(@NotNull Object data, T parameters) {
+        }
+
+        @Override
+        public void save() {
+        }
+
+        @Override
+        public boolean supports(Object data, Map<StorageParameter, String> parameters) {
+            return true;
         }
     }
 

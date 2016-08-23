@@ -11,11 +11,13 @@ public class ProjectConfiguration implements de.rocketlabs.behatide.domain.model
     private final SimpleStringProperty behatConfigurationFile;
     private final SimpleStringProperty projectLocation;
     private final SimpleStringProperty behatExecutable;
+    private final SimpleStringProperty title;
 
     public ProjectConfiguration() {
         behatConfigurationFile = new SimpleStringProperty();
         projectLocation = new SimpleStringProperty();
         behatExecutable = new SimpleStringProperty();
+        title = new SimpleStringProperty();
     }
 
     public String getBehatConfigurationFile() {
@@ -54,12 +56,25 @@ public class ProjectConfiguration implements de.rocketlabs.behatide.domain.model
         this.behatExecutable.set(behatExecutable);
     }
 
+    public String getTitle() {
+        return title.get();
+    }
+
+    public SimpleStringProperty titleProperty() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title.set(title);
+    }
+
     @Override
     public ProjectConfiguration getClone() {
         ProjectConfiguration projectConfiguration = new ProjectConfiguration();
         projectConfiguration.setBehatConfigurationFile(getBehatConfigurationFile());
         projectConfiguration.setBehatExecutable(getBehatExecutable());
         projectConfiguration.setProjectLocation(getProjectLocation());
+        projectConfiguration.setTitle(getTitle());
         return projectConfiguration;
     }
 
