@@ -20,6 +20,6 @@ public class FileLoadFailedEventListener implements EventListener<FileLoadFailed
 
     @Override
     public boolean runOnJavaFxThread() {
-        return false;
+        return true;
     }
 }

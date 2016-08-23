@@ -1,10 +1,14 @@
 package de.rocketlabs.behatide.application.component.startup;
 
-import de.rocketlabs.behatide.application.configuration.storage.StateStorageManager;
+import de.rocketlabs.behatide.application.configuration.storage.state.StateStorageManager;
+import de.rocketlabs.behatide.application.event.EventManager;
+import de.rocketlabs.behatide.application.event.LoadProjectEvent;
 import de.rocketlabs.behatide.application.manager.project.ProjectManager;
 import de.rocketlabs.behatide.application.manager.project.ProjectMetaData;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.input.KeyCode;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -24,14 +28,18 @@ public class ProjectQuickSelection extends ListView<ProjectMetaData> {
         return 300;
     }
 
-
     private void populateView() {
         StateStorageManager storageManager = StateStorageManager.getInstance();
         ProjectManager projectManager = storageManager.loadState(ProjectManager.class);
         @NotNull List<ProjectMetaData> recentProjects = projectManager.getRecentProjects();
         setVisible(!recentProjects.isEmpty());
         setItems(FXCollections.observableList(recentProjects));
+        getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                EventManager.fireEvent(new LoadProjectEvent(getSelectionModel().getSelectedItem()));
+            }
+        });
     }
-
 
 }

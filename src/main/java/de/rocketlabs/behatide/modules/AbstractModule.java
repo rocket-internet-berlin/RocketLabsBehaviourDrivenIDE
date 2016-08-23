@@ -1,14 +1,12 @@
 package de.rocketlabs.behatide.modules;
 
-import de.rocketlabs.behatide.domain.model.ProjectConfiguration;
+import de.rocketlabs.behatide.domain.model.ProjectType;
 
-import java.awt.*;
+import java.util.List;
 
 public abstract class AbstractModule extends com.google.inject.AbstractModule {
 
-    public abstract String getProjectTypeName();
+    public abstract List<ProjectType> getProjectTypes();
 
-    public abstract Image getProjectTypeIcon();
-
-    public abstract ProjectConfiguration getDefaultProjectConfiguration();
+    public abstract void configureGson();
 }

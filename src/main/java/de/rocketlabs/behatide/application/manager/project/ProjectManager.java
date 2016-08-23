@@ -1,7 +1,7 @@
 package de.rocketlabs.behatide.application.manager.project;
 
-import de.rocketlabs.behatide.application.configuration.storage.State;
-import de.rocketlabs.behatide.application.configuration.storage.StateStorageManager;
+import de.rocketlabs.behatide.application.configuration.storage.state.State;
+import de.rocketlabs.behatide.application.configuration.storage.state.StateStorageManager;
 import de.rocketlabs.behatide.application.event.*;
 import de.rocketlabs.behatide.application.event.EventListener;
 import org.jetbrains.annotations.NotNull;
@@ -31,6 +31,9 @@ public class ProjectManager {
     }
 
     private void addRecentProject(ProjectMetaData recentProject) {
+        if (recentProject == null) {
+            throw new IllegalArgumentException("recentProject may not be null");
+        }
         recentProjects.remove(recentProject);
         recentProjects.add(0, recentProject);
         if (recentProjects.size() > RECENT_PROJECTS_LIMIT) {

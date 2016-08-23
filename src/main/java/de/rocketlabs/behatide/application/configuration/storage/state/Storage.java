@@ -1,4 +1,4 @@
-package de.rocketlabs.behatide.application.configuration.storage;
+package de.rocketlabs.behatide.application.configuration.storage.state;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

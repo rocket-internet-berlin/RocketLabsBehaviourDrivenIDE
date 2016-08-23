@@ -1,10 +1,12 @@
 package de.rocketlabs.behatide.domain.model;
 
-import de.rocketlabs.behatide.domain.ConfigurationField;
+import de.rocketlabs.behatide.application.component.IdeForm;
 
-import java.util.List;
+public interface ProjectConfiguration<T extends ProjectConfiguration> extends Cloneable {
 
-public interface ProjectConfiguration {
+    T getClone();
 
-    List<ConfigurationField> getFields();
+    IdeForm getForm();
+
+    Project createProject();
 }

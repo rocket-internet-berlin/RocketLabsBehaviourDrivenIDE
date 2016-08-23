@@ -1,9 +1,10 @@
 package de.rocketlabs.behatide.configuration.components.storage;
 
-import de.rocketlabs.behatide.application.configuration.storage.DefaultStateStorage;
-import de.rocketlabs.behatide.application.configuration.storage.State;
-import de.rocketlabs.behatide.application.configuration.storage.StateStorageManager;
-import de.rocketlabs.behatide.application.configuration.storage.Storage;
+import de.rocketlabs.behatide.application.configuration.storage.StorageParameter;
+import de.rocketlabs.behatide.application.configuration.storage.state.JsonFileStateStorage;
+import de.rocketlabs.behatide.application.configuration.storage.state.State;
+import de.rocketlabs.behatide.application.configuration.storage.state.StateStorageManager;
+import de.rocketlabs.behatide.application.configuration.storage.state.Storage;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Before;
@@ -47,7 +48,12 @@ public class DefaultStageStorageTest {
 
         try (BufferedReader reader = new BufferedReader(new FileReader(saveFile))) {
             String line = reader.readLine();
-            Assert.assertEquals(SERIALIZED_OBJECT, line);
+            String result = "";
+            while (line != null) {
+                result += line;
+                line = reader.readLine();
+            }
+            Assert.assertEquals(SERIALIZED_OBJECT, result.replace(" ", ""));
         } catch (IOException e) {
             Assert.fail(e.getMessage());
         }
@@ -75,7 +81,7 @@ public class DefaultStageStorageTest {
     @State(
             name = "TestState",
             storages = @Storage(
-                    storageClass = DefaultTestStageStorage.class
+                storageClass = JsonFileTestStageStorage.class
             )
     )
     private static class TestState {
@@ -126,11 +132,11 @@ public class DefaultStageStorageTest {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static class DefaultTestStageStorage extends DefaultStateStorage {
+    public static class JsonFileTestStageStorage extends JsonFileStateStorage {
 
         @NotNull
         @Override
-        protected String getStorageDirectory() {
+        protected String getStorageDirectory(Map<StorageParameter, String> parameters) {
             return System.getProperty("java.io.tmpdir");
         }
     }

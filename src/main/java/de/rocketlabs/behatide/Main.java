@@ -1,7 +1,7 @@
 package de.rocketlabs.behatide;
 
 import de.rocketlabs.behatide.application.IdeApplication;
-import de.rocketlabs.behatide.application.configuration.storage.StateStorageManager;
+import de.rocketlabs.behatide.application.configuration.storage.state.StateStorageManager;
 import de.rocketlabs.behatide.application.event.EventManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
