@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.rocketlabs.behatide.application.component.dialog.AboutDialog?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<fx:root type="AboutDialog" fx:id="AboutDialog" xmlns:fx="http://javafx.com/fxml">
+    <content>
+        <VBox style="-fx-background-color: #FFFFFF; -fx-padding: 50">
+            <Label>Behat Ide</Label>
+            <Label fx:id="version"/>
+        </VBox>
+    </content>
+</fx:root>

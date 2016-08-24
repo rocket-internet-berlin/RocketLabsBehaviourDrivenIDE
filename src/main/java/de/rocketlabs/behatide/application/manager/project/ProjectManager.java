@@ -64,7 +64,7 @@ public class ProjectManager {
         public void handleEvent(LoadProjectEvent event) {
             addRecentProject(event.getProjectMetaData());
             openProjects.add(event.getProjectMetaData());
-
+            StateStorageManager.getInstance().setState(ProjectManager.this);
         }
 
         @Override
@@ -78,6 +78,7 @@ public class ProjectManager {
         @Override
         public void handleEvent(CloseProjectEvent event) {
             openProjects.remove(event.getProjectModel());
+            StateStorageManager.getInstance().setState(ProjectManager.this);
         }
 
         @Override
@@ -91,6 +92,7 @@ public class ProjectManager {
         @Override
         public void handleEvent(FileLoadFailedEvent event) {
             removeRecentProject(event.getPath());
+            StateStorageManager.getInstance().setState(ProjectManager.this);
         }
 
         @Override
