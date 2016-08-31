@@ -18,7 +18,6 @@ public class WidgetButton extends ToggleButton {
     private ImageView imageView;
     @FXML
     private Label label;
-    private Orientation orientation;
     private Widget widget;
 
     WidgetButton() {
@@ -26,13 +25,8 @@ public class WidgetButton extends ToggleButton {
     }
 
     WidgetButton(Orientation orientation) {
-        this.orientation = orientation;
         FXMLLoader fxmlLoader;
-        if (orientation == Orientation.HORIZONTAL) {
-            fxmlLoader = new FXMLLoader(getClass().getResource("/view/widget/WidgetButtonHorizontal.fxml"));
-        } else {
-            fxmlLoader = new FXMLLoader(getClass().getResource("/view/widget/WidgetButtonVertical.fxml"));
-        }
+        fxmlLoader = new FXMLLoader(getClass().getResource("/view/widget/WidgetButton.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
         try {
