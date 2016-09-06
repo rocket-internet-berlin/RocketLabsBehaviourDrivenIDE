@@ -291,10 +291,13 @@ PhpFile PhpFile() :
         <PHP_BEGIN>
         (<SLASH_STAR_COMMENT>)?
         [ LOOKAHEAD(NamespaceDeclaration()) namespace = NamespaceDeclaration() ]
-        (<SLASH_STAR_COMMENT>)?
-        (UseStatement() | <SLASH_STAR_COMMENT>)*
+        (
+            UseStatement() |
+            <SLASH_STAR_COMMENT> |
+            Statement() |
+            LOOKAHEAD([<ABSTRACT> | <FINAL>] <CLASS>) cd = ClassDeclaration() { classes = add(classes, cd); }
+        )*
 
-        ( LOOKAHEAD([<ABSTRACT> | <FINAL>] <CLASS>) cd = ClassDeclaration() { classes = add(classes, cd); } )*
         ( <EOF> | "\u001A" /** ctrl+z char **/)
     |     <EOF>
     )
