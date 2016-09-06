@@ -56,6 +56,8 @@ public class LoadProjectListener implements EventListener<LoadProjectEvent> {
             openMainWindow(project);
         } catch (IOException e) {
             EventManager.fireEvent(new CloseProjectEvent(projectMetaData));
+            //TODO: Improve error handling here
+            throw new RuntimeException(e);
         }
     }
 

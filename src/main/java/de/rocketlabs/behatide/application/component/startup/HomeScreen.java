@@ -7,6 +7,7 @@ import de.rocketlabs.behatide.domain.model.Project;
 import de.rocketlabs.behatide.domain.model.ProjectConfiguration;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 
@@ -49,7 +50,9 @@ public class HomeScreen extends BorderPane {
     @FXML
     private void onCreateNewProject() {
         CreateProjectWizard wizard = new CreateProjectWizard();
-        wizard.showAndWait().ifPresent(result -> {
+        wizard.showAndWait()
+              .filter(predicate -> predicate.getButtonData() == ButtonBar.ButtonData.FINISH)
+              .ifPresent(result -> {
             Object userData = wizard.getUserData();
             if (userData instanceof ProjectConfiguration) {
                 Project project = ((ProjectConfiguration) userData).createProject();
