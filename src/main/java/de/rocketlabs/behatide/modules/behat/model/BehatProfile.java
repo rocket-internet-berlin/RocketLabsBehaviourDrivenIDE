@@ -43,6 +43,11 @@ public final class BehatProfile implements Profile {
         return suites.keySet();
     }
 
+    @Override
+    public List<Suite> getSuites() {
+        return Collections.unmodifiableList(new LinkedList<>(suites.values()));
+    }
+
     public String getLocale() {
         return locale;
     }

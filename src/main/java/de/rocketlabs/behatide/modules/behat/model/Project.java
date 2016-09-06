@@ -6,6 +6,7 @@ import de.rocketlabs.behatide.application.configuration.storage.StorageParameter
 import de.rocketlabs.behatide.application.configuration.storage.state.State;
 import de.rocketlabs.behatide.application.configuration.storage.state.StateStorageManager;
 import de.rocketlabs.behatide.application.manager.project.ProjectMetaData;
+import de.rocketlabs.behatide.domain.model.Configuration;
 import de.rocketlabs.behatide.domain.parser.ConfigurationReader;
 import de.rocketlabs.behatide.modules.behat.BehatModule;
 import de.rocketlabs.behatide.modules.behat.parser.BehatConfigurationReader;
@@ -39,6 +40,11 @@ public class Project extends de.rocketlabs.behatide.domain.model.Project {
     @Override
     public ProjectMetaData getMetaData() {
         return new ProjectMetaData(projectLocation, title, "BehatModule");
+    }
+
+    @Override
+    public Configuration getConfiguration() {
+        return configuration;
     }
 
     private void loadConfigurationFile() {

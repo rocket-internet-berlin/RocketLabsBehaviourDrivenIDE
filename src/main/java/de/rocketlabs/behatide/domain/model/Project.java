@@ -7,4 +7,6 @@ public abstract class Project {
     public abstract String getTitle();
 
     public abstract ProjectMetaData getMetaData();
+
+    public abstract Configuration getConfiguration();
 }
