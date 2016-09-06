@@ -4,5 +4,7 @@ public interface EventListener<T extends Event> {
 
     void handleEvent(T event);
 
-    boolean runOnJavaFxThread();
+    default boolean runOnJavaFxThread() {
+        return false;
+    }
 }

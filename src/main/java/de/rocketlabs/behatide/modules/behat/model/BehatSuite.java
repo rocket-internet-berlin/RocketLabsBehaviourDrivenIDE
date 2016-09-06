@@ -3,6 +3,7 @@ package de.rocketlabs.behatide.modules.behat.model;
 import de.rocketlabs.behatide.domain.model.Suite;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -18,8 +19,18 @@ public class BehatSuite implements Suite {
     }
 
     @Override
+    public List<String> getBaseFiles() {
+        return null;
+    }
+
+    @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public String getProjectFileMask() {
+        return null;
     }
 
     public boolean isEnabled() {
