@@ -207,6 +207,7 @@ TOKEN_MGR_DECLS : {
 
     <FOREACH: "foreach"> |
     <AS: "as"> |
+    <INSTEADOF: "insteadof"> |
 
     <FOR: "for"> |
     <CONTINUE: "continue"> |
@@ -290,10 +291,13 @@ PhpFile PhpFile() :
         <PHP_BEGIN>
         (<SLASH_STAR_COMMENT>)?
         [ LOOKAHEAD(NamespaceDeclaration()) namespace = NamespaceDeclaration() ]
-        (<SLASH_STAR_COMMENT>)?
-        (UseStatement() | <SLASH_STAR_COMMENT>)*
+        (
+            UseStatement() |
+            <SLASH_STAR_COMMENT> |
+            Statement() |
+            LOOKAHEAD([<ABSTRACT> | <FINAL>] <CLASS>) cd = ClassDeclaration() { classes = add(classes, cd); }
+        )*
 
-        ( LOOKAHEAD(<CLASS>) cd = ClassDeclaration() { classes = add(classes, cd); } )*
         ( <EOF> | "\u001A" /** ctrl+z char **/)
     |     <EOF>
     )
@@ -353,6 +357,29 @@ void UseStatement() : {}
     <USE> (<IDENTIFIER> | <FQCN>) [ <AS> <IDENTIFIER> ] EndOfStatement()
 }
 
+void UseTraitStatement() : {}
+{
+    <USE> (<IDENTIFIER> | <FQCN>) (EndOfStatement() | CompoundTraiteStatement())
+}
+
+void CompoundTraiteStatement() : {}
+{
+    "{"
+        ( TraitMethodRedeclaration())*
+    "}"
+}
+
+void TraitMethodRedeclaration() : {}
+{
+    (
+        ((<IDENTIFIER> | <FQCN>) ("::" <IDENTIFIER>)?)
+        (
+            (<AS> Visibility() ((<IDENTIFIER> | <FQCN>) ("::" <IDENTIFIER>)?)) |
+            (<INSTEADOF> <IDENTIFIER>))
+        )
+        EndOfStatement()
+}
+
 List ClassMembers() :
 {
     List classMembers = null;
@@ -376,6 +403,7 @@ PhpFunction MemberDeclaration() :
         (<VAR> | Visibility() | <STATIC> )* <DOLLAR> <VAR_NAME> [ "=" Expression() ] ("," <DOLLAR> <VAR_NAME> [ "=" Expression() ])* EndOfStatement() |
         <GLOBAL> Variable() ("," Variable())* EndOfStatement() |
         <ABSTRACT> [Visibility()] [<STATIC>] <FUNCTION> ["&"] <IDENTIFIER> "(" [ParameterList()] ")" EndOfStatement() |
+        UseTraitStatement() |
         <SLASH_STAR_COMMENT>
     )
     { return cm; }
@@ -416,11 +444,17 @@ PhpDocBlock parseDocBlock(String docBlock) : {}
                     if (tagName != null) {
                         tags.add(new PhpDocBlockTag(tagName, tagDescription));
                     }
-                    tagName = line.substring(1, line.indexOf(' '));
+                  int spaceIndex = line.indexOf(' ');
+                  if(spaceIndex < 0) {
+                    tagName = line.substring(1);
+                    line = "";
+                  } else {
+                    tagName = line.substring(1, spaceIndex);
                     line = line.substring(line.indexOf(tagName) + tagName.length() + 1);
-                    tagDescription = "";
+                  }
                 }
-                if (tagName == null) {
+              tagDescription = "";
+              if (tagName == null) {
                     description += line;
                 } else {
                     tagDescription += line;
@@ -488,7 +522,7 @@ void  ThrowStatement() : {}
 
 void TryBlock() : {}
 {
-    <TRY> CompoundStatement() (<CATCH> "(" <IDENTIFIER> Variable() ")" CompoundStatement())+
+    <TRY> CompoundStatement() (<CATCH> "(" (<IDENTIFIER> | <FQCN>) Variable() ")" CompoundStatement())+
 }
 
 
@@ -537,7 +571,7 @@ void NamespaceStatement() : {}
 
 void InlineFunction() : {}
 {
-     <FUNCTION> "(" [ParameterList()] ")" CompoundStatement()
+     <FUNCTION> "(" [ParameterList()] ")" (<USE> "(" [ParameterList()] ")")? CompoundStatement()
 }
 
 void InterfaceDeclaration() : {}
@@ -727,13 +761,13 @@ void ArrayContent() : {}
 
 void ClassInstantiation() : {}
 {
-    <NEW>  Expression() [LOOKAHEAD(3) "(" ArgumentExpressionList() ")"] |
+    <NEW>  (Expression() | <FQCN>) [LOOKAHEAD(3) "(" ArgumentExpressionList() ")"] |
     <CLONE> Variable()
 }
 
 void ArgumentExpressionList() : {}
 {
-    [Expression()] ( "," Expression() )*
+    [Expression() | InlineFunction()] ( "," Expression() | InlineFunction())*
 }
 
 void Constant() : {}
