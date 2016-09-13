@@ -2,6 +2,7 @@ package de.rocketlabs.behatide.modules.behat.model;
 
 import de.rocketlabs.behatide.application.component.IdeForm;
 import de.rocketlabs.behatide.domain.model.Project;
+import de.rocketlabs.behatide.modules.behat.ProjectFactory;
 import de.rocketlabs.behatide.modules.behat.form.ProjectCreationForm;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -85,6 +86,6 @@ public class ProjectConfiguration implements de.rocketlabs.behatide.domain.model
 
     @Override
     public Project createProject() {
-        return de.rocketlabs.behatide.modules.behat.model.Project.generateProject(this);
+        return ProjectFactory.generateProject(this);
     }
 }
