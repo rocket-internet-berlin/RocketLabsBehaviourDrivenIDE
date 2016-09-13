@@ -19,18 +19,14 @@ public class BehatSuite implements Suite {
     }
 
     @Override
-    public List<String> getBaseFiles() {
-        return null;
+    public List<String> getPaths() {
+        //noinspection unchecked
+        return (List<String>) settings.get("paths");
     }
 
     @Override
     public String getName() {
         return name;
-    }
-
-    @Override
-    public String getProjectFileMask() {
-        return null;
     }
 
     public boolean isEnabled() {

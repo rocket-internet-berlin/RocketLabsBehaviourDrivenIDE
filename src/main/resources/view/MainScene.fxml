@@ -7,7 +7,8 @@
 <?import de.rocketlabs.behatide.application.component.widget.WidgetToolBar?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.BorderPane?>
-<fx:root type="de.rocketlabs.behatide.application.component.MainScene" xmlns:fx="http://javafx.com/fxml">
+<fx:root fx:id="MainScene" type="de.rocketlabs.behatide.application.component.MainScene"
+         xmlns:fx="http://javafx.com/fxml">
     <top>
         <MainMenuBar fx:id="menuBar"/>
     </top>
@@ -23,13 +24,13 @@
             </top>
             <left>
                 <WidgetToolBar orientation="VERTICAL" splitPane="${horizontalSplit}" contentPosition="0">
-                    <ProjectStructureWidget project="${project}" name="Project"/>
+                    <ProjectStructureWidget project="${MainScene.project}" name="Project"/>
                 </WidgetToolBar>
             </left>
             <center>
                 <SplitPane orientation="VERTICAL" fx:id="verticalSplit">
                     <SplitPane fx:id="horizontalSplit">
-                        <Editor/>
+                        <Editor project="${MainScene.project}"/>
                     </SplitPane>
                 </SplitPane>
             </center>

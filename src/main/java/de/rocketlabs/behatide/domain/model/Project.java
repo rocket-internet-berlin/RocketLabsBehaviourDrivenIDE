@@ -2,11 +2,20 @@ package de.rocketlabs.behatide.domain.model;
 
 import de.rocketlabs.behatide.application.manager.project.ProjectMetaData;
 
-public abstract class Project {
+import java.util.Map;
 
-    public abstract String getTitle();
+public interface Project {
 
-    public abstract ProjectMetaData getMetaData();
+    /**
+     * @return A regular expression matching files that should be used for the specific project type
+     */
+    String getFileMask();
 
-    public abstract Configuration getConfiguration();
+    String getTitle();
+
+    Map<String, String> getPathReplacements();
+
+    ProjectMetaData getMetaData();
+
+    Configuration getConfiguration();
 }

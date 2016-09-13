@@ -4,9 +4,7 @@ import java.util.List;
 
 public interface Suite {
 
-    List<String> getBaseFiles();
+    List<String> getPaths();
 
     String getName();
-
-    String getProjectFileMask();
 }

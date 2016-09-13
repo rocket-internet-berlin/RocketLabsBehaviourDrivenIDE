@@ -1,8 +1,12 @@
 package de.rocketlabs.behatide.application.component.control;
 
+import de.rocketlabs.behatide.application.util.FileNameComparator;
+import de.rocketlabs.behatide.application.util.TreeItemComparator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.scene.control.TreeItem;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.List;
@@ -10,19 +14,15 @@ import java.util.List;
 public class FileTreeItem extends TreeItem<File> {
 
     private final String fileMask;
+    private final List<String> pathFilters;
 
     private boolean isFirstTimeChildren = true;
-    private boolean isFirstTimeLeaf = true;
-    private boolean isLeaf;
-    private List<String> directoryFilter;
+    private Boolean isLeaf;
 
-    public FileTreeItem(File file) {
-        this(file, ".*");
-    }
-
-    public FileTreeItem(File file, String fileMask) {
+    public FileTreeItem(File file, @Nullable List<String> pathFilters, @Nullable String fileMask) {
         super(file);
         this.fileMask = fileMask;
+        this.pathFilters = pathFilters;
     }
 
     @Override
@@ -37,10 +37,8 @@ public class FileTreeItem extends TreeItem<File> {
 
     @Override
     public boolean isLeaf() {
-        if (isFirstTimeLeaf) {
-            isFirstTimeLeaf = false;
-            File f = getValue();
-            isLeaf = f.isFile();
+        if (isLeaf == null) {
+            isLeaf = getValue().isFile();
         }
 
         return isLeaf;
@@ -62,19 +60,46 @@ public class FileTreeItem extends TreeItem<File> {
             File[] files = file.listFiles();
             if (files != null) {
                 ObservableList<TreeItem<File>> children = FXCollections.observableArrayList();
+                SortedList<TreeItem<File>> treeItems = new SortedList<>(
+                    children,
+                    new TreeItemComparator<>(new FileNameComparator())
+                );
 
                 for (File childFile : files) {
-                    children.add(new FileTreeItem(childFile));
+                    if (isFiltered(childFile)) {
+                        continue;
+                    }
+                    children.add(new FileTreeItem(childFile, pathFilters, fileMask));
                 }
 
-                return children;
+                return treeItems;
             }
         }
 
         return FXCollections.emptyObservableList();
     }
 
-    public void setDirectoryFilter(List<String> directoryFilter) {
-        this.directoryFilter = directoryFilter;
+    private boolean isFiltered(File file) {
+        if (file.isDirectory()) {
+            return isDirectoryFiltered(file);
+        }
+        return isFileFiltered(file);
+    }
+
+    private boolean isFileFiltered(File file) {
+        return !(fileMask == null || fileMask.isEmpty()) && !file.getPath().matches(fileMask);
+    }
+
+    private boolean isDirectoryFiltered(File file) {
+        if (pathFilters == null || pathFilters.size() == 0) {
+            return false;
+        }
+        String absolutePath = file.getAbsolutePath();
+        for (String filter : pathFilters) {
+            if (absolutePath.contains(filter) || filter.contains(absolutePath)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

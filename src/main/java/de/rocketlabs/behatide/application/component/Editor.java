@@ -1,7 +1,14 @@
 package de.rocketlabs.behatide.application.component;
 
+import de.rocketlabs.behatide.application.event.EventListener;
+import de.rocketlabs.behatide.application.event.EventManager;
+import de.rocketlabs.behatide.application.event.FileLoadFailedEvent;
+import de.rocketlabs.behatide.application.event.FileOpenEvent;
 import de.rocketlabs.behatide.application.keymanager.listener.NewLineListener;
 import de.rocketlabs.behatide.application.keymanager.listener.TabListener;
+import de.rocketlabs.behatide.domain.model.Project;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
@@ -10,6 +17,8 @@ import org.fxmisc.richtext.StyleSpans;
 import org.fxmisc.richtext.StyleSpansBuilder;
 import org.fxmisc.wellbehaved.event.EventHandlerHelper;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
@@ -26,30 +35,54 @@ import static org.fxmisc.wellbehaved.event.EventPattern.keyPressed;
 public class Editor extends CodeArea {
 
     private static final CharSequence[] BEHAT_KEYWORDS = new String[]{
-        "Feature", "Scenario Outline", "Scenario Template", "Scenario", "Examples",
-        "Scenarios", "When", "Then", "Given", "And"
+        "Feature:", "Scenario Outline:", "Scenario Template:", "Scenario:", "Examples:",
+        "Scenarios:", "When", "Then", "Given", "And", "Background:"
     };
 
     private static final String KEYWORD_REGEX = "(" + String.join("|", BEHAT_KEYWORDS) + ")";
     private static final Pattern PATTERN = Pattern.compile("(?<KEYWORD>" + KEYWORD_REGEX + ")");
-    private static final String EDITOR_CODE = String.join("\n", "Feature: Setup_Text",
-                                                          "",
-                                                          "  Scenario: Behat IDE-editor Text Area",
-                                                          "    When I start the application",
-                                                          "    Then A new Stage gets created",
-                                                          "    And I see a editor window",
-                                                          "    When I click on the x of the Window",
-                                                          "    Then The the window gets closed",
-                                                          "    When Type any character",
-                                                          "    Then the character should appear on the screen"
-    );
 
     private static final Set<String> CSS_CLASS_KEYWORD = Collections.singleton("keyword");
     private static final Set<String> CSS_CLASS_DEFAULT = Collections.singleton("default");
 
+    private ObjectProperty<Project> project = new SimpleObjectProperty<>();
+
     public Editor() {
         registerKeyCombinations();
         setDesignToCodeArea();
+        registerEventListeners();
+    }
+
+    private void registerEventListeners() {
+        EventManager.addListener(FileOpenEvent.class, new EventListener<FileOpenEvent>() {
+            @Override
+            public boolean runOnJavaFxThread() {
+                return true;
+            }
+
+            @Override
+            public void handleEvent(FileOpenEvent e) {
+                if (e.getProject() == Editor.this.getProject() && e.getItem().isFile()) {
+                    try {
+                        Editor.this.replaceText(String.join("\n", Files.readAllLines(e.getItem().toPath())));
+                    } catch (IOException e1) {
+                        EventManager.fireEvent(new FileLoadFailedEvent(e.getItem()));
+                    }
+                }
+            }
+        });
+    }
+
+    public Project getProject() {
+        return project.get();
+    }
+
+    public ObjectProperty<Project> projectProperty() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project.set(project);
     }
 
     private void setDesignToCodeArea() {
@@ -61,8 +94,6 @@ public class Editor extends CodeArea {
         richChanges()
             .filter(ch -> !ch.getInserted().equals(ch.getRemoved()))
             .subscribe(change -> setStyleSpans(0, computeHighlighting(getText())));
-        replaceText(0, 0, EDITOR_CODE);
-        setPrefSize(1000, 1000);
     }
 
     private static StyleSpans<Collection<String>> computeHighlighting(String text) {
