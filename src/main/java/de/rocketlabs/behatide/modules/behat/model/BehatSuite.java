@@ -2,10 +2,7 @@ package de.rocketlabs.behatide.modules.behat.model;
 
 import de.rocketlabs.behatide.domain.model.Suite;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class BehatSuite implements Suite {
 
@@ -59,6 +56,16 @@ public class BehatSuite implements Suite {
 
     public void addSetting(String key, Object value) {
         settings.put(key, value);
+    }
+
+    public List<String> getSettingContexts() {
+        List<String> contexts = new LinkedList<>();
+        if (hasSetting("contexts")) {
+            //noinspection unchecked
+            contexts.addAll((Collection) settings.get("contexts"));
+        }
+
+        return contexts;
     }
 
 }
