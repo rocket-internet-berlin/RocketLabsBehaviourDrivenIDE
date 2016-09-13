@@ -11,4 +11,12 @@ public class PhpFile {
         this.namespace = namespace;
         this.classes = classes;
     }
+
+    public String getNamespace() {
+        return namespace;
+    }
+
+    public List<PhpClass> getClasses() {
+        return classes;
+    }
 }

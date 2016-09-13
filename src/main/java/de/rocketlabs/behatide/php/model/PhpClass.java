@@ -11,4 +11,12 @@ public class PhpClass {
         this.name = name;
         this.members = members;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<PhpFunction> getMembers() {
+        return members;
+    }
 }

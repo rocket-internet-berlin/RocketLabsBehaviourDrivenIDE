@@ -11,4 +11,12 @@ public class PhpFunction {
         this.name = name;
         this.docBlock = docBlock;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public PhpDocBlock getDocBlock() {
+        return docBlock;
+    }
 }

@@ -13,4 +13,16 @@ public class PhpDocBlock {
         this.description = description;
         this.tags = tags;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public List<PhpDocBlockTag> getTags() {
+        return tags;
+    }
+
+    public boolean hasTags() {
+        return tags != null && !tags.isEmpty();
+    }
 }

@@ -7,13 +7,12 @@ import de.rocketlabs.behatide.application.configuration.storage.state.State;
 import de.rocketlabs.behatide.application.configuration.storage.state.StateStorageManager;
 import de.rocketlabs.behatide.application.manager.project.ProjectMetaData;
 import de.rocketlabs.behatide.domain.model.Configuration;
-import de.rocketlabs.behatide.domain.model.Profile;
 import de.rocketlabs.behatide.domain.parser.ConfigurationReader;
 import de.rocketlabs.behatide.modules.behat.BehatModule;
 import de.rocketlabs.behatide.modules.behat.parser.BehatConfigurationReader;
 import de.rocketlabs.behatide.php.ParseException;
 import de.rocketlabs.behatide.php.PhpParser;
-import de.rocketlabs.behatide.php.model.PhpFile;
+import de.rocketlabs.behatide.php.model.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,9 +24,9 @@ import java.util.*;
 @State(name = "Project")
 public class Project implements de.rocketlabs.behatide.domain.model.Project {
 
-    public static final String AUTOLOAD_PHP_3 = "/../../../autoload.php";
-    public static final String VENDOR_AUTOLOAD_PHP2 = "/vendor/autoload.php";
-    public static final String VENDOR_AUTOLOAD_PHP_1 = "/../vendor/autoload.php";
+    private static final String AUTOLOAD_PHP_3 = "/../../../autoload.php";
+    private static final String VENDOR_AUTOLOAD_PHP2 = "/vendor/autoload.php";
+    private static final String VENDOR_AUTOLOAD_PHP_1 = "/../vendor/autoload.php";
     private transient Injector injector = Guice.createInjector(new BehatModule());
     private transient BehatConfigurationReader configurationReader =
         (BehatConfigurationReader) injector.getInstance(ConfigurationReader.class);
@@ -85,7 +84,7 @@ public class Project implements de.rocketlabs.behatide.domain.model.Project {
         }
     }
 
-    static Project generateProject(ProjectConfiguration configuration) {
+    public static Project generateProject(ProjectConfiguration configuration) {
         Project project = new Project();
         project.projectLocation = configuration.getProjectLocation();
         project.behatConfigurationFile = configuration.getBehatConfigurationFile();
@@ -97,53 +96,12 @@ public class Project implements de.rocketlabs.behatide.domain.model.Project {
             put(StorageParameter.STORAGE_DIRECTORY, project.projectLocation);
         }};
 
-        Map<String, PhpFile> loadedPhpFiles = new HashMap<>();
-        long l = System.currentTimeMillis();
-
-        Set<String> classesSet = new HashSet<>();
-        project.configuration.getProfileNames().forEach(profileName -> {
-            BehatProfile profile = project.configuration.getProfile(profileName);
-            profile.getSuiteNames().forEach(suiteName -> {
-                BehatSuite suite = profile.getSuite(suiteName);
-                classesSet.addAll(suite.getSettingContexts());
-            });
-        });
-
-        List<String> cmdList = new LinkedList<String>() {{
-            add("php");
-            add(Project.class.getResource("/php/loadClass.php").getFile());
-            add(getAutoloadPhpPath(configuration));
-            addAll(classesSet);
-        }};
-
-
-        ProcessBuilder builder = new ProcessBuilder();
-        builder.command(cmdList);
-        try {
-            Process process = builder.start();
-            try (BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()))){
-                for (String className : classesSet) {
-                    String path = in.readLine();
-                    if (path == null) {
-                        break;
-                    }
-                    PhpFile file = PhpParser.parse(new FileInputStream(path));
-                    loadedPhpFiles.put(className, file);
-                }
-            }
-        } catch (IOException | ParseException e) {
-            e.printStackTrace();
-        }
+        parsePhpFiles(project, configuration);
 
         StateStorageManager.getInstance().setState(project, storageParameters);
         StateStorageManager.getInstance().save();
 
         return project;
-    }
-
-    public Map getParsedPhpFiles()
-    {
-        return parsedPhpFiles;
     }
 
     @NotNull
@@ -172,4 +130,84 @@ public class Project implements de.rocketlabs.behatide.domain.model.Project {
         return f.exists();
     }
 
+    private static void buildContext(Map<String, PhpFile> loadedPhpFiles)
+    {
+        BehatContext behatContext = new BehatContext();
+        loadedPhpFiles.forEach((namespace, phpFile) -> {
+            List<PhpClass> phpClasses = phpFile.getClasses();
+            phpClasses.forEach(phpClass -> {
+                List<PhpFunction> members = phpClass.getMembers();
+                for (PhpFunction func : members) {
+                    PhpDocBlock dockBlock = func.getDocBlock();
+                    LinkedList<PhpFunction> tagContents = new LinkedList<>();
+                    if (dockBlock != null && dockBlock.hasTags()) {
+                        for (PhpDocBlockTag phpDocBlockTag : dockBlock.getTags()) {
+                            if (phpDocBlockTag.getName().matches("(Then|Given|When)")) {
+                                tagContents.add(func);
+                                break;
+                            }
+                        }
+                    }
+                    if (!tagContents.isEmpty()) {
+                        behatContext.put(phpClass.getName(), tagContents);
+                    }
+                }
+            });
+            }
+        );
+        StateStorageManager.getInstance().setState(behatContext);
+    }
+
+    private static void parsePhpFiles(Project project, ProjectConfiguration configuration)
+    {
+        Map<String, PhpFile> loadedPhpFiles = new HashMap<>();
+        long l = System.currentTimeMillis();
+
+        Set<String> classesSet = buildClassSet(project);
+
+        List<String> cmdList = new LinkedList<String>() {{
+            add("php");
+            add(Project.class.getResource("/php/loadClass.php").getFile());
+            add(getAutoloadPhpPath(configuration));
+            addAll(classesSet);
+        }};
+
+        ProcessBuilder builder = new ProcessBuilder();
+        builder.command(cmdList);
+        try {
+            executeCmd(builder, classesSet, loadedPhpFiles);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static Set<String> buildClassSet(Project project) {
+        Set<String> classesSet = new HashSet<>();
+        project.configuration.getProfileNames().forEach(profileName -> {
+            BehatProfile profile = project.configuration.getProfile(profileName);
+            profile.getSuiteNames().forEach(suiteName -> {
+                BehatSuite suite = profile.getSuite(suiteName);
+                classesSet.addAll(suite.getSettingContexts());
+            });
+        });
+        return classesSet;
+    }
+
+    private static void executeCmd(ProcessBuilder builder, Set<String> classesSet, Map<String, PhpFile> loadedPhpFiles ) throws IOException {
+        Process process = builder.start();
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()))){
+            for (String className : classesSet) {
+                String path = in.readLine();
+                if (path == null) {
+                    break;
+                }
+                PhpFile file = PhpParser.parse(new FileInputStream(path));
+                loadedPhpFiles.put(className, file);
+            }
+
+            buildContext(loadedPhpFiles);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
 }
