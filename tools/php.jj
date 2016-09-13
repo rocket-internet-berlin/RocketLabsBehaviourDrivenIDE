@@ -294,8 +294,8 @@ PhpFile PhpFile() :
         (
             UseStatement() |
             <SLASH_STAR_COMMENT> |
-            Statement() |
-            LOOKAHEAD([<ABSTRACT> | <FINAL>] <CLASS>) cd = ClassDeclaration() { classes = add(classes, cd); }
+            LOOKAHEAD(2) cd = ClassDeclaration() { classes = add(classes, cd); } |
+            Statement()
         )*
 
         ( <EOF> | "\u001A" /** ctrl+z char **/)
