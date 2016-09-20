@@ -1,31 +1,16 @@
-package de.rocketlabs.behatide.application.keymanager.listener;
+package de.rocketlabs.behatide.application.event.listener.editor;
 
 import com.google.common.base.Strings;
-import de.rocketlabs.behatide.application.component.Editor;
-import de.rocketlabs.behatide.application.keymanager.KeyEventListener;
+import de.rocketlabs.behatide.application.component.editor.Editor;
+import de.rocketlabs.behatide.application.component.editor.EditorBehavior;
 import javafx.scene.input.KeyEvent;
-import org.jetbrains.annotations.NotNull;
 
-public class NewLineListener implements KeyEventListener {
+public class NewLineListener {
 
     private static final char NEW_LINE_CHARACTER = '\n';
 
-    private Editor editor;
-
-    public NewLineListener(@NotNull Editor editor) {
-        this.editor = editor;
-    }
-
-    private int countLeadingOccurrences(String haystack, char needle) {
-        int count = 0;
-        while (count < haystack.length() && haystack.charAt(count) == needle) {
-            count++;
-        }
-        return count;
-    }
-
-    @Override
-    public void handleEvent(KeyEvent event) {
+    public static void handleEvent(EditorBehavior behavior, KeyEvent event) {
+        Editor editor = behavior.getEditor();
         String str = editor.getText().substring(0, editor.getCaretPosition());
         int lastLineBreak;
         if (editor.getLineIndex() > 0) {
@@ -39,5 +24,13 @@ public class NewLineListener implements KeyEventListener {
         editor.insertText(editor.getCaretPosition(), s);
 
         event.consume();
+    }
+
+    private static int countLeadingOccurrences(String haystack, char needle) {
+        int count = 0;
+        while (count < haystack.length() && haystack.charAt(count) == needle) {
+            count++;
+        }
+        return count;
     }
 }

@@ -1,6 +1,6 @@
 package de.rocketlabs.behatide.application.event.listener.editor;
 
-import de.rocketlabs.behatide.application.component.Editor;
+import de.rocketlabs.behatide.application.component.editor.Editor;
 import de.rocketlabs.behatide.application.event.EventListener;
 import de.rocketlabs.behatide.application.event.EventManager;
 import de.rocketlabs.behatide.application.event.FileLoadFailedEvent;

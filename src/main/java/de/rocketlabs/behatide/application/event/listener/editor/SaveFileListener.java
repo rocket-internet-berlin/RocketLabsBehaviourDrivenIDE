@@ -1,6 +1,6 @@
 package de.rocketlabs.behatide.application.event.listener.editor;
 
-import de.rocketlabs.behatide.application.component.Editor;
+import de.rocketlabs.behatide.application.component.editor.Editor;
 import de.rocketlabs.behatide.application.event.EventListener;
 import de.rocketlabs.behatide.application.event.FileSaveRequestEvent;
 import javafx.scene.control.Alert;
@@ -20,7 +20,7 @@ public class SaveFileListener implements EventListener<FileSaveRequestEvent> {
 
     @Override
     public void handleEvent(FileSaveRequestEvent event) {
-        if (!event.getProject().equals(editor.getProject())) {
+        if (!event.getProject().equals(editor.getProject()) || editor.getOpenFilePath() == null) {
             return;
         }
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import de.rocketlabs.behatide.application.component.Editor?>
+<?import de.rocketlabs.behatide.application.component.editor.Editor?>
 <?import de.rocketlabs.behatide.application.component.MainMenuBar?>
 <?import de.rocketlabs.behatide.application.component.MainScene?>
 <?import de.rocketlabs.behatide.application.component.widget.DefinitionWidget?>
