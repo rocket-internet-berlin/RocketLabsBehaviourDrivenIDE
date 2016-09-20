@@ -1,45 +1,43 @@
 package de.rocketlabs.behatide.application.keymanager.listener;
 
 import com.google.common.base.Strings;
+import de.rocketlabs.behatide.application.component.Editor;
 import de.rocketlabs.behatide.application.keymanager.KeyEventListener;
 import javafx.scene.input.KeyEvent;
-import org.fxmisc.richtext.CodeArea;
 import org.jetbrains.annotations.NotNull;
 
 public class NewLineListener implements KeyEventListener {
 
     private static final char NEW_LINE_CHARACTER = '\n';
 
-    private CodeArea codeArea;
+    private Editor editor;
 
-    public NewLineListener(@NotNull CodeArea codeArea) {
-        this.codeArea = codeArea;
+    public NewLineListener(@NotNull Editor editor) {
+        this.editor = editor;
     }
 
-    private int countOccurrences(String haystack, char needle) {
+    private int countLeadingOccurrences(String haystack, char needle) {
         int count = 0;
-        for (int i = 0; i < haystack.length(); i++) {
-            if (haystack.charAt(i) == needle) {
-                count++;
-            }
+        while (count < haystack.length() && haystack.charAt(count) == needle) {
+            count++;
         }
         return count;
     }
 
     @Override
     public void handleEvent(KeyEvent event) {
-        event.consume();
-        String str = codeArea.getText().substring(0, codeArea.getCaretPosition());
-        String lastLine = str.substring(str.lastIndexOf(NEW_LINE_CHARACTER));
-        Integer nextIndent = countOccurrences(lastLine, ' ');
-        for (int value : lastLine.getBytes()) {
-            if (value == NEW_LINE_CHARACTER) {
-                nextIndent++;
-            } else {
-                break;
-            }
+        String str = editor.getText().substring(0, editor.getCaretPosition());
+        int lastLineBreak;
+        if (editor.getLineIndex() > 0) {
+            lastLineBreak = Math.min(str.lastIndexOf(NEW_LINE_CHARACTER) + 1, str.length());
+        } else {
+            lastLineBreak = 0;
         }
-        String s = NEW_LINE_CHARACTER + Strings.repeat(" ", nextIndent - 1);
-        codeArea.insertText(codeArea.getCaretPosition(), s);
+        String lastLine = str.substring(lastLineBreak);
+        Integer nextIndent = countLeadingOccurrences(lastLine, ' ');
+        String s = NEW_LINE_CHARACTER + Strings.repeat(" ", Math.max(0, nextIndent));
+        editor.insertText(editor.getCaretPosition(), s);
+
+        event.consume();
     }
 }
