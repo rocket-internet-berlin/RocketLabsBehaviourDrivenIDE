@@ -12,6 +12,7 @@ import de.rocketlabs.behatide.modules.behat.BehatModule;
 import de.rocketlabs.behatide.modules.behat.parser.BehatConfigurationReader;
 import org.apache.commons.codec.digest.DigestUtils;
 
+import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -19,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @State(name = "Project")
-public class Project extends de.rocketlabs.behatide.domain.model.Project {
+public class Project implements de.rocketlabs.behatide.domain.model.Project {
 
     private transient Injector injector = Guice.createInjector(new BehatModule());
     private transient BehatConfigurationReader configurationReader =
@@ -33,8 +34,20 @@ public class Project extends de.rocketlabs.behatide.domain.model.Project {
     private byte[] configurationFileHash;
 
     @Override
+    public String getFileMask() {
+        return ".*\\.feature$";
+    }
+
+    @Override
     public String getTitle() {
         return title;
+    }
+
+    @Override
+    public Map<String, String> getPathReplacements() {
+        return new HashMap<String, String>() {{
+            put("%paths.base%", new File(behatConfigurationFile).getParentFile().getAbsolutePath());
+        }};
     }
 
     @Override
@@ -64,7 +77,7 @@ public class Project extends de.rocketlabs.behatide.domain.model.Project {
         }
     }
 
-    public static Project generateProject(ProjectConfiguration configuration) {
+    static Project generateProject(ProjectConfiguration configuration) {
         Project project = new Project();
         project.projectLocation = configuration.getProjectLocation();
         project.behatConfigurationFile = configuration.getBehatConfigurationFile();

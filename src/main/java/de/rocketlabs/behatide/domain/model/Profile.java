@@ -7,6 +7,8 @@ public interface Profile {
 
     String getName();
 
+    List<String> getPaths();
+
     Suite getSuite(String name);
 
     Set<String> getSuiteNames();

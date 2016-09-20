@@ -52,7 +52,19 @@ public class MainScene extends BorderPane {
     private void initSuiteSelection() {
         suiteSelection.getSelectionModel().selectedItemProperty().addListener(
             (observable, oldValue, newSuite)
-                -> EventManager.fireEvent(new SuiteSelectionChangedEvent(getProject(), newSuite))
+                -> EventManager.fireEvent(new SuiteSelectionChangedEvent(
+                getProject(),
+                profileSelection.getValue(),
+                newSuite
+            ))
+        );
+        EventManager.addListener(
+            ProfileSelectionChangedEvent.class,
+            e -> {
+                if (e.getProject().equals(getProject())) {
+                    suiteSelection.setItems(FXCollections.observableList(e.getProfile().getSuites()));
+                }
+            }
         );
         suiteSelection.setButtonCell(new SuiteCell());
         suiteSelection.setCellFactory(SuiteCell::new);
@@ -60,10 +72,11 @@ public class MainScene extends BorderPane {
     }
 
     private void initProfileSelection() {
-        profileSelection.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newProfile) -> {
-            suiteSelection.setItems(FXCollections.observableList(newProfile.getSuites()));
-            EventManager.fireEvent(new ProfileSelectionChangedEvent(getProject(), newProfile));
-        });
+        profileSelection.getSelectionModel().selectedItemProperty().addListener(
+            (observable, oldValue, newProfile) -> EventManager.fireEvent(new ProfileSelectionChangedEvent(
+                getProject(),
+                newProfile
+            )));
         profileSelection.setButtonCell(new ProfileCell());
         profileSelection.setCellFactory(ProfileCell::new);
         profileSelection.setPlaceholder(new Label("No Profiles found"));

@@ -25,6 +25,11 @@ public final class BehatProfile implements Profile {
     }
 
     @Override
+    public List<String> getPaths() {
+        return getAutoLoadPaths();
+    }
+
+    @Override
     public void addSuite(@NotNull Suite suite) {
         if (!(suite instanceof BehatSuite)) {
             throw new IllegalArgumentException("Profile must be of type BehatSuite");

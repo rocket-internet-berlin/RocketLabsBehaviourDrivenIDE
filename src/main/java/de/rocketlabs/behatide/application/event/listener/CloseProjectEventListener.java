@@ -10,8 +10,4 @@ public class CloseProjectEventListener implements EventListener<CloseProjectEven
 
     }
 
-    @Override
-    public boolean runOnJavaFxThread() {
-        return false;
-    }
 }

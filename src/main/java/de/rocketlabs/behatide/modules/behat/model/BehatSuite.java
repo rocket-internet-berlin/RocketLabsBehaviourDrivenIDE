@@ -3,6 +3,7 @@ package de.rocketlabs.behatide.modules.behat.model;
 import de.rocketlabs.behatide.domain.model.Suite;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,6 +16,12 @@ public class BehatSuite implements Suite {
 
     public BehatSuite(String name) {
         this.name = name;
+    }
+
+    @Override
+    public List<String> getPaths() {
+        //noinspection unchecked
+        return (List<String>) settings.get("paths");
     }
 
     @Override
