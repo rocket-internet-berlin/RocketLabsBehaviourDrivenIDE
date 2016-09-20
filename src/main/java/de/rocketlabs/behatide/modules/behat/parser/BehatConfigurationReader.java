@@ -12,7 +12,7 @@ import java.util.Map;
 
 public final class BehatConfigurationReader implements ConfigurationReader<BehatConfiguration> {
 
-    public static final String YAML_HOOK_IDENTIFIER = "<<";
+    private static final String YAML_HOOK_IDENTIFIER = "<<";
     private BehatProfileReader profileParser;
 
     @Inject
@@ -50,7 +50,7 @@ public final class BehatConfigurationReader implements ConfigurationReader<Behat
         //noinspection unchecked
         Map<String, Object> mergedMap = new HashMap<>(dataMap);
 
-        if (mergedMap.containsKey(YAML_HOOK_IDENTIFIER)) {
+        while (mergedMap.containsKey(YAML_HOOK_IDENTIFIER)) {
             assert mergedMap.get(YAML_HOOK_IDENTIFIER) instanceof Map;
 
             //noinspection unchecked

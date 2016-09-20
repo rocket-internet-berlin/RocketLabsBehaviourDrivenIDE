@@ -31,7 +31,6 @@ public class CreateProjectStep1 extends WizardPane implements ValidationWizardSt
     @FXML
     private BorderPane pane;
     private BooleanProperty invalidProperty = new SimpleBooleanProperty(true);
-    IdeForm form;
 
     CreateProjectStep1() {
         loadComponent();
@@ -68,7 +67,7 @@ public class CreateProjectStep1 extends WizardPane implements ValidationWizardSt
                                   ProjectType oldValue,
                                   ProjectType newValue) {
         ProjectConfiguration<?> configuration = newValue.getDefaultConfiguration().getClone();
-        form = configuration.getForm();
+        IdeForm form = configuration.getForm();
         pane.setCenter(form);
         invalidProperty.unbind();
         invalidProperty.bind(form.getValidation().invalidProperty());

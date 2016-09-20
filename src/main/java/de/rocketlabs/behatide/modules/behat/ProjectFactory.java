@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -27,9 +28,9 @@ import java.util.stream.Collectors;
 public class ProjectFactory {
 
     private static final String[] AUTO_LOADER_PATHS = new String[]{
-        "/../../../autoload.php",
-        "/vendor/autoload.php",
-        "/../vendor/autoload.php",
+        "../../../autoload.php",
+        "vendor/autoload.php",
+        "../vendor/autoload.php",
         };
 
     private static Injector injector = Guice.createInjector(new BehatModule());
@@ -86,7 +87,7 @@ public class ProjectFactory {
             BehatProfile profile = project.getConfiguration().getProfile(profileName);
             profile.getSuiteNames().forEach(suiteName -> {
                 BehatSuite suite = profile.getSuite(suiteName);
-                classesSet.addAll(suite.getSettingContexts());
+                classesSet.addAll(suite.getContexts());
             });
         });
         return classesSet;
@@ -133,8 +134,9 @@ public class ProjectFactory {
         String parentPath = f.getParent();
 
         for (String autoLoaderPath : AUTO_LOADER_PATHS) {
-            if (Files.exists(Paths.get(parentPath, autoLoaderPath))) {
-                return parentPath + autoLoaderPath;
+            Path path = Paths.get(parentPath, autoLoaderPath);
+            if (Files.exists(path)) {
+                return path.toAbsolutePath().toString();
             }
         }
 
@@ -148,7 +150,7 @@ public class ProjectFactory {
             (className, phpFile) ->
                 phpFile.getClasses()
                        .stream()
-                       .filter(phpClass -> className.equals(phpFile.getNamespace() + '\\' + phpClass.getName()))
+                       .filter(phpClass -> className.equals('\\' + phpFile.getNamespace() + '\\' + phpClass.getName()))
                        .forEach(phpClass -> classDefinitions.put(className, getClassFunctions(phpClass))));
         return classDefinitions;
     }
