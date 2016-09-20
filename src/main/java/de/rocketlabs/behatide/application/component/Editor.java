@@ -1,6 +1,12 @@
 package de.rocketlabs.behatide.application.component;
 
-import de.rocketlabs.behatide.application.event.*;
+import de.rocketlabs.behatide.application.event.DefinitionClickedEvent;
+import de.rocketlabs.behatide.application.event.EventManager;
+import de.rocketlabs.behatide.application.event.FileOpenEvent;
+import de.rocketlabs.behatide.application.event.FileSaveRequestEvent;
+import de.rocketlabs.behatide.application.event.listener.editor.DefinitionClickedEventListener;
+import de.rocketlabs.behatide.application.event.listener.editor.FileOpenEventListener;
+import de.rocketlabs.behatide.application.event.listener.editor.SaveFileListener;
 import de.rocketlabs.behatide.application.keymanager.listener.NewLineListener;
 import de.rocketlabs.behatide.application.keymanager.listener.TabListener;
 import de.rocketlabs.behatide.domain.model.Project;
@@ -16,8 +22,7 @@ import org.fxmisc.richtext.StyleSpans;
 import org.fxmisc.richtext.StyleSpansBuilder;
 import org.fxmisc.wellbehaved.event.EventHandlerHelper;
 
-import java.io.IOException;
-import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
@@ -45,75 +50,18 @@ public class Editor extends CodeArea {
     private static final Set<String> CSS_CLASS_DEFAULT = Collections.singleton("default");
 
     private ObjectProperty<Project> project = new SimpleObjectProperty<>();
+    private Path openFilePath;
 
     public Editor() {
-        registerKeyCombinations();
+        setUpBehavior();
         setDesignToCodeArea();
         registerEventListeners();
     }
 
     private void registerEventListeners() {
-        EventManager.addListener(FileOpenEvent.class, new EventListener<FileOpenEvent>() {
-            @Override
-            public boolean runOnJavaFxThread() {
-                return true;
-            }
-
-            @Override
-            public void handleEvent(FileOpenEvent e) {
-                if (e.getProject() == Editor.this.getProject() && e.getItem().isFile()) {
-                    try {
-                        Editor.this.replaceText(String.join("\n", Files.readAllLines(e.getItem().toPath())));
-                    } catch (IOException e1) {
-                        EventManager.fireEvent(new FileLoadFailedEvent(e.getItem()));
-                    }
-                }
-            }
-        });
-        EventManager.addListener(DefinitionClickedEvent.class, new EventListener<DefinitionClickedEvent>() {
-            @Override
-            public boolean runOnJavaFxThread() {
-                return true;
-            }
-
-            @Override
-            public void handleEvent(DefinitionClickedEvent event) {
-                if (event.getProject().equals(getProject())) {
-                    insertLine();
-                    insertTextAtCaret("And " + event.getDefinition().getAnnotations().get(0).getStatement());
-                }
-            }
-        });
-    }
-
-    public int getLineIndex() {
-        return offsetToPosition(getCaretPosition(), Bias.Forward).getMajor();
-    }
-
-    private void insertLine() {
-        int caretPosition = getCaretPosition();
-        int length = getLength();
-        while (caretPosition < length && !getText(caretPosition, caretPosition + 1).equals("\n")) {
-            caretPosition++;
-        }
-        moveTo(caretPosition);
-        fireEvent(new KeyEvent(this, this, KeyEvent.KEY_PRESSED, "\n", "", KeyCode.ENTER, false, false, false, false));
-    }
-
-    private void insertTextAtCaret(String text) {
-        insertText(getCaretPosition(), text);
-    }
-
-    public Project getProject() {
-        return project.get();
-    }
-
-    public ObjectProperty<Project> projectProperty() {
-        return project;
-    }
-
-    public void setProject(Project project) {
-        this.project.set(project);
+        EventManager.addListener(FileOpenEvent.class, new FileOpenEventListener(this));
+        EventManager.addListener(DefinitionClickedEvent.class, new DefinitionClickedEventListener(this));
+        EventManager.addListener(FileSaveRequestEvent.class, new SaveFileListener(this));
     }
 
     private void setDesignToCodeArea() {
@@ -140,12 +88,18 @@ public class Editor extends CodeArea {
         return spansBuilder.create();
     }
 
-    private void registerKeyCombinations() {
+    private void setUpBehavior() {
         TabListener tabListener = new TabListener(this);
         registerKeyCombination(tabListener::handleEvent, TAB, SHIFT_ANY);
 
         NewLineListener enterListener = new NewLineListener(this);
         registerKeyCombination(enterListener::handleEvent, ENTER);
+
+        focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                EventManager.fireEvent(new FileSaveRequestEvent(getProject()));
+            }
+        });
     }
 
     private void registerKeyCombination(Consumer<? super KeyEvent> action,
@@ -155,5 +109,43 @@ public class Editor extends CodeArea {
             onKeyPressedProperty(),
             EventHandlerHelper.on(keyPressed(code, modifiers)).act(action).create()
         );
+    }
+
+    public int getLineIndex() {
+        return offsetToPosition(getCaretPosition(), Bias.Forward).getMajor();
+    }
+
+    public Project getProject() {
+        return project.get();
+    }
+
+    public void setProject(Project project) {
+        this.project.set(project);
+    }
+
+    public void insertLine() {
+        int caretPosition = getCaretPosition();
+        int length = getLength();
+        while (caretPosition < length && !getText(caretPosition, caretPosition + 1).equals("\n")) {
+            caretPosition++;
+        }
+        moveTo(caretPosition);
+        fireEvent(new KeyEvent(this, this, KeyEvent.KEY_PRESSED, "\n", "", KeyCode.ENTER, false, false, false, false));
+    }
+
+    public void insertTextAtCaret(String text) {
+        insertText(getCaretPosition(), text);
+    }
+
+    public ObjectProperty<Project> projectProperty() {
+        return project;
+    }
+
+    public void setOpenFilePath(Path openFilePath) {
+        this.openFilePath = openFilePath;
+    }
+
+    public Path getOpenFilePath() {
+        return openFilePath;
     }
 }

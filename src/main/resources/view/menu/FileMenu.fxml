@@ -4,6 +4,11 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.input.KeyCodeCombination?>
 <fx:root type="FileMenu" xmlns:fx="http://javafx.com/fxml">
+    <MenuItem text="Save" onAction="#saveAction">
+        <accelerator>
+            <KeyCodeCombination shortcut="DOWN" code="S" shift="UP" control="UP" alt="UP" meta="UP"/>
+        </accelerator>
+    </MenuItem>
     <MenuItem text="Exit" onAction="#exitAction">
         <accelerator>
             <KeyCodeCombination shortcut="DOWN" code="Q" shift="UP" control="UP" alt="UP" meta="UP"/>

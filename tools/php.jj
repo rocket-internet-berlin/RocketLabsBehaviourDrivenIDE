@@ -462,6 +462,7 @@ PhpDocBlock parseDocBlock(String docBlock) : {}
             }
             return new PhpDocBlock(description, tags);
         } catch (Exception e) {
+            e.printStackTrace(System.err);
             throw new ParseException(e.getMessage());
         }
     }

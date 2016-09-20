@@ -11,7 +11,7 @@
 <fx:root fx:id="MainScene" type="de.rocketlabs.behatide.application.component.MainScene"
          xmlns:fx="http://javafx.com/fxml">
     <top>
-        <MainMenuBar fx:id="menuBar"/>
+        <MainMenuBar fx:id="menuBar" project="${MainScene.project}"/>
     </top>
     <center>
         <BorderPane>
