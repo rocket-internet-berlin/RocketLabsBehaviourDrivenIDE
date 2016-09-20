@@ -14,7 +14,6 @@ import de.rocketlabs.behatide.php.ParseException;
 import de.rocketlabs.behatide.php.PhpParser;
 import de.rocketlabs.behatide.php.model.PhpClass;
 import de.rocketlabs.behatide.php.model.PhpFile;
-import de.rocketlabs.behatide.php.model.PhpFunction;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ProjectFactory {
@@ -77,7 +77,7 @@ public class ProjectFactory {
     private static void loadBehatDefinitions(Project project, ProjectConfiguration configuration) {
         Set<String> classesSet = buildClassSet(project);
         Map<String, PhpFile> parsedFiles = loadPhpClasses(classesSet, configuration);
-        Map<String, List<PhpFunction>> behatDefinitions = getBehatDefinitions(parsedFiles);
+        Map<String, PhpClass> behatDefinitions = getBehatDefinitions(parsedFiles);
         project.setAvailableDefinitions(behatDefinitions);
     }
 
@@ -87,7 +87,7 @@ public class ProjectFactory {
             BehatProfile profile = project.getConfiguration().getProfile(profileName);
             profile.getSuiteNames().forEach(suiteName -> {
                 BehatSuite suite = profile.getSuite(suiteName);
-                classesSet.addAll(suite.getContexts());
+                classesSet.addAll(suite.getDefinitionContainerIdentifiers());
             });
         });
         return classesSet;
@@ -143,26 +143,19 @@ public class ProjectFactory {
         throw new RuntimeException("autoload not found");
     }
 
-    private static Map<String, List<PhpFunction>> getBehatDefinitions(Map<String, PhpFile> loadedPhpFiles) {
-        Map<String, List<PhpFunction>> classDefinitions = new HashMap<>();
+    private static Map<String, PhpClass> getBehatDefinitions(Map<String, PhpFile> loadedPhpFiles) {
+        Function<Map.Entry<String, PhpFile>, PhpClass> findClass = entry -> {
+            PhpFile phpFile = entry.getValue();
+            for (PhpClass phpClass : phpFile.getClasses()) {
+                if (entry.getKey().equals('\\' + phpFile.getNamespace() + '\\' + phpClass.getName())) {
+                    return phpClass;
+                }
+            }
+            return null;
+        };
 
-        loadedPhpFiles.forEach(
-            (className, phpFile) ->
-                phpFile.getClasses()
-                       .stream()
-                       .filter(phpClass -> className.equals('\\' + phpFile.getNamespace() + '\\' + phpClass.getName()))
-                       .forEach(phpClass -> classDefinitions.put(className, getClassFunctions(phpClass))));
-        return classDefinitions;
-    }
-
-    @NotNull
-    private static List<PhpFunction> getClassFunctions(PhpClass phpClass) {
-        return phpClass.getMembers()
-                       .stream()
-                       .filter(f -> f.getDocBlock() != null &&
-                                    f.getDocBlock().hasTags() &&
-                                    f.getDocBlock().getTags()
-                                     .stream().anyMatch(t -> t.getName().matches("(Then|Given|When)")))
-                       .collect(Collectors.toList());
+        return loadedPhpFiles.entrySet()
+                             .stream()
+                             .collect(Collectors.toMap(Map.Entry::getKey, findClass));
     }
 }

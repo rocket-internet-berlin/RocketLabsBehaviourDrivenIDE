@@ -30,7 +30,7 @@ public class FileTreeItem extends TreeItem<File> {
         if (isFirstTimeChildren) {
             isFirstTimeChildren = false;
 
-            super.getChildren().setAll(buildChildren(this));
+            super.getChildren().setAll(buildChildren());
         }
         return super.getChildren();
     }
@@ -48,14 +48,12 @@ public class FileTreeItem extends TreeItem<File> {
      * Returning a collection of type ObservableList containing TreeItems, which
      * represent all children available in handed TreeItem.
      *
-     * @param TreeItem the root node from which children a collection of TreeItem
-     *                 should be created.
      * @return an ObservableList<TreeItem<File>> containing TreeItems, which
      * represent all children available in handed TreeItem. If the
      * handed TreeItem is a leaf, an empty list is returned.
      */
-    private ObservableList<TreeItem<File>> buildChildren(TreeItem<File> TreeItem) {
-        File file = TreeItem.getValue();
+    private ObservableList<TreeItem<File>> buildChildren() {
+        File file = getValue();
         if (file != null && file.isDirectory()) {
             File[] files = file.listFiles();
             if (files != null) {

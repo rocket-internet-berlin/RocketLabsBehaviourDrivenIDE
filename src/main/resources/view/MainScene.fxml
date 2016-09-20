@@ -3,6 +3,7 @@
 <?import de.rocketlabs.behatide.application.component.Editor?>
 <?import de.rocketlabs.behatide.application.component.MainMenuBar?>
 <?import de.rocketlabs.behatide.application.component.MainScene?>
+<?import de.rocketlabs.behatide.application.component.widget.DefinitionWidget?>
 <?import de.rocketlabs.behatide.application.component.widget.ProjectStructureWidget?>
 <?import de.rocketlabs.behatide.application.component.widget.WidgetToolBar?>
 <?import javafx.scene.control.*?>
@@ -25,6 +26,7 @@
             <left>
                 <WidgetToolBar orientation="VERTICAL" splitPane="${horizontalSplit}" contentPosition="0">
                     <ProjectStructureWidget project="${MainScene.project}" name="Project"/>
+                    <DefinitionWidget project="${MainScene.project}" name="Definitions"/>
                 </WidgetToolBar>
             </left>
             <center>

@@ -10,7 +10,11 @@ import java.io.File;
 public class FileTreeCell extends TreeCell<File> {
 
     public FileTreeCell(Project project) {
-        setOnMouseClicked(e -> EventManager.fireEvent(new FileOpenEvent(getItem(), project)));
+        setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+                EventManager.fireEvent(new FileOpenEvent(getItem(), project));
+            }
+        });
     }
 
     @Override

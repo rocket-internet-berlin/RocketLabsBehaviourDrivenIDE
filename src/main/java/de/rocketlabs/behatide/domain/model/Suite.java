@@ -7,4 +7,6 @@ public interface Suite {
     List<String> getPaths();
 
     String getName();
+
+    List<String> getDefinitionContainerIdentifiers();
 }

@@ -61,7 +61,8 @@ public class BehatSuite implements Suite {
         settings.put(key, value);
     }
 
-    public List<String> getContexts() {
+    @Override
+    public List<String> getDefinitionContainerIdentifiers() {
         //noinspection unchecked
         return (List<String>) settings.get("contexts");
     }

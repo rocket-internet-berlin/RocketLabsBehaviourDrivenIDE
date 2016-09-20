@@ -1,18 +1,17 @@
 package de.rocketlabs.behatide.application.component;
 
-import de.rocketlabs.behatide.application.event.EventListener;
-import de.rocketlabs.behatide.application.event.EventManager;
-import de.rocketlabs.behatide.application.event.FileLoadFailedEvent;
-import de.rocketlabs.behatide.application.event.FileOpenEvent;
+import de.rocketlabs.behatide.application.event.*;
 import de.rocketlabs.behatide.application.keymanager.listener.NewLineListener;
 import de.rocketlabs.behatide.application.keymanager.listener.TabListener;
 import de.rocketlabs.behatide.domain.model.Project;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.StyleSpans;
 import org.fxmisc.richtext.StyleSpansBuilder;
 import org.fxmisc.wellbehaved.event.EventHandlerHelper;
@@ -71,6 +70,38 @@ public class Editor extends CodeArea {
                 }
             }
         });
+        EventManager.addListener(DefinitionClickedEvent.class, new EventListener<DefinitionClickedEvent>() {
+            @Override
+            public boolean runOnJavaFxThread() {
+                return true;
+            }
+
+            @Override
+            public void handleEvent(DefinitionClickedEvent event) {
+                if (event.getProject().equals(getProject())) {
+                    insertLine();
+                    insertTextAtCaret("And " + event.getDefinition().getAnnotations().get(0).getStatement());
+                }
+            }
+        });
+    }
+
+    public int getLineIndex() {
+        return offsetToPosition(getCaretPosition(), Bias.Forward).getMajor();
+    }
+
+    private void insertLine() {
+        int caretPosition = getCaretPosition();
+        int length = getLength();
+        while (caretPosition < length && !getText(caretPosition, caretPosition + 1).equals("\n")) {
+            caretPosition++;
+        }
+        moveTo(caretPosition);
+        fireEvent(new KeyEvent(this, this, KeyEvent.KEY_PRESSED, "\n", "", KeyCode.ENTER, false, false, false, false));
+    }
+
+    private void insertTextAtCaret(String text) {
+        insertText(getCaretPosition(), text);
     }
 
     public Project getProject() {
@@ -87,7 +118,7 @@ public class Editor extends CodeArea {
 
     private void setDesignToCodeArea() {
         IntFunction<String> format = (digits -> "%" + (digits < 2 ? 2 : digits) + "d");
-        LineNumber ln = new LineNumber(getParagraphs(), format);
+        IntFunction<Node> ln = LineNumberFactory.get(this, format);
 
         setParagraphGraphicFactory(ln);
         getStyleClass().add("editor-test-class");

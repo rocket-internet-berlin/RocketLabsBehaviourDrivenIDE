@@ -1,8 +1,12 @@
 package de.rocketlabs.behatide.php.model;
 
+import de.rocketlabs.behatide.application.util.Collectors;
+import de.rocketlabs.behatide.domain.model.Definition;
+import de.rocketlabs.behatide.domain.model.DefinitionContainer;
+
 import java.util.List;
 
-public class PhpClass {
+public class PhpClass implements DefinitionContainer {
 
     private final String name;
     private final List<PhpFunction> members;
@@ -12,11 +16,15 @@ public class PhpClass {
         this.members = members;
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public List<Definition> getDefinitions() {
+        return members.stream()
+                      .filter(f -> f.getAnnotations().size() > 0)
+                      .collect(Collectors.toLinkedList());
     }
 
-    public List<PhpFunction> getMembers() {
-        return members;
+    @Override
+    public String getName() {
+        return name;
     }
 }

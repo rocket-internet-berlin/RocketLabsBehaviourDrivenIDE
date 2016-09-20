@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.rocketlabs.behatide.application.component.widget.DefinitionWidget?>
+<?import javafx.scene.control.TreeView?>
+<fx:root type="de.rocketlabs.behatide.application.component.widget.DefinitionWidget"
+         xmlns:fx="http://javafx.com/fxml">
+    <TreeView fx:id="treeView"/>
+</fx:root>
