@@ -7,6 +7,8 @@
 <?import de.rocketlabs.behatide.application.component.widget.ProjectStructureWidget?>
 <?import de.rocketlabs.behatide.application.component.widget.WidgetToolBar?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <fx:root fx:id="MainScene" type="de.rocketlabs.behatide.application.component.MainScene"
          xmlns:fx="http://javafx.com/fxml">
@@ -21,6 +23,13 @@
                     <ComboBox fx:id="profileSelection"/>
                     <Label>Suite:</Label>
                     <ComboBox fx:id="suiteSelection"/>
+                    <Button fx:id="runButton" onAction="#runFile">
+                        <graphic>
+                            <ImageView>
+                                <Image url="/images/bullet_go.png"/>
+                            </ImageView>
+                        </graphic>
+                    </Button>
                 </ToolBar>
             </top>
             <left>
@@ -32,7 +41,7 @@
             <center>
                 <SplitPane orientation="VERTICAL" fx:id="verticalSplit">
                     <SplitPane fx:id="horizontalSplit">
-                        <Editor project="${MainScene.project}"/>
+                        <Editor fx:id="editor" project="${MainScene.project}"/>
                     </SplitPane>
                 </SplitPane>
             </center>

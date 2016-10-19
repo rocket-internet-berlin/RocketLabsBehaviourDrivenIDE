@@ -6,6 +6,7 @@ import de.rocketlabs.behatide.domain.model.Project;
 import de.rocketlabs.behatide.domain.model.ProjectLoader;
 import de.rocketlabs.behatide.domain.model.ProjectType;
 import de.rocketlabs.behatide.domain.parser.ConfigurationReader;
+import de.rocketlabs.behatide.domain.runner.TestRunner;
 import de.rocketlabs.behatide.modules.AbstractModule;
 import de.rocketlabs.behatide.modules.behat.filter.*;
 import de.rocketlabs.behatide.modules.behat.model.BehatConfiguration;
@@ -25,6 +26,7 @@ public class BehatModule extends AbstractModule {
         bind(ConfigurationReader.class).to(BehatConfigurationReader.class);
         bind(ProjectLoader.class).to(de.rocketlabs.behatide.modules.behat.model.ProjectLoader.class);
         bind(Project.class).to(de.rocketlabs.behatide.modules.behat.model.Project.class);
+        bind(TestRunner.class).to(de.rocketlabs.behatide.modules.behat.runner.TestRunner.class);
     }
 
     @Override

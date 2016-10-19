@@ -6,7 +6,7 @@
 <Stage>
     <scene>
         <Scene stylesheets="@../css/editor.css">
-            <MainScene prefWidth="500" prefHeight="500"/>
+            <MainScene prefWidth="900" prefHeight="500"/>
         </Scene>
     </scene>
 </Stage>
