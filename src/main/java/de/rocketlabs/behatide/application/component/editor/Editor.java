@@ -1,14 +1,13 @@
 package de.rocketlabs.behatide.application.component.editor;
 
+import de.rocketlabs.behatide.application.component.LineNumber;
 import de.rocketlabs.behatide.domain.model.Project;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.Node;
 import javafx.scene.control.Skin;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import org.fxmisc.richtext.CodeArea;
-import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.StyleSpans;
 import org.fxmisc.richtext.StyleSpansBuilder;
 import org.fxmisc.richtext.skin.StyledTextAreaVisual;
@@ -45,17 +44,6 @@ public class Editor extends CodeArea {
         setDesign();
     }
 
-    private void setDesign() {
-        IntFunction<String> format = (digits -> "%" + (digits < 2 ? 2 : digits) + "d");
-        IntFunction<Node> ln = LineNumberFactory.get(this, format);
-
-        setParagraphGraphicFactory(ln);
-        getStyleClass().add("editor-test-class");
-        richChanges()
-            .filter(ch -> !ch.getInserted().equals(ch.getRemoved()))
-            .subscribe(change -> setStyleSpans(0, computeHighlighting(getText())));
-    }
-
     private static StyleSpans<Collection<String>> computeHighlighting(String text) {
         Matcher matcher = PATTERN.matcher(text);
         int lastKwEnd = 0;
@@ -71,16 +59,6 @@ public class Editor extends CodeArea {
         }
         spansBuilder.add(CSS_CLASS_DEFAULT, text.length() - lastKwEnd);
         return spansBuilder.create();
-    }
-
-    @Override
-    protected Skin<?> createDefaultSkin() {
-        //noinspection RedundantTypeArguments
-        return Skins.<Editor, StyledTextAreaVisual<Collection<String>>>createSimpleSkin(
-            this,
-            area -> new StyledTextAreaVisual<>(area, (text, styleClasses) -> text.getStyleClass().addAll(styleClasses)),
-            EditorBehavior::new
-        );
     }
 
     public int getLineIndex() {
@@ -119,5 +97,26 @@ public class Editor extends CodeArea {
 
     public ObjectProperty<Project> projectProperty() {
         return project;
+    }
+
+    @Override
+    protected Skin<?> createDefaultSkin() {
+        //noinspection RedundantTypeArguments
+        return Skins.<Editor, StyledTextAreaVisual<Collection<String>>>createSimpleSkin(
+            this,
+            area -> new StyledTextAreaVisual<>(area, (text, styleClasses) -> text.getStyleClass().addAll(styleClasses)),
+            EditorBehavior::new
+        );
+    }
+
+    private void setDesign() {
+        IntFunction<String> format = (digits -> "%" + (digits < 2 ? 2 : digits) + "d");
+        LineNumber ln = new LineNumber(getParagraphs(), format);
+
+        setParagraphGraphicFactory(ln);
+        getStyleClass().add("editor-test-class");
+        richChanges()
+            .filter(ch -> !ch.getInserted().equals(ch.getRemoved()))
+            .subscribe(change -> setStyleSpans(0, computeHighlighting(getText())));
     }
 }
