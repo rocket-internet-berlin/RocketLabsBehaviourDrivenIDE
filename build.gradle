@@ -2,8 +2,12 @@ group 'de.rocketlabs'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
+apply plugin: 'distribution'
+apply plugin: 'application'
 
 sourceCompatibility = 1.8
+
+mainClassName = 'de.rocketlabs.behatide.Main'
 
 repositories {
     mavenCentral()
@@ -46,3 +50,12 @@ task generatePhpParser(type: Exec) {
 }
 
 compileJava.dependsOn(generatePhpParser)
+
+distributions {
+    main {
+        baseName = 'BehatIde'
+        contents {
+            from jar
+        }
+    }
+}
