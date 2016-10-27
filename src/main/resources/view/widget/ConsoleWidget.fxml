@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.rocketlabs.behatide.application.component.widget.ConsoleWidget?>
+<?import javafx.scene.control.TabPane?>
+<fx:root type="de.rocketlabs.behatide.application.component.widget.ConsoleWidget" xmlns:fx="http://javafx.com/fxml">
+    <TabPane fx:id="pane"/>
+</fx:root>

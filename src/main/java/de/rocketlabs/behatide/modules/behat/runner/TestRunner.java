@@ -1,12 +1,9 @@
 package de.rocketlabs.behatide.modules.behat.runner;
 
+import de.rocketlabs.behatide.application.component.control.Console;
 import de.rocketlabs.behatide.modules.behat.model.BehatProfile;
 import de.rocketlabs.behatide.modules.behat.model.BehatSuite;
 import de.rocketlabs.behatide.modules.behat.model.Project;
-import javafx.scene.Scene;
-import javafx.scene.control.TextArea;
-import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,7 +14,11 @@ import java.nio.file.Path;
 public class TestRunner implements de.rocketlabs.behatide.domain.runner.TestRunner<Project, BehatProfile, BehatSuite> {
 
     @Override
-    public void runFile(Project project, BehatProfile profile, BehatSuite suite, Path filePath) {
+    public void runFile(Project project,
+                        BehatProfile profile,
+                        BehatSuite suite,
+                        Path filePath,
+                        Console console) {
         String behatExecutablePath = project.getBehatExecutablePath();
 
         ProcessBuilder processBuilder = new ProcessBuilder(
@@ -28,40 +29,29 @@ public class TestRunner implements de.rocketlabs.behatide.domain.runner.TestRunn
                 filePath.toString()
         );
         try {
-            //TODO: Prettify (hack hack hack)
             Process process = processBuilder.start();
             InputStream inputStream = process.getInputStream();
             InputStream errorStream = process.getErrorStream();
 
-            Stage stage = new Stage();
-            HBox root = new HBox();
-            TextArea e = new TextArea();
-            e.setPrefWidth(1000);
-            e.editableProperty().setValue(false);
-            root.getChildren().add(e);
-            Scene value = new Scene(root, 1000, 300);
-            stage.setScene(value);
-            stage.show();
-
-            printStream(inputStream, e);
-            printStream(errorStream, e);
+            printStream(inputStream, console);
+            printStream(errorStream, console);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void printStream(InputStream inputStream, TextArea e) {
+    private void printStream(InputStream inputStream, Console console) {
         new Thread(
-                () -> {
-                    try {
-                        BufferedReader buf = new BufferedReader(new InputStreamReader(inputStream));
-                        String s;
-                        while ((s = buf.readLine()) != null) {
-                            e.appendText(s + '\n');
-                        }
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
+            () -> {
+                try {
+                    BufferedReader buf = new BufferedReader(new InputStreamReader(inputStream));
+                    String s;
+                    while ((s = buf.readLine()) != null) {
+                        console.write(s + '\n');
                     }
-                }).start();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }).start();
     }
 }

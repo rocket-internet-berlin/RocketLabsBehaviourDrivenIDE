@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.rocketlabs.behatide.application.component.control.Console?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<fx:root type="Console" xmlns:fx="http://javafx.com/fxml">
+    <TextArea fx:id="textArea"
+              editable="false"
+              AnchorPane.leftAnchor="0"
+              AnchorPane.topAnchor="0"
+              AnchorPane.bottomAnchor="0"
+              AnchorPane.rightAnchor="0"/>
+</fx:root>

@@ -1,7 +1,9 @@
 package de.rocketlabs.behatide.application.component;
 
 import com.google.inject.Guice;
+import de.rocketlabs.behatide.application.component.control.Console;
 import de.rocketlabs.behatide.application.component.editor.Editor;
+import de.rocketlabs.behatide.application.component.widget.ConsoleWidget;
 import de.rocketlabs.behatide.application.event.EventManager;
 import de.rocketlabs.behatide.application.event.project.ProfileSelectionChangedEvent;
 import de.rocketlabs.behatide.application.manager.modules.ModuleManager;
@@ -22,6 +24,8 @@ import java.nio.file.Path;
 
 public class EditorView extends BorderPane implements FxmlLoading {
 
+    @FXML
+    private ConsoleWidget consoleWidget;
     @FXML
     private Editor editor;
     @FXML
@@ -89,6 +93,7 @@ public class EditorView extends BorderPane implements FxmlLoading {
         return project.get();
     }
 
+    @FXML
     public ObjectProperty<Project> projectProperty() {
         return project;
     }
@@ -108,8 +113,10 @@ public class EditorView extends BorderPane implements FxmlLoading {
                 (project.getMetaData().getModuleName());
 
         TestRunner runner = Guice.createInjector(module).getInstance(TestRunner.class);
+        Console console = consoleWidget.newConsole(file.getFileName().toString());
         //noinspection unchecked
-        runner.runFile(project, profile, suite, file);
+        runner.runFile(project, profile, suite, file, console);
+        //TODO: Show console widget
     }
 
     private class ProfileCell extends ListCell<Profile> {
