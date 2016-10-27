@@ -1,6 +1,5 @@
 package de.rocketlabs.behatide.domain.model;
 
-
 import javafx.scene.image.Image;
 
 public class ProjectType {

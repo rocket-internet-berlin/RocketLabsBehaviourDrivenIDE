@@ -32,7 +32,10 @@ public final class BehatConfigurationReader implements ConfigurationReader<Behat
                 //noinspection Convert2streamapi
                 for (Object profileName : ((Map) data).keySet()) {
                     if (profileName instanceof String) {
-                        configuration.addProfile(profileParser.read(((String) profileName), (Map) ((Map) data).get(profileName)));
+                        configuration.addProfile(profileParser.read(
+                                ((String) profileName),
+                                (Map) ((Map) data).get(profileName)
+                        ));
                     }
                 }
             }

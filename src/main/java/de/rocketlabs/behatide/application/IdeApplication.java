@@ -36,5 +36,4 @@ public class IdeApplication {
         EventManager.addListener(FileLoadFailedEvent.class, new FileLoadFailedEventListener());
         EventManager.addListener(ShowStartupEvent.class, new ShowStartupEventListener());
     }
-
 }

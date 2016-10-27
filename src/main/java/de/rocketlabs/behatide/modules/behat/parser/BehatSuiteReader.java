@@ -65,5 +65,4 @@ public class BehatSuiteReader {
         }
         return value;
     }
-
 }

@@ -18,7 +18,10 @@ public class StateStorageException extends RuntimeException {
         super(cause);
     }
 
-    protected StateStorageException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    protected StateStorageException(String message,
+                                    Throwable cause,
+                                    boolean enableSuppression,
+                                    boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

@@ -59,8 +59,8 @@ public class FileTreeItem extends TreeItem<File> {
             if (files != null) {
                 ObservableList<TreeItem<File>> children = FXCollections.observableArrayList();
                 SortedList<TreeItem<File>> treeItems = new SortedList<>(
-                    children,
-                    new TreeItemComparator<>(new FileNameComparator())
+                        children,
+                        new TreeItemComparator<>(new FileNameComparator())
                 );
 
                 for (File childFile : files) {

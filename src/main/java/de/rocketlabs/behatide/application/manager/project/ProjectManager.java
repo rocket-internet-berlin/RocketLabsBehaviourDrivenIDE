@@ -27,9 +27,9 @@ public class ProjectManager {
     @NotNull
     public List<ProjectMetaData> getRecentProjects() {
         return recentProjects
-            .stream()
-            .map(ProjectMetaData::clone)
-            .collect(Collectors.toList());
+                .stream()
+                .map(ProjectMetaData::clone)
+                .collect(Collectors.toList());
     }
 
     private void addRecentProject(ProjectMetaData recentProject) {
@@ -55,9 +55,9 @@ public class ProjectManager {
 
     public List<ProjectMetaData> getOpenProjects() {
         return openProjects
-            .stream()
-            .map(ProjectMetaData::clone)
-            .collect(Collectors.toList());
+                .stream()
+                .map(ProjectMetaData::clone)
+                .collect(Collectors.toList());
     }
 
     private void handleLoadProjectEvent(LoadProjectEvent event) {

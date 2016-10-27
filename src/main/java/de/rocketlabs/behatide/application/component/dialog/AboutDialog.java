@@ -1,33 +1,22 @@
 package de.rocketlabs.behatide.application.component.dialog;
 
+import de.rocketlabs.behatide.application.component.FxmlLoading;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.stage.Popup;
 
-import java.io.IOException;
-
-public class AboutDialog extends Popup {
+public class AboutDialog extends Popup implements FxmlLoading {
 
     @FXML
     private Label version;
 
     public AboutDialog() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/dialog/AboutDialog.fxml"));
-        fxmlLoader.setRoot(this);
-        fxmlLoader.setController(this);
-        opacityProperty().setValue(1);
-        setAutoHide(true);
-        try {
-            fxmlLoader.load();
-        } catch (IOException exception) {
-            throw new RuntimeException(exception);
-        }
+        loadFxml();
     }
 
-    @FXML
-    private void initialize() {
-        version.setText(getVersion());
+    @Override
+    public String getFxmlPath() {
+        return "/view/dialog/AboutDialog.fxml";
     }
 
     private String getVersion() {
@@ -36,5 +25,10 @@ public class AboutDialog extends Popup {
             return "DEVELOPMENT VERSION";
         }
         return version;
+    }
+
+    @FXML
+    private void initialize() {
+        version.setText(getVersion());
     }
 }

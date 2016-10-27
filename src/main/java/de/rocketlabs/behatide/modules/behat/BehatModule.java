@@ -43,11 +43,11 @@ public class BehatModule extends AbstractModule {
         GsonUtils.registerType(AbstractModule.class, getClass());
         GsonUtils.registerType(Project.class, de.rocketlabs.behatide.modules.behat.model.Project.class);
         GsonUtils.registerType(
-            GherkinFilter.class,
-            NameFilter.class,
-            NarrativeFilter.class,
-            RoleFilter.class,
-            TagFilter.class
+                GherkinFilter.class,
+                NameFilter.class,
+                NarrativeFilter.class,
+                RoleFilter.class,
+                TagFilter.class
         );
     }
 }

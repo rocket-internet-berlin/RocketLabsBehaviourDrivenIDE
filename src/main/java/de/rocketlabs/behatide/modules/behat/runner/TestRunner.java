@@ -21,11 +21,11 @@ public class TestRunner implements de.rocketlabs.behatide.domain.runner.TestRunn
         String behatExecutablePath = project.getBehatExecutablePath();
 
         ProcessBuilder processBuilder = new ProcessBuilder(
-            behatExecutablePath,
-            "-c", project.getBehatConfigurationFile(),
-            "-p", profile.getName(),
-            "-s", suite.getName(),
-            filePath.toString()
+                behatExecutablePath,
+                "-c", project.getBehatConfigurationFile(),
+                "-p", profile.getName(),
+                "-s", suite.getName(),
+                filePath.toString()
         );
         try {
             //TODO: Prettify (hack hack hack)
@@ -52,16 +52,16 @@ public class TestRunner implements de.rocketlabs.behatide.domain.runner.TestRunn
 
     private void printStream(InputStream inputStream, TextArea e) {
         new Thread(
-            () -> {
-                try {
-                    BufferedReader buf = new BufferedReader(new InputStreamReader(inputStream));
-                    String s;
-                    while ((s = buf.readLine()) != null) {
-                        e.appendText(s + '\n');
+                () -> {
+                    try {
+                        BufferedReader buf = new BufferedReader(new InputStreamReader(inputStream));
+                        String s;
+                        while ((s = buf.readLine()) != null) {
+                            e.appendText(s + '\n');
+                        }
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
                     }
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            }).start();
+                }).start();
     }
 }

@@ -14,25 +14,25 @@ public abstract class Collectors {
 
     public static <T> Collector<T, ?, List<T>> toLinkedList() {
         return new CollectorImpl<>(
-            LinkedList::new,
-            List::add,
-            (left, right) -> {
-                left.addAll(right);
-                return left;
-            },
-            Collections.unmodifiableSet(EnumSet.of(Collector.Characteristics.IDENTITY_FINISH))
+                LinkedList::new,
+                List::add,
+                (left, right) -> {
+                    left.addAll(right);
+                    return left;
+                },
+                Collections.unmodifiableSet(EnumSet.of(Collector.Characteristics.IDENTITY_FINISH))
         );
     }
 
     public static <T> Collector<T, ?, ObservableList<T>> toObservableList() {
         return new CollectorImpl<>(
-            FXCollections::observableArrayList,
-            List::add,
-            (left, right) -> {
-                left.addAll(right);
-                return left;
-            },
-            Collections.unmodifiableSet(EnumSet.of(Collector.Characteristics.IDENTITY_FINISH))
+                FXCollections::observableArrayList,
+                List::add,
+                (left, right) -> {
+                    left.addAll(right);
+                    return left;
+                },
+                Collections.unmodifiableSet(EnumSet.of(Collector.Characteristics.IDENTITY_FINISH))
         );
     }
 

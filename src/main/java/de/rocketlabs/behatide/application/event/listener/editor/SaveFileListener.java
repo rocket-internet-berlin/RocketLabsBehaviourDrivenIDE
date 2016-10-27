@@ -29,10 +29,10 @@ public class SaveFileListener implements EventListener<FileSaveRequestEvent> {
 
         try {
             Files.write(
-                openFilePath,
-                content.getBytes(),
-                StandardOpenOption.DSYNC,
-                StandardOpenOption.TRUNCATE_EXISTING
+                    openFilePath,
+                    content.getBytes(),
+                    StandardOpenOption.DSYNC,
+                    StandardOpenOption.TRUNCATE_EXISTING
             );
         } catch (IOException e) {
             e.printStackTrace(System.err);

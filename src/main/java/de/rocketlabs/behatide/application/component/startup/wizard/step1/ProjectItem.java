@@ -1,17 +1,15 @@
 package de.rocketlabs.behatide.application.component.startup.wizard.step1;
 
+import de.rocketlabs.behatide.application.component.FxmlLoading;
 import de.rocketlabs.behatide.domain.model.ProjectType;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 
-import java.io.IOException;
-
-public class ProjectItem extends ListCell<ProjectType> {
+public class ProjectItem extends ListCell<ProjectType> implements FxmlLoading<HBox> {
 
     private ListView<ProjectType> view;
 
@@ -20,25 +18,22 @@ public class ProjectItem extends ListCell<ProjectType> {
     @FXML
     public Label title;
     @FXML
-    private Node content;
+    private HBox content;
 
     public ProjectItem(ListView<ProjectType> view) {
         this.view = view;
         content = loadFxml();
+        setOnMouseClicked(e -> view.getSelectionModel().select(getItem()));
     }
 
-    private Node loadFxml() {
-        FXMLLoader fxmlLoader = new FXMLLoader(
-            getClass().getResource("/view/startup/createProjectWizard/step1/ProjectItem.fxml"));
-        fxmlLoader.setController(this);
-        try {
-            Node load = fxmlLoader.load();
-            setOnMouseClicked(e -> view.getSelectionModel().select(getItem()));
-            return load;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    @Override
+    public String getFxmlPath() {
+        return "/view/startup/createProjectWizard/step1/ProjectItem.fxml";
+    }
 
+    @Override
+    public Object getRoot() {
+        return null;
     }
 
     @Override

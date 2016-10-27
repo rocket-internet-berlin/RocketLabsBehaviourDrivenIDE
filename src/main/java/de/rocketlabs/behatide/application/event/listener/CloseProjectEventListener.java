@@ -9,5 +9,4 @@ public class CloseProjectEventListener implements EventListener<CloseProjectEven
     public void handleEvent(CloseProjectEvent event) {
 
     }
-
 }

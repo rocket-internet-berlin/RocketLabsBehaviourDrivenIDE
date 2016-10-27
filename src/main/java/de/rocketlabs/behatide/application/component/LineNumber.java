@@ -17,20 +17,19 @@ public class LineNumber implements IntFunction<Node> {
     private static final Font DEFAULT_FONT =
             Font.font("monospace", FontPosture.ITALIC, 13);
 
-
     private final Val<Integer> nParagraphs;
     private final IntFunction<String> format;
 
     public LineNumber(
             ObservableList size,
-            IntFunction<String>format) {
+            IntFunction<String> format) {
         nParagraphs = LiveList.sizeOf(size);
         this.format = format;
     }
 
     @Override
     public Node apply(int idx) {
-        Val<String> formatted = nParagraphs.map(n -> format(idx+1, n));
+        Val<String> formatted = nParagraphs.map(n -> format(idx + 1, n));
 
         Label lineNo = new Label();
         lineNo.setFont(DEFAULT_FONT);

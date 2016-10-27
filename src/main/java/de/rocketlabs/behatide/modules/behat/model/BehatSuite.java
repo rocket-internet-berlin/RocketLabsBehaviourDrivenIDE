@@ -66,5 +66,4 @@ public class BehatSuite implements Suite {
         //noinspection unchecked
         return (List<String>) settings.get("contexts");
     }
-
 }

@@ -6,7 +6,6 @@ import de.rocketlabs.behatide.modules.behat.model.FilterType;
 
 import java.util.Map;
 
-
 public final class BehatProfileReader {
 
     private static final String DEFAULT_LOCALE = "en";
@@ -63,8 +62,8 @@ public final class BehatProfileReader {
         if (profileData.get("autoload") instanceof Map) {
             Map<?, ?> autoLoadData = (Map) profileData.get("autoload");
             autoLoadData.values().stream()
-                    .filter(value -> value instanceof String)
-                    .forEach(value -> profile.addAutoLoadPath((String) value));
+                        .filter(value -> value instanceof String)
+                        .forEach(value -> profile.addAutoLoadPath((String) value));
         } else if (profileData.get("autoload") instanceof String) {
             profile.addAutoLoadPath((String) profileData.get("autoload"));
         } else {

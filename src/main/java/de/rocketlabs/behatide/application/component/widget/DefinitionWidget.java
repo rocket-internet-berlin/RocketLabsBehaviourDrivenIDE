@@ -1,5 +1,6 @@
 package de.rocketlabs.behatide.application.component.widget;
 
+import de.rocketlabs.behatide.application.component.FxmlLoading;
 import de.rocketlabs.behatide.application.component.SuiteSelectionChangedEvent;
 import de.rocketlabs.behatide.application.component.control.DefinitionTreeCell;
 import de.rocketlabs.behatide.application.component.control.DefinitionTreeItem;
@@ -9,34 +10,30 @@ import de.rocketlabs.behatide.domain.model.DefinitionContainer;
 import de.rocketlabs.behatide.domain.model.Project;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 
-import java.io.IOException;
 import java.util.List;
 
-public class DefinitionWidget extends Widget {
+public class DefinitionWidget extends Widget implements FxmlLoading {
 
     public TreeView<Object> treeView;
     private ObjectProperty<Project> project = new SimpleObjectProperty<>();
     private boolean suiteSelected = false;
 
     public DefinitionWidget() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/widget/DefinitionWidget.fxml"));
-        fxmlLoader.setRoot(this);
-        fxmlLoader.setController(this);
-        try {
-            fxmlLoader.load();
-        } catch (IOException exception) {
-            throw new RuntimeException(exception);
-        }
+        loadFxml();
 
         treeView.setShowRoot(false);
         treeView.setCellFactory(param -> new DefinitionTreeCell(getProject()));
         treeView.setRoot(new TreeItem<>());
 
         EventManager.addListener(SuiteSelectionChangedEvent.class, new SuiteChangedListener());
+    }
+
+    @Override
+    public String getFxmlPath() {
+        return "/view/widget/DefinitionWidget.fxml";
     }
 
     public Project getProject() {

@@ -1,5 +1,6 @@
 package de.rocketlabs.behatide.application.component.widget;
 
+import de.rocketlabs.behatide.application.component.FxmlLoading;
 import de.rocketlabs.behatide.application.component.SuiteSelectionChangedEvent;
 import de.rocketlabs.behatide.application.component.control.FileTreeCell;
 import de.rocketlabs.behatide.application.component.control.FileTreeItem;
@@ -11,36 +12,32 @@ import de.rocketlabs.behatide.domain.model.Project;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TreeView;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
-public class ProjectStructureWidget extends Widget {
+public class ProjectStructureWidget extends Widget implements FxmlLoading {
 
     public TreeView<File> treeView;
     private ObjectProperty<Project> project = new SimpleObjectProperty<>();
     private boolean suiteSelected = false;
 
     public ProjectStructureWidget() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/widget/ProjectStructureWidget.fxml"));
-        fxmlLoader.setRoot(this);
-        fxmlLoader.setController(this);
-        try {
-            fxmlLoader.load();
-        } catch (IOException exception) {
-            throw new RuntimeException(exception);
-        }
+        loadFxml();
 
         EventManager.addListener(SuiteSelectionChangedEvent.class, new SuiteChangedListener());
         EventManager.addListener(ProfileSelectionChangedEvent.class, new ProfileChangedListener());
     }
 
+    @Override
+    public String getFxmlPath() {
+        return "/view/widget/ProjectStructureWidget.fxml";
+    }
+
     private void initTree(List<String> paths, String fileMask) {
         getProject().getPathReplacements().forEach(
-            (pattern, replacement) -> paths.replaceAll(path -> path.replace(pattern, replacement)));
+                (pattern, replacement) -> paths.replaceAll(path -> path.replace(pattern, replacement)));
         File parentDirectory = FileUtils.findCommonParent(paths);
         FileTreeItem root = new FileTreeItem(parentDirectory, paths, fileMask);
 

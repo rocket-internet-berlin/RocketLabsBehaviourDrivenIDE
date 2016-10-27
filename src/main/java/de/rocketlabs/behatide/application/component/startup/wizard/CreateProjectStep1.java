@@ -1,5 +1,6 @@
 package de.rocketlabs.behatide.application.component.startup.wizard;
 
+import de.rocketlabs.behatide.application.component.FxmlLoading;
 import de.rocketlabs.behatide.application.component.IdeForm;
 import de.rocketlabs.behatide.application.component.startup.wizard.step1.ProjectItem;
 import de.rocketlabs.behatide.application.manager.modules.ModuleManager;
@@ -13,18 +14,16 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.BorderPane;
 import org.controlsfx.dialog.WizardPane;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-public class CreateProjectStep1 extends WizardPane implements ValidationWizardStep {
+public class CreateProjectStep1 extends WizardPane implements ValidationWizardStep, FxmlLoading {
 
     @FXML
     private ListView<ProjectType> projectTypeList;
@@ -33,19 +32,12 @@ public class CreateProjectStep1 extends WizardPane implements ValidationWizardSt
     private BooleanProperty invalidProperty = new SimpleBooleanProperty(true);
 
     CreateProjectStep1() {
-        loadComponent();
+        loadFxml();
     }
 
-    private void loadComponent() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/startup/createProjectWizard/step1.fxml"));
-        fxmlLoader.setController(this);
-        fxmlLoader.setRoot(this);
-
-        try {
-            fxmlLoader.load();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    @Override
+    public String getFxmlPath() {
+        return "/view/startup/createProjectWizard/step1.fxml";
     }
 
     @FXML

@@ -41,5 +41,4 @@ public class ProjectQuickSelection extends ListView<ProjectMetaData> {
             }
         });
     }
-
 }

@@ -12,7 +12,8 @@ public class FileLoadFailedEventListener implements EventListener<FileLoadFailed
 
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setHeaderText(message);
-        if (event.getError() != null && event.getError().getMessage() != null && !event.getError().getMessage().isEmpty()) {
+        if (event.getError() != null && event.getError().getMessage() != null && !event.getError().getMessage()
+                                                                                       .isEmpty()) {
             alert.setContentText(event.getError().getMessage());
         }
         alert.showAndWait();

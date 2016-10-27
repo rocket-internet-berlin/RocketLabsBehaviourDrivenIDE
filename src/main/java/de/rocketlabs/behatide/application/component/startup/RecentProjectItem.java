@@ -1,10 +1,10 @@
 package de.rocketlabs.behatide.application.component.startup;
 
+import de.rocketlabs.behatide.application.component.FxmlLoading;
 import de.rocketlabs.behatide.application.event.EventManager;
 import de.rocketlabs.behatide.application.event.LoadProjectEvent;
 import de.rocketlabs.behatide.application.manager.project.ProjectMetaData;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -12,9 +12,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
-import java.io.IOException;
-
-public class RecentProjectItem extends ListCell<ProjectMetaData> {
+public class RecentProjectItem extends ListCell<ProjectMetaData> implements FxmlLoading {
 
     @FXML
     public Label projectPath;
@@ -30,7 +28,7 @@ public class RecentProjectItem extends ListCell<ProjectMetaData> {
 
     RecentProjectItem(ListView<ProjectMetaData> view) {
         this.view = view;
-        content = loadFxml();
+        content = (AnchorPane) loadFxml();
     }
 
     @Override
@@ -65,13 +63,13 @@ public class RecentProjectItem extends ListCell<ProjectMetaData> {
         setGraphic(content);
     }
 
-    private AnchorPane loadFxml() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/startup/RecentProjectItem.fxml"));
-        fxmlLoader.setController(this);
-        try {
-            return fxmlLoader.load();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    @Override
+    public String getFxmlPath() {
+        return "/view/startup/RecentProjectItem.fxml";
+    }
+
+    @Override
+    public Object getRoot() {
+        return null;
     }
 }

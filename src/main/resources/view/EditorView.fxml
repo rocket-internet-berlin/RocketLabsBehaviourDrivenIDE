@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.rocketlabs.behatide.application.component.editor.Editor?>
+<?import de.rocketlabs.behatide.application.component.EditorView?>
 <?import de.rocketlabs.behatide.application.component.MainMenuBar?>
-<?import de.rocketlabs.behatide.application.component.MainScene?>
 <?import de.rocketlabs.behatide.application.component.widget.DefinitionWidget?>
 <?import de.rocketlabs.behatide.application.component.widget.ProjectStructureWidget?>
 <?import de.rocketlabs.behatide.application.component.widget.WidgetToolBar?>
@@ -10,10 +10,10 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
-<fx:root fx:id="MainScene" type="de.rocketlabs.behatide.application.component.MainScene"
-         xmlns:fx="http://javafx.com/fxml">
+<fx:root type="de.rocketlabs.behatide.application.component.EditorView" xmlns:fx="http://javafx.com/fxml"
+         stylesheets="@../css/editor.css" prefWidth="900" prefHeight="500">
     <top>
-        <MainMenuBar fx:id="menuBar" project="${MainScene.project}"/>
+        <MainMenuBar fx:id="menuBar" project="${project}"/>
     </top>
     <center>
         <BorderPane>
@@ -34,14 +34,14 @@
             </top>
             <left>
                 <WidgetToolBar orientation="VERTICAL" splitPane="${horizontalSplit}" contentPosition="0">
-                    <ProjectStructureWidget project="${MainScene.project}" name="Project"/>
-                    <DefinitionWidget project="${MainScene.project}" name="Definitions"/>
+                    <ProjectStructureWidget project="${project}" name="Project"/>
+                    <DefinitionWidget project="${project}" name="Definitions"/>
                 </WidgetToolBar>
             </left>
             <center>
                 <SplitPane orientation="VERTICAL" fx:id="verticalSplit">
                     <SplitPane fx:id="horizontalSplit">
-                        <Editor fx:id="editor" project="${MainScene.project}"/>
+                        <Editor fx:id="editor" project="${project}"/>
                     </SplitPane>
                 </SplitPane>
             </center>
@@ -52,5 +52,4 @@
             </bottom>
         </BorderPane>
     </center>
-
 </fx:root>

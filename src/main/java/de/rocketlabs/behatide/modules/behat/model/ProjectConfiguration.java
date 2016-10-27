@@ -7,7 +7,7 @@ import de.rocketlabs.behatide.modules.behat.form.ProjectCreationForm;
 import javafx.beans.property.SimpleStringProperty;
 
 public class ProjectConfiguration implements de.rocketlabs.behatide.domain.model
-                                                 .ProjectConfiguration<ProjectConfiguration> {
+                                                     .ProjectConfiguration<ProjectConfiguration> {
 
     private final SimpleStringProperty behatConfigurationFile;
     private final SimpleStringProperty projectLocation;

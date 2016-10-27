@@ -1,6 +1,5 @@
 package de.rocketlabs.behatide.application.event;
 
-
 import javafx.application.Platform;
 
 import java.util.*;

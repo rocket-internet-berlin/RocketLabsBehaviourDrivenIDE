@@ -32,5 +32,4 @@ public class IdeForm extends GridPane {
 
     //TODO add separator
     //TODO add title line
-
 }

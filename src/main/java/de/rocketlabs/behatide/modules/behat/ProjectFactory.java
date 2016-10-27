@@ -28,18 +28,18 @@ import java.util.stream.Collectors;
 public class ProjectFactory {
 
     private static final String[] AUTO_LOADER_PATHS = new String[]{
-        "../../../autoload.php",
-        "vendor/autoload.php",
-        "../vendor/autoload.php",
-        };
+            "../../../autoload.php",
+            "vendor/autoload.php",
+            "../vendor/autoload.php",
+            };
 
     private static Injector injector = Guice.createInjector(new BehatModule());
     private static BehatConfigurationReader configurationReader =
-        (BehatConfigurationReader) injector.getInstance(ConfigurationReader.class);
+            (BehatConfigurationReader) injector.getInstance(ConfigurationReader.class);
 
     public static de.rocketlabs.behatide.domain.model.Project generateProject(ProjectConfiguration configuration) {
         Project project = new de.rocketlabs.behatide.modules.behat.model
-            .Project();
+                .Project();
         project.setProjectLocation(configuration.getProjectLocation());
         project.setBehatConfigurationFile(configuration.getBehatConfigurationFile());
         project.setBehatExecutablePath(configuration.getBehatExecutable());

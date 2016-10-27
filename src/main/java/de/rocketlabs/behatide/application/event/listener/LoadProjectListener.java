@@ -2,7 +2,7 @@ package de.rocketlabs.behatide.application.event.listener;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import de.rocketlabs.behatide.application.component.MainScene;
+import de.rocketlabs.behatide.application.component.EditorView;
 import de.rocketlabs.behatide.application.configuration.storage.StorageParameter;
 import de.rocketlabs.behatide.application.configuration.storage.state.StateStorageManager;
 import de.rocketlabs.behatide.application.event.CloseProjectEvent;
@@ -13,7 +13,6 @@ import de.rocketlabs.behatide.application.manager.modules.ModuleManager;
 import de.rocketlabs.behatide.application.manager.project.ProjectMetaData;
 import de.rocketlabs.behatide.domain.model.Project;
 import de.rocketlabs.behatide.modules.AbstractModule;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
@@ -67,10 +66,13 @@ public class LoadProjectListener implements EventListener<LoadProjectEvent> {
     }
 
     private void openMainWindow(Project project) throws IOException {
-        Stage stage = FXMLLoader.load(getClass().getResource("/view/IdeApplication.fxml"));
-        Scene scene = stage.getScene();
-        MainScene root = ((MainScene) scene.getRoot());
-        root.setProject(project);
+        EditorView view = new EditorView();
+        view.setProject(project);
+
+        Scene scene = new Scene(view);
+
+        Stage stage = new Stage();
+        stage.setScene(scene);
         stage.setTitle(project.getTitle() + " - Rocket Labs Behat IDE");
         stage.show();
         stage.centerOnScreen();

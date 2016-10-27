@@ -15,14 +15,12 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 
-import java.io.IOException;
 import java.nio.file.Path;
 
-public class MainScene extends BorderPane {
+public class EditorView extends BorderPane implements FxmlLoading {
 
     @FXML
     private Editor editor;
@@ -37,15 +35,8 @@ public class MainScene extends BorderPane {
 
     private ObjectProperty<Project> project = new SimpleObjectProperty<>();
 
-    public MainScene() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MainScene.fxml"));
-        fxmlLoader.setRoot(this);
-        fxmlLoader.setController(this);
-        try {
-            fxmlLoader.load();
-        } catch (IOException exception) {
-            throw new RuntimeException(exception);
-        }
+    public EditorView() {
+        loadFxml();
 
         project.addListener((observable, oldValue, newProject) -> {
             Configuration configuration = newProject.getConfiguration();
@@ -56,22 +47,27 @@ public class MainScene extends BorderPane {
         initSuiteSelection();
     }
 
+    @Override
+    public String getFxmlPath() {
+        return "/view/EditorView.fxml";
+    }
+
     private void initSuiteSelection() {
         suiteSelection.getSelectionModel().selectedItemProperty().addListener(
-            (observable, oldValue, newSuite)
-                -> EventManager.fireEvent(new SuiteSelectionChangedEvent(
-                getProject(),
-                profileSelection.getValue(),
-                newSuite
-            ))
+                (observable, oldValue, newSuite)
+                        -> EventManager.fireEvent(new SuiteSelectionChangedEvent(
+                        getProject(),
+                        profileSelection.getValue(),
+                        newSuite
+                ))
         );
         EventManager.addListener(
-            ProfileSelectionChangedEvent.class,
-            e -> {
-                if (e.getProject().equals(getProject())) {
-                    suiteSelection.setItems(FXCollections.observableList(e.getProfile().getSuites()));
+                ProfileSelectionChangedEvent.class,
+                e -> {
+                    if (e.getProject().equals(getProject())) {
+                        suiteSelection.setItems(FXCollections.observableList(e.getProfile().getSuites()));
+                    }
                 }
-            }
         );
         suiteSelection.setButtonCell(new SuiteCell());
         suiteSelection.setCellFactory(SuiteCell::new);
@@ -80,10 +76,10 @@ public class MainScene extends BorderPane {
 
     private void initProfileSelection() {
         profileSelection.getSelectionModel().selectedItemProperty().addListener(
-            (observable, oldValue, newProfile) -> EventManager.fireEvent(new ProfileSelectionChangedEvent(
-                getProject(),
-                newProfile
-            )));
+                (observable, oldValue, newProfile) -> EventManager.fireEvent(new ProfileSelectionChangedEvent(
+                        getProject(),
+                        newProfile
+                )));
         profileSelection.setButtonCell(new ProfileCell());
         profileSelection.setCellFactory(ProfileCell::new);
         profileSelection.setPlaceholder(new Label("No Profiles found"));
@@ -109,7 +105,7 @@ public class MainScene extends BorderPane {
         Path file = editor.getOpenFilePath();
 
         AbstractModule module = ModuleManager.getInstance().forName
-            (project.getMetaData().getModuleName());
+                (project.getMetaData().getModuleName());
 
         TestRunner runner = Guice.createInjector(module).getInstance(TestRunner.class);
         //noinspection unchecked

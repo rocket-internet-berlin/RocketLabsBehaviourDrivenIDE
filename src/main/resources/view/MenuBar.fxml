@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--suppress JavaFxUnresolvedFxIdReference -->
 <?import de.rocketlabs.behatide.application.component.MainMenuBar?>
 <?import de.rocketlabs.behatide.application.component.menu.FileMenu?>
 <?import de.rocketlabs.behatide.application.component.menu.HelpMenu?>
-<fx:root fx:id="menuBar" type="MainMenuBar" xmlns:fx="http://javafx.com/fxml">
-    <FileMenu scene="${menuBar.scene}" project="${menuBar.project}"/>
-    <HelpMenu scene="${menuBar.scene}" project="${menuBar.project}"/>
+<fx:root fx:id="menuBar" type="de.rocketlabs.behatide.application.component.MainMenuBar"
+         xmlns:fx="http://javafx.com/fxml">
+    <FileMenu scene="${menuBar.scene}" project="${project}"/>
+    <HelpMenu scene="${menuBar.scene}" project="${project}"/>
 </fx:root>

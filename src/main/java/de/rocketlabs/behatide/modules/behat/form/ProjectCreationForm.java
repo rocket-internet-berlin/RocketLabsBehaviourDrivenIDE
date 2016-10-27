@@ -39,5 +39,4 @@ public class ProjectCreationForm extends IdeForm {
         getValidation().registerValidator(projectLocation, Validator.createEmptyValidator(ERR_MSG_EMPTY));
         getValidation().setErrorDecorationEnabled(false);
     }
-
 }

@@ -19,8 +19,10 @@ public enum FilterType {
     public GherkinFilter createFilter(String filterCriteria) {
         try {
             return filterClass.getConstructor(String.class).newInstance(filterCriteria);
-        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-            throw new RuntimeException("Provided class " + filterClass.getName() + " seems not to extend GherkinFilter");
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException
+                e) {
+            throw new RuntimeException("Provided class " + filterClass.getName() + " seems not to extend " +
+                                       "GherkinFilter");
         }
     }
 }

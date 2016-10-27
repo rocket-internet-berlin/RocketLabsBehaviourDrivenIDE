@@ -14,5 +14,4 @@ public class LoadProjectEvent implements Event {
     public ProjectMetaData getProjectMetaData() {
         return projectModel;
     }
-
 }

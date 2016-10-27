@@ -25,12 +25,12 @@ public class Editor extends CodeArea {
 
     private static final String COMMENT_PATTERN = "[\\^\n]\\s*#[^\n]*";
     private static final CharSequence[] BEHAT_KEYWORDS = new String[]{
-        "Feature:", "Scenario Outline:", "Scenario Template:", "Scenario:", "Examples:",
-        "Scenarios:", "When", "Then", "Given", "And", "Background:"
+            "Feature:", "Scenario Outline:", "Scenario Template:", "Scenario:", "Examples:",
+            "Scenarios:", "When", "Then", "Given", "And", "Background:"
     };
     private static final Pattern PATTERN = Pattern.compile(
-        "(?<KEYWORD>(" + String.join("|", BEHAT_KEYWORDS) + "))"
-        + "|(?<COMMENT>" + COMMENT_PATTERN + ")"
+            "(?<KEYWORD>(" + String.join("|", BEHAT_KEYWORDS) + "))"
+            + "|(?<COMMENT>" + COMMENT_PATTERN + ")"
     );
 
     private static final Set<String> CSS_CLASS_KEYWORD = Collections.singleton("keyword");
@@ -50,9 +50,9 @@ public class Editor extends CodeArea {
         StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
         while (matcher.find()) {
             Set<String> cssClass =
-                matcher.group("KEYWORD") != null ? CSS_CLASS_KEYWORD :
-                matcher.group("COMMENT") != null ? CSS_CLASS_COMMENT :
-                CSS_CLASS_DEFAULT;
+                    matcher.group("KEYWORD") != null ? CSS_CLASS_KEYWORD :
+                    matcher.group("COMMENT") != null ? CSS_CLASS_COMMENT :
+                    CSS_CLASS_DEFAULT;
             spansBuilder.add(CSS_CLASS_DEFAULT, matcher.start() - lastKwEnd);
             spansBuilder.add(cssClass, matcher.end() - matcher.start());
             lastKwEnd = matcher.end();
@@ -103,9 +103,12 @@ public class Editor extends CodeArea {
     protected Skin<?> createDefaultSkin() {
         //noinspection RedundantTypeArguments
         return Skins.<Editor, StyledTextAreaVisual<Collection<String>>>createSimpleSkin(
-            this,
-            area -> new StyledTextAreaVisual<>(area, (text, styleClasses) -> text.getStyleClass().addAll(styleClasses)),
-            EditorBehavior::new
+                this,
+                area -> new StyledTextAreaVisual<>(
+                        area,
+                        (text, styleClasses) -> text.getStyleClass().addAll(styleClasses)
+                ),
+                EditorBehavior::new
         );
     }
 
@@ -116,7 +119,7 @@ public class Editor extends CodeArea {
         setParagraphGraphicFactory(ln);
         getStyleClass().add("editor-test-class");
         richChanges()
-            .filter(ch -> !ch.getInserted().equals(ch.getRemoved()))
-            .subscribe(change -> setStyleSpans(0, computeHighlighting(getText())));
+                .filter(ch -> !ch.getInserted().equals(ch.getRemoved()))
+                .subscribe(change -> setStyleSpans(0, computeHighlighting(getText())));
     }
 }

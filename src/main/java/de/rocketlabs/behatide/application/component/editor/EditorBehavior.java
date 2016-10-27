@@ -26,10 +26,10 @@ public class EditorBehavior extends StyledTextAreaBehavior {
 
     static {
         KEY_PRESSED_TEMPLATE = EventHandlerTemplate
-            .on(keyPressed(ENTER)).act(NewLineListener::handleEvent)
-            .on(keyPressed(TAB, SHIFT_ANY)).act(TabListener::handleEvent)
-            .create()
-            .onlyWhen(b -> b.editor.isEditable());
+                .on(keyPressed(ENTER)).act(NewLineListener::handleEvent)
+                .on(keyPressed(TAB, SHIFT_ANY)).act(TabListener::handleEvent)
+                .create()
+                .onlyWhen(b -> b.editor.isEditable());
     }
 
     EditorBehavior(StyledTextAreaVisual<?> visual) {
