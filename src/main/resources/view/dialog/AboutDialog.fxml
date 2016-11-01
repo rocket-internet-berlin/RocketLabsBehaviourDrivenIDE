@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.rocketlabs.behatide.application.component.dialog.AboutDialog?>
+<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 <fx:root type="AboutDialog" fx:id="AboutDialog" xmlns:fx="http://javafx.com/fxml">
@@ -8,6 +9,8 @@
         <VBox style="-fx-background-color: #FFFFFF; -fx-padding: 50">
             <Label>Behat Ide</Label>
             <Label fx:id="version"/>
+            <Label>Used software: FamFamFAm Silk Icons:</Label>
+            <Hyperlink>http://www.famfamfam.com/lab/icons/silk/</Hyperlink>
         </VBox>
     </content>
 </fx:root>
