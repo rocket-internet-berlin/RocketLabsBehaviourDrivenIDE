@@ -5,6 +5,6 @@
 <?import de.rocketlabs.behatide.application.component.menu.HelpMenu?>
 <fx:root fx:id="menuBar" type="de.rocketlabs.behatide.application.component.MainMenuBar"
          xmlns:fx="http://javafx.com/fxml">
-    <FileMenu scene="${menuBar.scene}" project="${project}"/>
-    <HelpMenu scene="${menuBar.scene}" project="${project}"/>
+    <FileMenu scene="${menuBar.scene}" project="${menuBar.project}"/>
+    <HelpMenu scene="${menuBar.scene}" project="${menuBar.project}"/>
 </fx:root>

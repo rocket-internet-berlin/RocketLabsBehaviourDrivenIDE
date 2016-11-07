@@ -9,9 +9,9 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <fx:root type="de.rocketlabs.behatide.application.component.EditorView" xmlns:fx="http://javafx.com/fxml"
-         stylesheets="@../css/editor.css" prefWidth="900" prefHeight="500">
+         stylesheets="@../css/editor.css" prefWidth="900" prefHeight="500" fx:id="this">
     <top>
-        <MainMenuBar fx:id="menuBar" project="${project}"/>
+        <MainMenuBar fx:id="menuBar" project="${this.project}"/>
     </top>
     <center>
         <BorderPane>
@@ -32,20 +32,20 @@
             </top>
             <left>
                 <WidgetToolBar orientation="VERTICAL" splitPane="${horizontalSplit}" contentPosition="0">
-                    <ProjectStructureWidget project="${project}" name="Project"/>
-                    <DefinitionWidget project="${project}" name="Definitions"/>
+                    <ProjectStructureWidget project="${this.project}" name="Project"/>
+                    <DefinitionWidget project="${this.project}" name="Definitions"/>
                 </WidgetToolBar>
             </left>
             <center>
                 <SplitPane orientation="VERTICAL" fx:id="verticalSplit">
                     <SplitPane fx:id="horizontalSplit">
-                        <Editor fx:id="editor" project="${project}"/>
+                        <Editor fx:id="editor" project="${this.project}"/>
                     </SplitPane>
                 </SplitPane>
             </center>
             <bottom>
                 <WidgetToolBar splitPane="${verticalSplit}" contentPosition="1">
-                    <ConsoleWidget fx:id="consoleWidget" project="${project}" name="Run"/>
+                    <ConsoleWidget fx:id="consoleWidget" project="${this.project}" name="Run"/>
                 </WidgetToolBar>
             </bottom>
         </BorderPane>
