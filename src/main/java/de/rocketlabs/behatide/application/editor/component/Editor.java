@@ -1,9 +1,10 @@
-package de.rocketlabs.behatide.application.component.editor;
+package de.rocketlabs.behatide.application.editor.component;
 
 import de.rocketlabs.behatide.application.component.LineNumber;
-import de.rocketlabs.behatide.domain.model.Project;
+import de.rocketlabs.behatide.application.model.ProjectContext;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.fxml.FXML;
 import javafx.scene.control.Skin;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -25,11 +26,11 @@ public class Editor extends CodeArea {
 
     private static final String COMMENT_PATTERN = "[\\^\n]\\s*#[^\n]*";
     private static final CharSequence[] BEHAT_KEYWORDS = new String[]{
-            "Feature:", "Scenario Outline:", "Scenario Template:", "Scenario:", "Examples:",
-            "Scenarios:", "When", "Then", "Given", "And", "Background:"
+        "Feature:", "Scenario Outline:", "Scenario Template:", "Scenario:", "Examples:",
+        "Scenarios:", "When", "Then", "Given", "And", "Background:"
     };
     private static final Pattern PATTERN = Pattern.compile(
-            "(?<KEYWORD>(" + String.join("|", BEHAT_KEYWORDS) + "))"
+        "(?<KEYWORD>(" + String.join("|", BEHAT_KEYWORDS) + "))"
             + "|(?<COMMENT>" + COMMENT_PATTERN + ")"
     );
 
@@ -37,7 +38,7 @@ public class Editor extends CodeArea {
     private static final Set<String> CSS_CLASS_DEFAULT = Collections.singleton("default");
     private static final Set<String> CSS_CLASS_COMMENT = Collections.singleton("comment");
 
-    private ObjectProperty<Project> project = new SimpleObjectProperty<>();
+    private ObjectProperty<ProjectContext> projectContext = new SimpleObjectProperty<>();
     private Path openFilePath;
 
     public Editor() {
@@ -50,9 +51,9 @@ public class Editor extends CodeArea {
         StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
         while (matcher.find()) {
             Set<String> cssClass =
-                    matcher.group("KEYWORD") != null ? CSS_CLASS_KEYWORD :
+                matcher.group("KEYWORD") != null ? CSS_CLASS_KEYWORD :
                     matcher.group("COMMENT") != null ? CSS_CLASS_COMMENT :
-                    CSS_CLASS_DEFAULT;
+                        CSS_CLASS_DEFAULT;
             spansBuilder.add(CSS_CLASS_DEFAULT, matcher.start() - lastKwEnd);
             spansBuilder.add(cssClass, matcher.end() - matcher.start());
             lastKwEnd = matcher.end();
@@ -73,12 +74,12 @@ public class Editor extends CodeArea {
         this.openFilePath = openFilePath;
     }
 
-    public Project getProject() {
-        return project.get();
+    public ProjectContext getProjectContext() {
+        return projectContext.get();
     }
 
-    public void setProject(Project project) {
-        this.project.set(project);
+    public void setProjectContext(ProjectContext projectContext) {
+        this.projectContext.set(projectContext);
     }
 
     public void insertLine() {
@@ -95,20 +96,21 @@ public class Editor extends CodeArea {
         insertText(getCaretPosition(), text);
     }
 
-    public ObjectProperty<Project> projectProperty() {
-        return project;
+    @FXML
+    public ObjectProperty<ProjectContext> projectContextProperty() {
+        return projectContext;
     }
 
     @Override
     protected Skin<?> createDefaultSkin() {
         //noinspection RedundantTypeArguments
         return Skins.<Editor, StyledTextAreaVisual<Collection<String>>>createSimpleSkin(
-                this,
-                area -> new StyledTextAreaVisual<>(
-                        area,
-                        (text, styleClasses) -> text.getStyleClass().addAll(styleClasses)
-                ),
-                EditorBehavior::new
+            this,
+            area -> new StyledTextAreaVisual<>(
+                area,
+                (text, styleClasses) -> text.getStyleClass().addAll(styleClasses)
+            ),
+            (visual) -> new EditorBehavior(visual, getProjectContext())
         );
     }
 
@@ -119,7 +121,7 @@ public class Editor extends CodeArea {
         setParagraphGraphicFactory(ln);
         getStyleClass().add("editor-test-class");
         richChanges()
-                .filter(ch -> !ch.getInserted().equals(ch.getRemoved()))
-                .subscribe(change -> setStyleSpans(0, computeHighlighting(getText())));
+            .filter(ch -> !ch.getInserted().equals(ch.getRemoved()))
+            .subscribe(change -> setStyleSpans(0, computeHighlighting(getText())));
     }
 }

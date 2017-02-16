@@ -1,18 +1,18 @@
 package de.rocketlabs.behatide.application.component.control;
 
-import de.rocketlabs.behatide.application.event.EventManager;
-import de.rocketlabs.behatide.application.event.FileOpenEvent;
-import de.rocketlabs.behatide.domain.model.Project;
+import de.rocketlabs.behatide.application.action.ActionRunner;
+import de.rocketlabs.behatide.application.editor.action.OpenFile;
+import de.rocketlabs.behatide.application.model.ProjectContext;
 import javafx.scene.control.TreeCell;
 
 import java.io.File;
 
 public class FileTreeCell extends TreeCell<File> {
 
-    public FileTreeCell(Project project) {
+    public FileTreeCell(ProjectContext projectContext) {
         setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
-                EventManager.fireEvent(new FileOpenEvent(getItem(), project));
+                ActionRunner.run(new OpenFile(getItem(), projectContext));
             }
         });
     }

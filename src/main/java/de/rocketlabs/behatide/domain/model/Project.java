@@ -8,7 +8,7 @@ import java.util.Map;
 public interface Project {
 
     /**
-     * @return A regular expression matching files that should be used for the specific project type
+     * @return A regular expression matching files that should be used for the specific projectContext type
      */
     String getFileMask();
 
@@ -21,4 +21,6 @@ public interface Project {
     Configuration getConfiguration();
 
     List<DefinitionContainer> getDefinitions(List<String> definitionContainerIdentifiers);
+
+    Map<String, byte[]> getFileHashes();
 }

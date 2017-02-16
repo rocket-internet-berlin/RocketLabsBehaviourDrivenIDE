@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import de.rocketlabs.behatide.application.component.editor.Editor?>
 <?import de.rocketlabs.behatide.application.component.EditorView?>
 <?import de.rocketlabs.behatide.application.component.MainMenuBar?>
 <?import de.rocketlabs.behatide.application.component.widget.*?>
+<?import de.rocketlabs.behatide.application.editor.component.Editor?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -11,7 +11,7 @@
 <fx:root type="de.rocketlabs.behatide.application.component.EditorView" xmlns:fx="http://javafx.com/fxml"
          stylesheets="@../css/editor.css" prefWidth="900" prefHeight="500" fx:id="this">
     <top>
-        <MainMenuBar fx:id="menuBar" project="${this.project}"/>
+        <MainMenuBar fx:id="menuBar" projectContext="${this.projectContext}"/>
     </top>
     <center>
         <BorderPane>
@@ -32,20 +32,20 @@
             </top>
             <left>
                 <WidgetToolBar orientation="VERTICAL" splitPane="${horizontalSplit}" contentPosition="0">
-                    <ProjectStructureWidget project="${this.project}" name="Project"/>
-                    <DefinitionWidget project="${this.project}" name="Definitions"/>
+                    <ProjectStructureWidget projectContext="${this.projectContext}" name="Project"/>
+                    <DefinitionWidget projectContext="${this.projectContext}" name="Definitions"/>
                 </WidgetToolBar>
             </left>
             <center>
                 <SplitPane orientation="VERTICAL" fx:id="verticalSplit">
                     <SplitPane fx:id="horizontalSplit">
-                        <Editor fx:id="editor" project="${this.project}"/>
+                        <Editor fx:id="editor" projectContext="${this.projectContext}"/>
                     </SplitPane>
                 </SplitPane>
             </center>
             <bottom>
                 <WidgetToolBar splitPane="${verticalSplit}" contentPosition="1">
-                    <ConsoleWidget fx:id="consoleWidget" project="${this.project}" name="Run"/>
+                    <ConsoleWidget fx:id="consoleWidget" projectContext="${this.projectContext}" name="Run"/>
                 </WidgetToolBar>
             </bottom>
         </BorderPane>

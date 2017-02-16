@@ -22,11 +22,11 @@ public class TestRunner implements de.rocketlabs.behatide.domain.runner.TestRunn
         String behatExecutablePath = project.getBehatExecutablePath();
 
         ProcessBuilder processBuilder = new ProcessBuilder(
-                behatExecutablePath,
-                "-c", project.getBehatConfigurationFile(),
-                "-p", profile.getName(),
-                "-s", suite.getName(),
-                filePath.toString()
+            behatExecutablePath,
+            "-c", project.getBehatConfigurationFile(),
+            "-p", profile.getName(),
+            "-s", suite.getName(),
+            filePath.toString()
         );
         try {
             Process process = processBuilder.start();

@@ -1,8 +1,8 @@
 package de.rocketlabs.behatide.application.component.menu;
 
+import de.rocketlabs.behatide.application.action.ActionRunner;
 import de.rocketlabs.behatide.application.component.FxmlLoading;
-import de.rocketlabs.behatide.application.event.EventManager;
-import de.rocketlabs.behatide.application.event.FileSaveRequestEvent;
+import de.rocketlabs.behatide.application.editor.action.SaveFile;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -27,7 +27,7 @@ public class FileMenu extends AbstractMenu implements FxmlLoading {
 
     @FXML
     private void saveAction() {
-        EventManager.fireEvent(new FileSaveRequestEvent(getProject()));
+        ActionRunner.run(new SaveFile(getProjectContext()));
     }
 
     @FXML

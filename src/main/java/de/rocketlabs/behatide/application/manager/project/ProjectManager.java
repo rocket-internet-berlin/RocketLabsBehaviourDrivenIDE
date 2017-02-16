@@ -2,10 +2,10 @@ package de.rocketlabs.behatide.application.manager.project;
 
 import de.rocketlabs.behatide.application.configuration.storage.state.State;
 import de.rocketlabs.behatide.application.configuration.storage.state.StateStorageManager;
-import de.rocketlabs.behatide.application.event.CloseProjectEvent;
 import de.rocketlabs.behatide.application.event.EventManager;
 import de.rocketlabs.behatide.application.event.FileLoadFailedEvent;
-import de.rocketlabs.behatide.application.event.LoadProjectEvent;
+import de.rocketlabs.behatide.application.event.ProjectClosedEvent;
+import de.rocketlabs.behatide.application.event.ProjectLoadedEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -19,17 +19,17 @@ public class ProjectManager {
     private Set<ProjectMetaData> openProjects = new HashSet<>();
 
     public ProjectManager() {
-        EventManager.addListener(LoadProjectEvent.class, this::handleLoadProjectEvent);
-        EventManager.addListener(CloseProjectEvent.class, this::handleCloseProjectEvent);
+        EventManager.addListener(ProjectLoadedEvent.class, this::handleLoadProjectEvent);
+        EventManager.addListener(ProjectClosedEvent.class, this::handleProjectClosedEvent);
         EventManager.addListener(FileLoadFailedEvent.class, this::handleFileLoadFailedEvent);
     }
 
     @NotNull
     public List<ProjectMetaData> getRecentProjects() {
         return recentProjects
-                .stream()
-                .map(ProjectMetaData::clone)
-                .collect(Collectors.toList());
+            .stream()
+            .map(ProjectMetaData::clone)
+            .collect(Collectors.toList());
     }
 
     private void addRecentProject(ProjectMetaData recentProject) {
@@ -55,18 +55,18 @@ public class ProjectManager {
 
     public List<ProjectMetaData> getOpenProjects() {
         return openProjects
-                .stream()
-                .map(ProjectMetaData::clone)
-                .collect(Collectors.toList());
+            .stream()
+            .map(ProjectMetaData::clone)
+            .collect(Collectors.toList());
     }
 
-    private void handleLoadProjectEvent(LoadProjectEvent event) {
+    private void handleLoadProjectEvent(ProjectLoadedEvent event) {
         addRecentProject(event.getProjectMetaData());
         openProjects.add(event.getProjectMetaData());
         StateStorageManager.getInstance().setState(ProjectManager.this);
     }
 
-    private void handleCloseProjectEvent(CloseProjectEvent event) {
+    private void handleProjectClosedEvent(ProjectClosedEvent event) {
         openProjects.remove(event.getProjectModel());
         StateStorageManager.getInstance().setState(ProjectManager.this);
     }

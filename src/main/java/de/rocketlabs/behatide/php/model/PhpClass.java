@@ -19,8 +19,8 @@ public class PhpClass implements DefinitionContainer {
     @Override
     public List<Definition> getDefinitions() {
         return members.stream()
-                      .filter(f -> f.getAnnotations().size() > 0)
-                      .collect(Collectors.toLinkedList());
+            .filter(f -> f.getAnnotations().size() > 0)
+            .collect(Collectors.toLinkedList());
     }
 
     @Override

@@ -28,18 +28,18 @@ import java.util.stream.Collectors;
 public class ProjectFactory {
 
     private static final String[] AUTO_LOADER_PATHS = new String[]{
-            "../../../autoload.php",
-            "vendor/autoload.php",
-            "../vendor/autoload.php",
-            };
+        "../../../autoload.php",
+        "vendor/autoload.php",
+        "../vendor/autoload.php",
+    };
 
     private static Injector injector = Guice.createInjector(new BehatModule());
     private static BehatConfigurationReader configurationReader =
-            (BehatConfigurationReader) injector.getInstance(ConfigurationReader.class);
+        (BehatConfigurationReader) injector.getInstance(ConfigurationReader.class);
 
     public static de.rocketlabs.behatide.domain.model.Project generateProject(ProjectConfiguration configuration) {
         Project project = new de.rocketlabs.behatide.modules.behat.model
-                .Project();
+            .Project();
         project.setProjectLocation(configuration.getProjectLocation());
         project.setBehatConfigurationFile(configuration.getBehatConfigurationFile());
         project.setBehatExecutablePath(configuration.getBehatExecutable());
@@ -58,17 +58,18 @@ public class ProjectFactory {
     }
 
     private static void loadConfigurationFile(Project project) {
-        try (InputStream in = Files.newInputStream(Paths.get(project.getBehatConfigurationFile()))) {
+        String filePath = project.getBehatConfigurationFile();
+        try (InputStream in = Files.newInputStream(Paths.get(filePath))) {
             project.setConfiguration(configurationReader.read(in));
         } catch (Exception e) {
             throw new RuntimeException("Could not load behat configuration", e);
         }
-        project.setConfigurationFileHash(getFileHash(project.getBehatConfigurationFile()));
+        setFileHash(project, filePath);
     }
 
-    private static byte[] getFileHash(String filePath) {
+    private static void setFileHash(Project project, String filePath) {
         try (InputStream in = Files.newInputStream(Paths.get(filePath))) {
-            return DigestUtils.md5(in);
+            project.setFileHash(filePath, DigestUtils.md5(in));
         } catch (Exception e) {
             throw new RuntimeException("Could not load behat configuration", e);
         }
@@ -76,7 +77,7 @@ public class ProjectFactory {
 
     private static void loadBehatDefinitions(Project project, ProjectConfiguration configuration) {
         Set<String> classesSet = buildClassSet(project);
-        Map<String, PhpFile> parsedFiles = loadPhpClasses(classesSet, configuration);
+        Map<String, PhpFile> parsedFiles = loadPhpClasses(project, classesSet, configuration);
         Map<String, PhpClass> behatDefinitions = getBehatDefinitions(parsedFiles);
         project.setAvailableDefinitions(behatDefinitions);
     }
@@ -93,7 +94,7 @@ public class ProjectFactory {
         return classesSet;
     }
 
-    private static Map<String, PhpFile> loadPhpClasses(Set<String> classesSet, ProjectConfiguration configuration) {
+    private static Map<String, PhpFile> loadPhpClasses(Project project, Set<String> classesSet, ProjectConfiguration configuration) {
         ProcessBuilder builder = configureProcessBuilder(classesSet, configuration);
         Map<String, PhpFile> parsedFiles = new HashMap<>();
         try {
@@ -105,6 +106,7 @@ public class ProjectFactory {
                         break;
                     }
                     parsedFiles.put(className, PhpParser.parse(new FileInputStream(path)));
+                    setFileHash(project, path);
                 }
             }
         } catch (IOException | ParseException e) {
@@ -129,7 +131,6 @@ public class ProjectFactory {
 
     @NotNull
     private static String getAutoloadPhpPath(ProjectConfiguration configuration) {
-
         File f = new File(configuration.getBehatExecutable());
         String parentPath = f.getParent();
 
@@ -155,7 +156,7 @@ public class ProjectFactory {
         };
 
         return loadedPhpFiles.entrySet()
-                             .stream()
-                             .collect(Collectors.toMap(Map.Entry::getKey, findClass));
+            .stream()
+            .collect(Collectors.toMap(Map.Entry::getKey, findClass));
     }
 }

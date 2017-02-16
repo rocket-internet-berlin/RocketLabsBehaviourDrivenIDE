@@ -1,5 +1,6 @@
 package de.rocketlabs.behatide.application.event;
 
+import de.rocketlabs.behatide.application.runnable.AbstractWorker;
 import javafx.application.Platform;
 
 import java.util.*;
@@ -7,7 +8,7 @@ import java.util.*;
 public class EventManager {
 
     private static final Queue<Event> eventsToProcess = new LinkedList<>();
-    private static final Worker worker = new Worker();
+    private static final Worker worker = new Worker(eventsToProcess);
     private static Map<Class<? extends Event>, List<EventListener<? extends Event>>> map = new HashMap<>();
 
     static {
@@ -49,39 +50,12 @@ public class EventManager {
         worker.invokeStop();
     }
 
-    private static class Worker implements Runnable {
-
-        private boolean stopInvoked;
-
-        private void invokeStop() {
-            stopInvoked = true;
-            synchronized (eventsToProcess) {
-                eventsToProcess.notifyAll();
-            }
+    private static class Worker extends AbstractWorker<Event> {
+        Worker(Queue<Event> taskQueue) {
+            super(taskQueue);
         }
 
-        @Override
-        public void run() {
-            //noinspection InfiniteLoopStatement
-            while (!stopInvoked) {
-                Event event;
-                synchronized (eventsToProcess) {
-                    while (!stopInvoked && eventsToProcess.isEmpty()) {
-                        try {
-                            eventsToProcess.wait();
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                    event = eventsToProcess.poll();
-                }
-                if (event != null) {
-                    handleEvent(event);
-                }
-            }
-        }
-
-        private <T extends Event> void handleEvent(T event) {
+        protected <T extends Event> void handleTask(T event) {
             List<EventListener<?>> listeners = map.get(event.getClass());
             if (listeners != null) {
                 listeners.forEach(listener -> {

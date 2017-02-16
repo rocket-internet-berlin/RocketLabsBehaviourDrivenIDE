@@ -44,9 +44,9 @@ public class ProjectMetaData implements Cloneable {
     @Override
     public boolean equals(Object obj) {
         return obj instanceof ProjectMetaData
-               && title.equals(((ProjectMetaData) obj).title)
-               && path.equals(((ProjectMetaData) obj).path)
-               && moduleName.equals(((ProjectMetaData) obj).moduleName);
+            && title.equals(((ProjectMetaData) obj).title)
+            && path.equals(((ProjectMetaData) obj).path)
+            && moduleName.equals(((ProjectMetaData) obj).moduleName);
     }
 
     @Override

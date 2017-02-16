@@ -1,7 +1,7 @@
-package de.rocketlabs.behatide.application.event.listener.editor;
+package de.rocketlabs.behatide.application.editor.event.listener;
 
-import de.rocketlabs.behatide.application.component.editor.Editor;
-import de.rocketlabs.behatide.application.component.editor.EditorBehavior;
+import de.rocketlabs.behatide.application.editor.component.Editor;
+import de.rocketlabs.behatide.application.editor.component.EditorBehavior;
 import javafx.scene.control.IndexRange;
 import javafx.scene.input.KeyEvent;
 

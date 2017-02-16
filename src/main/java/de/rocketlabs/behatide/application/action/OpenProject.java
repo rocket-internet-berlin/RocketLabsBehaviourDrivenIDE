@@ -1,73 +1,53 @@
-package de.rocketlabs.behatide.application.event.listener;
+package de.rocketlabs.behatide.application.action;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import de.rocketlabs.behatide.application.component.EditorView;
 import de.rocketlabs.behatide.application.configuration.storage.StorageParameter;
 import de.rocketlabs.behatide.application.configuration.storage.state.StateStorageManager;
-import de.rocketlabs.behatide.application.event.CloseProjectEvent;
-import de.rocketlabs.behatide.application.event.EventListener;
 import de.rocketlabs.behatide.application.event.EventManager;
-import de.rocketlabs.behatide.application.event.LoadProjectEvent;
+import de.rocketlabs.behatide.application.event.ProjectLoadedEvent;
 import de.rocketlabs.behatide.application.manager.modules.ModuleManager;
 import de.rocketlabs.behatide.application.manager.project.ProjectMetaData;
+import de.rocketlabs.behatide.application.model.ProjectContext;
 import de.rocketlabs.behatide.domain.model.Project;
 import de.rocketlabs.behatide.modules.AbstractModule;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LoadProjectListener implements EventListener<LoadProjectEvent> {
+public class OpenProject extends FxCapableAction {
 
     private final StateStorageManager storageManager;
     private final ModuleManager moduleManager;
+    private final ProjectMetaData metaData;
 
-    public LoadProjectListener() {
+    public OpenProject(ProjectMetaData metaData) {
+        this.metaData = metaData;
         storageManager = StateStorageManager.getInstance();
         moduleManager = ModuleManager.getInstance();
     }
 
-    @Override
-    public void handleEvent(LoadProjectEvent event) {
-        ProjectMetaData projectMetaData = event.getProjectMetaData();
-        AbstractModule module = moduleManager.forName(projectMetaData.getModuleName());
+    public void doAction() {
+        AbstractModule module = moduleManager.forName(metaData.getModuleName());
         Injector injector = Guice.createInjector(module);
         Class<? extends Project> projectClass = injector.getInstance(Project.class).getClass();
 
         Map<StorageParameter, String> parameters = new HashMap<StorageParameter, String>() {{
-            put(StorageParameter.STORAGE_DIRECTORY, projectMetaData.getPath());
+            put(StorageParameter.STORAGE_DIRECTORY, metaData.getPath());
         }};
         Project project = storageManager.loadState(projectClass, parameters);
 
-        if (project == null) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Could not load project");
-            alert.showAndWait();
-            EventManager.fireEvent(new CloseProjectEvent(projectMetaData));
-            return;
-        }
-
-        try {
-            openMainWindow(project);
-        } catch (IOException e) {
-            EventManager.fireEvent(new CloseProjectEvent(projectMetaData));
-            //TODO: Improve error handling here
-            throw new RuntimeException(e);
-        }
+        executeInFxThread(() -> openMainWindow(project));
+        EventManager.fireEvent(new ProjectLoadedEvent(metaData));
     }
 
-    @Override
-    public boolean runOnJavaFxThread() {
-        return true;
-    }
-
-    private void openMainWindow(Project project) throws IOException {
+    private void openMainWindow(Project project) {
         EditorView view = new EditorView();
-        view.setProject(project);
+        ProjectContext context = new ProjectContext(project, view.getEditor());
+        view.setProjectContext(context);
 
         Scene scene = new Scene(view);
 

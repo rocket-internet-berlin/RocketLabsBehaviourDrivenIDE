@@ -1,7 +1,7 @@
 package de.rocketlabs.behatide.application.component.widget;
 
 import de.rocketlabs.behatide.application.component.control.Console;
-import de.rocketlabs.behatide.domain.model.Project;
+import de.rocketlabs.behatide.application.model.ProjectContext;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXMLLoader;
@@ -13,7 +13,7 @@ import java.io.IOException;
 public class ConsoleWidget extends Widget {
 
     public TabPane pane;
-    private ObjectProperty<Project> project = new SimpleObjectProperty<>();
+    private ObjectProperty<ProjectContext> projectContext = new SimpleObjectProperty<>();
 
     public ConsoleWidget() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/widget/ConsoleWidget.fxml"));
@@ -34,15 +34,15 @@ public class ConsoleWidget extends Widget {
         return console;
     }
 
-    public Project getProject() {
-        return project.get();
+    public ProjectContext getProjectContext() {
+        return projectContext.get();
     }
 
-    public ObjectProperty<Project> projectProperty() {
-        return project;
+    public ObjectProperty<ProjectContext> projectContextProperty() {
+        return projectContext;
     }
 
-    public void setProject(Project project) {
-        this.project.set(project);
+    public void setProjectContext(ProjectContext projectContext) {
+        this.projectContext.set(projectContext);
     }
 }

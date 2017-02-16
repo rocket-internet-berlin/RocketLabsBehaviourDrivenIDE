@@ -6,8 +6,8 @@ import de.rocketlabs.behatide.application.component.control.DefinitionTreeCell;
 import de.rocketlabs.behatide.application.component.control.DefinitionTreeItem;
 import de.rocketlabs.behatide.application.event.EventListener;
 import de.rocketlabs.behatide.application.event.EventManager;
+import de.rocketlabs.behatide.application.model.ProjectContext;
 import de.rocketlabs.behatide.domain.model.DefinitionContainer;
-import de.rocketlabs.behatide.domain.model.Project;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.TreeItem;
@@ -18,14 +18,14 @@ import java.util.List;
 public class DefinitionWidget extends Widget implements FxmlLoading {
 
     public TreeView<Object> treeView;
-    private ObjectProperty<Project> project = new SimpleObjectProperty<>();
+    private ObjectProperty<ProjectContext> projectContext = new SimpleObjectProperty<>();
     private boolean suiteSelected = false;
 
     public DefinitionWidget() {
         loadFxml();
 
         treeView.setShowRoot(false);
-        treeView.setCellFactory(param -> new DefinitionTreeCell(getProject()));
+        treeView.setCellFactory(param -> new DefinitionTreeCell(getProjectContext()));
         treeView.setRoot(new TreeItem<>());
 
         EventManager.addListener(SuiteSelectionChangedEvent.class, new SuiteChangedListener());
@@ -36,12 +36,12 @@ public class DefinitionWidget extends Widget implements FxmlLoading {
         return "/view/widget/DefinitionWidget.fxml";
     }
 
-    public Project getProject() {
-        return project.get();
+    public ProjectContext getProjectContext() {
+        return projectContext.get();
     }
 
-    public void setProject(Project project) {
-        this.project.set(project);
+    public void setProjectContext(ProjectContext projectContext) {
+        this.projectContext.set(projectContext);
     }
 
     private void initTree(List<DefinitionContainer> definitionContainers) {
@@ -50,15 +50,15 @@ public class DefinitionWidget extends Widget implements FxmlLoading {
         definitionContainers.forEach(container -> root.getChildren().add(new DefinitionTreeItem(container)));
     }
 
-    public ObjectProperty<Project> projectProperty() {
-        return project;
+    public ObjectProperty<ProjectContext> projectContextProperty() {
+        return projectContext;
     }
 
     private class SuiteChangedListener implements EventListener<SuiteSelectionChangedEvent> {
 
         @Override
         public void handleEvent(SuiteSelectionChangedEvent event) {
-            if (!event.getProject().equals(getProject())) {
+            if (!event.getProjectContext().equals(getProjectContext())) {
                 return;
             }
 
@@ -70,7 +70,7 @@ public class DefinitionWidget extends Widget implements FxmlLoading {
             suiteSelected = true;
 
             List<String> definitionContainerIdentifiers = event.getSuite().getDefinitionContainerIdentifiers();
-            List<DefinitionContainer> definitions = getProject().getDefinitions(definitionContainerIdentifiers);
+            List<DefinitionContainer> definitions = getProjectContext().getProject().getDefinitions(definitionContainerIdentifiers);
             initTree(definitions);
         }
 

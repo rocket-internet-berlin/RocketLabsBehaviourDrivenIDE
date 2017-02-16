@@ -15,14 +15,14 @@ public class LineNumber implements IntFunction<Node> {
 
     private static final Insets DEFAULT_INSETS = new Insets(0.0, 5.0, 0.0, 5.0);
     private static final Font DEFAULT_FONT =
-            Font.font("monospace", FontPosture.ITALIC, 13);
+        Font.font("monospace", FontPosture.ITALIC, 13);
 
     private final Val<Integer> nParagraphs;
     private final IntFunction<String> format;
 
     public LineNumber(
-            ObservableList size,
-            IntFunction<String> format) {
+        ObservableList size,
+        IntFunction<String> format) {
         nParagraphs = LiveList.sizeOf(size);
         this.format = format;
     }

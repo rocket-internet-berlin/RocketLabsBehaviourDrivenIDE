@@ -1,6 +1,7 @@
 package de.rocketlabs.behatide;
 
 import de.rocketlabs.behatide.application.IdeApplication;
+import de.rocketlabs.behatide.application.action.ActionRunner;
 import de.rocketlabs.behatide.application.configuration.storage.state.StateStorageManager;
 import de.rocketlabs.behatide.application.event.EventManager;
 import javafx.application.Application;
@@ -22,5 +23,6 @@ public class Main extends Application {
     public void stop() throws Exception {
         StateStorageManager.getInstance().save();
         EventManager.stopWorker();
+        ActionRunner.stop();
     }
 }

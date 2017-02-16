@@ -40,8 +40,8 @@ public class BehatSuiteReader {
                         break;
                     default:
                         model.addSetting(
-                                ((String) key),
-                                readSettingsValue(((String) key), value)
+                            ((String) key),
+                            readSettingsValue(((String) key), value)
                         );
                 }
             }
