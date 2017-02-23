@@ -1,8 +1,8 @@
 package de.rocketlabs.behatide.application.component.startup;
 
+import de.rocketlabs.behatide.application.action.ActionRunner;
+import de.rocketlabs.behatide.application.action.OpenProject;
 import de.rocketlabs.behatide.application.configuration.storage.state.StateStorageManager;
-import de.rocketlabs.behatide.application.event.EventManager;
-import de.rocketlabs.behatide.application.event.LoadProjectEvent;
 import de.rocketlabs.behatide.application.manager.project.ProjectManager;
 import de.rocketlabs.behatide.application.manager.project.ProjectMetaData;
 import javafx.collections.FXCollections;
@@ -37,7 +37,7 @@ public class ProjectQuickSelection extends ListView<ProjectMetaData> {
         getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
-                EventManager.fireEvent(new LoadProjectEvent(getSelectionModel().getSelectedItem()));
+                ActionRunner.run(new OpenProject(getSelectionModel().getSelectedItem()));
             }
         });
     }

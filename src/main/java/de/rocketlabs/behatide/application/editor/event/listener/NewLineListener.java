@@ -1,8 +1,8 @@
-package de.rocketlabs.behatide.application.event.listener.editor;
+package de.rocketlabs.behatide.application.editor.event.listener;
 
 import com.google.common.base.Strings;
-import de.rocketlabs.behatide.application.component.editor.Editor;
-import de.rocketlabs.behatide.application.component.editor.EditorBehavior;
+import de.rocketlabs.behatide.application.editor.component.Editor;
+import de.rocketlabs.behatide.application.editor.component.EditorBehavior;
 import javafx.scene.input.KeyEvent;
 
 public class NewLineListener {

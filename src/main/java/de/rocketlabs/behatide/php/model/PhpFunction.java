@@ -43,10 +43,10 @@ public class PhpFunction implements Definition {
             return new LinkedList<>();
         }
         return docBlock.getTags()
-                       .stream()
-                       .filter(tag -> Objects.equals(tag.getName(), "Then")
-                                      || Objects.equals(tag.getName(), "When")
-                                      || Objects.equals(tag.getName(), "Given"))
-                       .collect(Collectors.toList());
+            .stream()
+            .filter(tag -> Objects.equals(tag.getName(), "Then")
+                || Objects.equals(tag.getName(), "When")
+                || Objects.equals(tag.getName(), "Given"))
+            .collect(Collectors.toList());
     }
 }

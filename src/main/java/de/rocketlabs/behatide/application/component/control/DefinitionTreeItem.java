@@ -40,8 +40,8 @@ public class DefinitionTreeItem extends TreeItem<Object> {
         }
 
         return ((DefinitionContainer) getValue()).getDefinitions()
-                                                 .stream()
-                                                 .map(DefinitionTreeItem::new)
-                                                 .collect(Collectors.toObservableList());
+            .stream()
+            .map(DefinitionTreeItem::new)
+            .collect(Collectors.toObservableList());
     }
 }

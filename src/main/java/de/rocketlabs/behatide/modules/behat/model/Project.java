@@ -6,6 +6,7 @@ import de.rocketlabs.behatide.domain.model.DefinitionContainer;
 import de.rocketlabs.behatide.php.model.PhpClass;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,7 @@ public class Project implements de.rocketlabs.behatide.domain.model.Project {
     private String behatConfigurationFile;
     private BehatConfiguration configuration;
     private Map<String, PhpClass> availableDefinitions;
-    private byte[] configurationFileHash;
+    private Map<String, byte[]> fileHashes = new HashMap<>();
 
     public Map<String, PhpClass> getAvailableDefinitions() {
         return availableDefinitions;
@@ -46,12 +47,12 @@ public class Project implements de.rocketlabs.behatide.domain.model.Project {
         this.behatExecutablePath = behatExecutablePath;
     }
 
-    public byte[] getConfigurationFileHash() {
-        return configurationFileHash;
+    public Map<String, byte[]> getFileHashes() {
+        return Collections.unmodifiableMap(fileHashes);
     }
 
-    public void setConfigurationFileHash(byte[] configurationFileHash) {
-        this.configurationFileHash = configurationFileHash;
+    public void setFileHash(String path, byte[] hash) {
+        fileHashes.put(path, hash);
     }
 
     @Override
@@ -84,10 +85,10 @@ public class Project implements de.rocketlabs.behatide.domain.model.Project {
     @Override
     public List<DefinitionContainer> getDefinitions(List<String> definitionContainerIdentifiers) {
         return availableDefinitions.entrySet()
-                                   .stream()
-                                   .filter(entry -> definitionContainerIdentifiers.contains(entry.getKey()))
-                                   .map(Map.Entry::getValue)
-                                   .collect(Collectors.toList());
+            .stream()
+            .filter(entry -> definitionContainerIdentifiers.contains(entry.getKey()))
+            .map(Map.Entry::getValue)
+            .collect(Collectors.toList());
     }
 
     public void setConfiguration(BehatConfiguration configuration) {

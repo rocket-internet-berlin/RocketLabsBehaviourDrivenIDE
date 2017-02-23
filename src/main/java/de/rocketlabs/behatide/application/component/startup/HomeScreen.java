@@ -1,9 +1,9 @@
 package de.rocketlabs.behatide.application.component.startup;
 
+import de.rocketlabs.behatide.application.action.ActionRunner;
+import de.rocketlabs.behatide.application.action.OpenProject;
 import de.rocketlabs.behatide.application.component.FxmlLoading;
 import de.rocketlabs.behatide.application.component.startup.wizard.CreateProjectWizard;
-import de.rocketlabs.behatide.application.event.EventManager;
-import de.rocketlabs.behatide.application.event.LoadProjectEvent;
 import de.rocketlabs.behatide.domain.model.Project;
 import de.rocketlabs.behatide.domain.model.ProjectConfiguration;
 import javafx.fxml.FXML;
@@ -43,13 +43,13 @@ public class HomeScreen extends BorderPane implements FxmlLoading {
     private void onCreateNewProject() {
         CreateProjectWizard wizard = new CreateProjectWizard();
         wizard.showAndWait()
-              .filter(predicate -> predicate.getButtonData() == ButtonBar.ButtonData.FINISH)
-              .ifPresent(result -> {
-                  Object userData = wizard.getUserData();
-                  if (userData instanceof ProjectConfiguration) {
-                      Project project = ((ProjectConfiguration) userData).createProject();
-                      EventManager.fireEvent(new LoadProjectEvent(project.getMetaData()));
-                  }
-              });
+            .filter(predicate -> predicate.getButtonData() == ButtonBar.ButtonData.FINISH)
+            .ifPresent(result -> {
+                Object userData = wizard.getUserData();
+                if (userData instanceof ProjectConfiguration) {
+                    Project project = ((ProjectConfiguration) userData).createProject();
+                    ActionRunner.run(new OpenProject(project.getMetaData()));
+                }
+            });
     }
 }

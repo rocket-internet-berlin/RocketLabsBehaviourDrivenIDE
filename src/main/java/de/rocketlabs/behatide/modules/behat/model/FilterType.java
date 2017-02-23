@@ -20,9 +20,9 @@ public enum FilterType {
         try {
             return filterClass.getConstructor(String.class).newInstance(filterCriteria);
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException
-                e) {
+            e) {
             throw new RuntimeException("Provided class " + filterClass.getName() + " seems not to extend " +
-                                       "GherkinFilter");
+                "GherkinFilter");
         }
     }
 }

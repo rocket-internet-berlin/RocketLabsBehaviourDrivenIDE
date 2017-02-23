@@ -2,19 +2,19 @@ package de.rocketlabs.behatide.application.component.control;
 
 import de.rocketlabs.behatide.application.event.DefinitionClickedEvent;
 import de.rocketlabs.behatide.application.event.EventManager;
+import de.rocketlabs.behatide.application.model.ProjectContext;
 import de.rocketlabs.behatide.domain.model.Definition;
 import de.rocketlabs.behatide.domain.model.DefinitionContainer;
-import de.rocketlabs.behatide.domain.model.Project;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeCell;
 
 public class DefinitionTreeCell extends TreeCell<Object> {
 
-    public DefinitionTreeCell(Project project) {
+    public DefinitionTreeCell(ProjectContext projectContext) {
         super();
         setOnMouseClicked(e -> {
             if (getItem() instanceof Definition && e.getClickCount() == 2) {
-                EventManager.fireEvent(new DefinitionClickedEvent((Definition) getItem(), project));
+                EventManager.fireEvent(new DefinitionClickedEvent((Definition) getItem(), projectContext));
             }
         });
     }

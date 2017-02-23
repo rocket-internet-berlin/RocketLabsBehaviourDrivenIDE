@@ -1,13 +1,11 @@
 package de.rocketlabs.behatide.application;
 
+import de.rocketlabs.behatide.application.action.ActionRunner;
+import de.rocketlabs.behatide.application.action.ShowStartup;
 import de.rocketlabs.behatide.application.configuration.storage.state.StateStorageManager;
 import de.rocketlabs.behatide.application.event.EventManager;
 import de.rocketlabs.behatide.application.event.FileLoadFailedEvent;
-import de.rocketlabs.behatide.application.event.LoadProjectEvent;
-import de.rocketlabs.behatide.application.event.ShowStartupEvent;
 import de.rocketlabs.behatide.application.event.listener.FileLoadFailedEventListener;
-import de.rocketlabs.behatide.application.event.listener.LoadProjectListener;
-import de.rocketlabs.behatide.application.event.listener.ShowStartupEventListener;
 import de.rocketlabs.behatide.application.manager.project.ProjectManager;
 import de.rocketlabs.behatide.application.manager.project.ProjectMetaData;
 
@@ -25,15 +23,13 @@ public class IdeApplication {
         registerEventListeners();
 
         if (openProjects.isEmpty()) {
-            EventManager.fireEvent(new ShowStartupEvent());
+            ActionRunner.run(new ShowStartup());
         } else {
-            openProjects.forEach(project -> EventManager.fireEvent(new LoadProjectEvent(project)));
+            openProjects.forEach(project -> ActionRunner.run(new de.rocketlabs.behatide.application.action.OpenProject(project)));
         }
     }
 
     private void registerEventListeners() {
-        EventManager.addListener(LoadProjectEvent.class, new LoadProjectListener());
         EventManager.addListener(FileLoadFailedEvent.class, new FileLoadFailedEventListener());
-        EventManager.addListener(ShowStartupEvent.class, new ShowStartupEventListener());
     }
 }

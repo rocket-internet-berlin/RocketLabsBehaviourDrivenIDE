@@ -1,16 +1,17 @@
 package de.rocketlabs.behatide.application.event;
 
 import de.rocketlabs.behatide.application.manager.project.ProjectMetaData;
+import org.jetbrains.annotations.NotNull;
 
-public class CloseProjectEvent implements Event {
+public class ProjectLoadedEvent implements Event {
 
     private ProjectMetaData projectModel;
 
-    public CloseProjectEvent(ProjectMetaData projectModel) {
+    public ProjectLoadedEvent(@NotNull ProjectMetaData projectModel) {
         this.projectModel = projectModel;
     }
 
-    public ProjectMetaData getProjectModel() {
+    public ProjectMetaData getProjectMetaData() {
         return projectModel;
     }
 }

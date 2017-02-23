@@ -4,9 +4,10 @@ import de.rocketlabs.behatide.application.component.FxmlLoading;
 import de.rocketlabs.behatide.application.component.SuiteSelectionChangedEvent;
 import de.rocketlabs.behatide.application.component.control.FileTreeCell;
 import de.rocketlabs.behatide.application.component.control.FileTreeItem;
+import de.rocketlabs.behatide.application.editor.event.ProfileSelectionChangedEvent;
 import de.rocketlabs.behatide.application.event.EventListener;
 import de.rocketlabs.behatide.application.event.EventManager;
-import de.rocketlabs.behatide.application.event.project.ProfileSelectionChangedEvent;
+import de.rocketlabs.behatide.application.model.ProjectContext;
 import de.rocketlabs.behatide.application.util.FileUtils;
 import de.rocketlabs.behatide.domain.model.Project;
 import javafx.beans.property.ObjectProperty;
@@ -20,7 +21,7 @@ import java.util.List;
 public class ProjectStructureWidget extends Widget implements FxmlLoading {
 
     public TreeView<File> treeView;
-    private ObjectProperty<Project> project = new SimpleObjectProperty<>();
+    private ObjectProperty<ProjectContext> projectContext = new SimpleObjectProperty<>();
     private boolean suiteSelected = false;
 
     public ProjectStructureWidget() {
@@ -36,35 +37,36 @@ public class ProjectStructureWidget extends Widget implements FxmlLoading {
     }
 
     private void initTree(List<String> paths, String fileMask) {
-        getProject().getPathReplacements().forEach(
-                (pattern, replacement) -> paths.replaceAll(path -> path.replace(pattern, replacement)));
+        Project project = getProjectContext().getProject();
+        project.getPathReplacements().forEach(
+            (pattern, replacement) -> paths.replaceAll(path -> path.replace(pattern, replacement)));
         File parentDirectory = FileUtils.findCommonParent(paths);
         FileTreeItem root = new FileTreeItem(parentDirectory, paths, fileMask);
 
-        treeView.setCellFactory(param -> new FileTreeCell(getProject()));
+        treeView.setCellFactory(param -> new FileTreeCell(getProjectContext()));
         treeView.setRoot(root);
     }
 
     @FXML
-    public Project getProject() {
-        return project.get();
+    public ProjectContext getProjectContext() {
+        return projectContext.get();
     }
 
     @FXML
-    public ObjectProperty<Project> projectProperty() {
-        return project;
+    public ObjectProperty<ProjectContext> projectContextProperty() {
+        return projectContext;
     }
 
     @FXML
-    public void setProject(Project project) {
-        this.project.set(project);
+    public void setProjectContext(ProjectContext projectContext) {
+        this.projectContext.set(projectContext);
     }
 
     private class SuiteChangedListener implements EventListener<SuiteSelectionChangedEvent> {
 
         @Override
         public void handleEvent(SuiteSelectionChangedEvent event) {
-            if (!event.getProject().equals(getProject())) {
+            if (!event.getProjectContext().equals(getProjectContext())) {
                 return;
             }
 
@@ -76,7 +78,7 @@ public class ProjectStructureWidget extends Widget implements FxmlLoading {
             suiteSelected = true;
 
             List<String> paths = event.getSuite().getPaths();
-            String fileMask = event.getProject().getFileMask();
+            String fileMask = event.getProjectContext().getProject().getFileMask();
 
             initTree(paths, fileMask);
         }
@@ -91,12 +93,12 @@ public class ProjectStructureWidget extends Widget implements FxmlLoading {
 
         @Override
         public void handleEvent(ProfileSelectionChangedEvent event) {
-            if (!event.getProject().equals(getProject()) || suiteSelected || event.getProfile() == null) {
+            if (!event.getProjectContext().equals(getProjectContext()) || suiteSelected || event.getProfile() == null) {
                 return;
             }
 
             List<String> paths = event.getProfile().getPaths();
-            String fileMask = event.getProject().getFileMask();
+            String fileMask = event.getProjectContext().getProject().getFileMask();
 
             initTree(paths, fileMask);
         }

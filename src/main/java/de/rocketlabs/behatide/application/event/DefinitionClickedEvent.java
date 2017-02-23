@@ -1,23 +1,23 @@
 package de.rocketlabs.behatide.application.event;
 
+import de.rocketlabs.behatide.application.model.ProjectContext;
 import de.rocketlabs.behatide.domain.model.Definition;
-import de.rocketlabs.behatide.domain.model.Project;
 
 public class DefinitionClickedEvent implements Event {
 
     private final Definition definition;
-    private final Project project;
+    private final ProjectContext projectContext;
 
-    public DefinitionClickedEvent(Definition definition, Project project) {
+    public DefinitionClickedEvent(Definition definition, ProjectContext projectContext) {
         this.definition = definition;
-        this.project = project;
+        this.projectContext = projectContext;
     }
 
     public Definition getDefinition() {
         return definition;
     }
 
-    public Project getProject() {
-        return project;
+    public ProjectContext getProject() {
+        return projectContext;
     }
 }

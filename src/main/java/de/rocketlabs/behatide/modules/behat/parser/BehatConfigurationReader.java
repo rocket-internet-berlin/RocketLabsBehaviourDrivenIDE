@@ -33,8 +33,8 @@ public final class BehatConfigurationReader implements ConfigurationReader<Behat
                 for (Object profileName : ((Map) data).keySet()) {
                     if (profileName instanceof String) {
                         configuration.addProfile(profileParser.read(
-                                ((String) profileName),
-                                (Map) ((Map) data).get(profileName)
+                            ((String) profileName),
+                            (Map) ((Map) data).get(profileName)
                         ));
                     }
                 }

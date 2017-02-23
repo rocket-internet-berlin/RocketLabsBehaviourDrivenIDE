@@ -1,6 +1,6 @@
 package de.rocketlabs.behatide.application.component.menu;
 
-import de.rocketlabs.behatide.domain.model.Project;
+import de.rocketlabs.behatide.application.model.ProjectContext;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
@@ -9,7 +9,7 @@ import javafx.scene.control.MenuItem;
 
 class AbstractMenu extends Menu {
 
-    protected ObjectProperty<Project> project = new SimpleObjectProperty<>();
+    protected ObjectProperty<ProjectContext> projectContext = new SimpleObjectProperty<>();
 
     AbstractMenu() {
         super();
@@ -27,15 +27,15 @@ class AbstractMenu extends Menu {
         super(text, graphic, items);
     }
 
-    public Project getProject() {
-        return project.get();
+    public ProjectContext getProjectContext() {
+        return projectContext.get();
     }
 
-    public ObjectProperty<Project> projectProperty() {
-        return project;
+    public ObjectProperty<ProjectContext> projectContextProperty() {
+        return projectContext;
     }
 
-    public void setProject(Project project) {
-        this.project.set(project);
+    public void setProjectContext(ProjectContext project) {
+        this.projectContext.set(project);
     }
 }

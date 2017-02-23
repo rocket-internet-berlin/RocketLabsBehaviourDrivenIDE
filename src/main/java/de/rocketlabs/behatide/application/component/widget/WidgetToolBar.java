@@ -56,12 +56,12 @@ public class WidgetToolBar extends ToolBar {
         button.imageProperty().bind(widget.imageProperty());
 
         button.textProperty().bind(
-                new When(widget.mnemonicProperty().isNotNull())
-                        .then(new SimpleStringProperty("_")
-                                      .concat(widget.mnemonicProperty())
-                                      .concat(": ")
-                                      .concat(widget.nameProperty()))
-                        .otherwise(widget.nameProperty())
+            new When(widget.mnemonicProperty().isNotNull())
+                .then(new SimpleStringProperty("_")
+                    .concat(widget.mnemonicProperty())
+                    .concat(": ")
+                    .concat(widget.nameProperty()))
+                .otherwise(widget.nameProperty())
         );
         button.setToggleGroup(buttonGroup);
         button.setWidget(widget);

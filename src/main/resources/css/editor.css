@@ -4,8 +4,8 @@
 }
 
 .editor-test-class {
-   -fx-background-color:  #2B3233;
-   -fx-text-fill: #FFFFFF
+    -fx-background-color: #2B3233;
+    -fx-text-fill: #FFFFFF
 }
 
 .default {
@@ -14,7 +14,7 @@
 }
 
 .lineNumber {
-    -fx-background-color:  #2B3233;
+    -fx-background-color: #2B3233;
     -fx-border-style: solid;
     -fx-border-width: 0 1 0 0;
     -fx-border-color: transparent #E7E7E1 transparent transparent;
@@ -30,9 +30,9 @@
 }
 
 #menuBar {
-   -fx-hgap: 100%;
-   -fx-vgap: 100%;
-   -fx-background-color: #2B3233;
+    -fx-hgap: 100%;
+    -fx-vgap: 100%;
+    -fx-background-color: #2B3233;
 }
 
 #menuBar .menu * {
@@ -40,10 +40,10 @@
 }
 
 #menuBar .menu-item:hover, #menuBar .menu-item:focused, #menuBar .menu-item:hover > .label, #menuBar .menu-item:focused > .label,
- #menuBar .menu:hover, #menuBar .menu:focused, #menuBar .menu:hover > .label, #menuBar .menu:focused > .label, #menuBar .menu:showing, #menuBar .menu:showing > .label {
-   -fx-background-color: #0096c9;
+#menuBar .menu:hover, #menuBar .menu:focused, #menuBar .menu:hover > .label, #menuBar .menu:focused > .label, #menuBar .menu:showing, #menuBar .menu:showing > .label {
+    -fx-background-color: #0096c9;
 }
 
 #menuBar .label {
-     -fx-text-fill: #FFFFFF;
- }
+    -fx-text-fill: #FFFFFF;
+}
